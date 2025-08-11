@@ -1,0 +1,115 @@
+.requesting-modal .modal-container {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+.requesting-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.requesting-modal .modal-title {
+  font-size: 24px;
+  color: #343a40;
+}
+
+.requesting-modal .close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #dc3545;
+}
+
+.requesting-modal .booking-card {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.requesting-modal .card-header {
+  display: flex;
+  align-items: center;
+}
+
+.requesting-modal .profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.requesting-modal .booking-info {
+  font-size: 14px;
+  color: #495057;
+}
+
+.requesting-modal .service-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.requesting-modal .location-info {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.requesting-modal .feedback-message {
+  margin: 15px 0;
+  padding: 10px;
+  background: #e9ecef;
+  border-left: 4px solid #17a2b8;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.requesting-modal .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.requesting-modal .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.requesting-modal .accept-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.requesting-modal .reject-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.requesting-modal .close-modal-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.requesting-modal .close-modal-btn:hover,
+.requesting-modal .accept-btn:hover,
+.requesting-modal .reject-btn:hover {
+  opacity: 0.9;
+}
+
+.requesting-modal .modal-footer {
+  text-align: center;
+  margin-top: 20px;
+}

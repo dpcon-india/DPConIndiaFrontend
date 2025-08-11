@@ -1,0 +1,7 @@
+.data-table-row {
+  border-bottom: 1px solid #ccc; /* Adjust color and width as needed */
+}
+
+.data-table-row:last-child {
+  border-bottom: none; /* Optional: Remove the border from the last row */
+}

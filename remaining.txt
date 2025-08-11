@@ -1,0 +1,225 @@
+GLOBAL FUNCTIONALITY    
+- footer routing with socials 
+- categories page
+
+
+AUTHENTICATION
+- become a provider
+- provider signup 
+- reset password
+
+
+LANDING PAGE
+- Search services by name and location 
+- authentic data on the home hero seciton
+- list the categories and navigate them 
+- list the features and implement navigation in them
+- Genuine reviews from Customers
+
+
+SERVICES
+- fetch services
+- services details 
+    - contact provider
+    - fetch service data
+    - fetch faq's
+- sorting by price
+- filter
+    - filter by name
+    - categories filter
+    - sub categories filter
+    - locaiton filter 
+    - price range filter
+    - rating filter
+
+
+CUSTOMERS
+- Dashboard
+    - get stats of user 
+    - recent transctions 
+    - recent bookings
+- bookings 
+    - fetch the bookings
+    - sort by date
+    - get by calender
+- Setting 
+    - Account Settings
+    - Security Settings
+    
+PROVIDERS
+- nav
+    - fetch notifications
+- Dashboard
+    - upcomming, completed, canceled appointment 
+    - analytics of total earning
+    - top services
+    - bookings by date
+    - Highly Rated Staffs
+    - Add new staff
+- Services
+    - fetch active services
+    - fetch inActive services
+    - sort by time
+    - Add new services
+    - pagination
+- Bookings 
+    - Fetch Bookings 
+    - Add Bookings
+    - sort by time 
+    - Get by Date 
+    - reschedule 
+    - reBook
+- Staff
+    - fetch staff
+    - sort by date
+    - import data by excel file
+    - export data as excel file
+    - print list
+    - add staff
+    - Edit staff
+    - delete staff
+    - filter by date, id, name, active/inActive
+    - pagination
+- Customers
+    - fetch customer
+    - sort by date
+    - import data by excel file
+    - export data as excel file
+    - print list
+    - filter by date, id, name, active/inActive
+    - pagination
+- Payout
+    - stats
+    - fetch payments
+    - print list
+    - set Payout
+- Coupons
+    - fetch Coupons
+    - sort by date
+    - print list
+    - add Coupons
+    - Edit Coupons
+    - delete Coupons
+    - filter by date, id, name, active/inActive
+    - pagination
+- Earnings 
+    - fetch Earnings by product
+    - sort by alphabets
+    - edit service
+    - delete service
+    - pagination  
+
+STAFF
+- Dashboard
+    - get stats of staff 
+    - recent transctions 
+    - recent bookings
+- bookings 
+    - fetch the bookings
+    - sort by date
+    - get by calender
+- Setting 
+    - Account Settings
+    - Security Settings
+- Booking
+    - create a webhook to show the popup in real time
+    - all staff should get a popup when a enquiry is created or a booking is created
+    - When a staff accept the booking the other would not be able to select that 
+    - if no one accept the booking the a message should go to the Provider and he would assing the staff to the booking 
+
+BOOKINGS 
+- fetch services
+- get data to send to furthur file
+- Booking details
+- payments
+
+
+STATIC PAGES
+- about us 
+- how it works
+- FAQ's
+- privacy policy
+- terms and conditions
+
+BECOME A PROVIDER
+- store the data and send it to backend 
+
+BLOGS
+- pagination
+- blog details
+    - fetch details
+    - about author
+    - comments
+    - write comments
+    - show categories
+    - show tags
+
+ADMIN DASHBOARD
+- Dashboard
+    - stats
+    - revenue
+    - booking summary
+    - top services
+    - top provider
+    - top countries
+    - booking stats
+- services 
+    - fetch services 
+    - fetch by status
+    - sort by alphabets
+    - fetch by name 
+    - create service
+    - pagination
+- Bookings 
+    - Edit status
+- Admin Earnings
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Provider Earnings
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Featured Services
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - add featured service
+    - view featured Services
+    - edit Featured Services
+    - delete Featured Services
+- Email Newsletter
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - send eamil to all
+    - send Email to once
+    - delete 
+
+PAYMENT GATEWAY
+OTP VERIFICATION
+
+
+NEW CHANGES
+- staff attendance system 
+- staff should upload a image with proper dresscode which checkIn
+- new logo - increase the size of the logo
+- if teh person cancel the booking it would be count and if canel 3 times it would be banned
+- aws waf
+- staff would enter the otp given by the customer to start working on the service
+
+
+
+navigate to previous page (done)
+not editing the category (done)
+remove number of listings (done)
+pop up the share button on the (done)
+razorpay 
+future booking 
+css after navigating shiffing to right

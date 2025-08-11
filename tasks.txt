@@ -1,0 +1,437 @@
+GLOBAL FUNCTIONALITY    
+- nav
+- nav link routings
+- footer 
+- footer routing with socials 
+- categories page
+- pricing page
+- change logo
+
+
+AUTHENTICATION
+- login (done)
+- login with otp (done)
+- singup (done)
+- become a provider
+- provider signup 
+- reset password
+
+
+LANDING PAGE
+- Search services by name and location 
+- authentic data on the home hero seciton
+- list the categories and navigate them
+- list the features and implement navigation in them
+- popular services 
+- list poluar services as per the tabs
+- most preferred services
+- popluar provider
+- Browse High Rated Services
+- list high reated services as per the tabs
+- Genuine reviews from Customers
+- blogs
+- arrcordian of professions 
+- accordican of popular cities
+
+
+SERVICES
+- fetch services
+- favourite the service
+- services details 
+    - contact provider
+    - fetch service data
+    - fetch faq's
+    - fetch reviews
+- sorting by price
+- filter
+    - filter by name
+    - categories filter
+    - sub categories filter
+    - locaiton filter 
+    - price range filter
+    - rating filter
+
+
+CUSTOMERS
+- Dashboard
+    - get stats of user 
+    - recent transctions 
+    - recent bookings
+- bookings 
+    - fetch the bookings
+    - sort by date
+    - get by calender
+- favourites
+    - fetch the favourites
+    - un favourite
+    - sort by date
+    - get by calender
+- wallet 
+    - stats
+    - wallet transaction
+    - pagination
+    - add wallet
+- reviews
+    - fetch the reviews
+    - delete the reivews
+    - sort by most helpful and recent
+    - pagination
+- Setting 
+    - Account Settings
+    - Security Settings
+    
+PROVIDERS
+- nav
+    - fetch notifications
+- Dashboard
+    - upcomming, completed, canceled appointment 
+    - analytics of total earning
+    - subsciption
+    - top services
+    - bookings by date
+    - top locations 
+    - latest reviews
+    - Highly Rated Staffs
+    - Add new staff
+- Services
+    - fetch active services
+    - fetch inActive services
+    - sort by time
+    - Add new services
+    - pagination
+- Bookings 
+    - Fetch Bookings 
+    - Add Bookings
+    - sort by time 
+    - Get by Date 
+    - reschedule 
+    - reBook
+- Staff
+    - fetch staff
+    - sort by date
+    - import data by excel file
+    - export data as excel file
+    - print list
+    - add staff
+    - Edit staff
+    - delete staff
+    - filter by date, id, name, active/inActive
+    - pagination
+- Customers
+    - fetch customer
+    - sort by date
+    - import data by excel file
+    - export data as excel file
+    - print list
+    - filter by date, id, name, active/inActive
+    - pagination
+- Payout
+    - stats
+    - fetch payments
+    - print list
+    - set Payout
+- Holiday and leave 
+    - fetch H&L on calender
+    - add leave
+    - add Holiday
+    - Leave History
+    - Eidt leave
+    - delete leave
+- Coupons
+    - fetch Coupons
+    - sort by date
+    - print list
+    - add Coupons
+    - Edit Coupons
+    - delete Coupons
+    - filter by date, id, name, active/inActive
+    - pagination
+- Offers
+    - fetch offers
+    - sort by date
+    - import data by excel file
+    - export data as excel file
+    - print list
+    - add offers
+    - Edit offers
+    - delete offers
+    - filter by date, id, name, active/inActive
+    - pagination
+- Reviews
+    - fetch reviews
+    - Edit Reviews
+    - Delete Reviews
+    - Sort by time
+    - pagination
+- Enquiries
+    - fetch enquiries
+    - sort by date
+    - print list
+    - filter by date, id, name, active/inActive
+    - pagination
+- Earnings 
+    - fetch Earnings by product
+    - sort by alphabets
+    - edit service
+    - delete service
+    - pagination 
+- Settings
+    - appointment
+    - Account settings 
+    - socials
+    - Security
+    - Plan and blling
+        - Blling History
+    - payments
+    - notification
+    - connected apps
+    - profile verification
+    -     
+
+
+BOOKINGS 
+- fetch services
+- get data to send to furthur file
+- Booking details
+- payments
+
+
+STATIC PAGES
+- about us 
+- how it works
+- FAQ's
+- privacy policy
+- terms and conditions
+
+BECOME A PROVIDER
+- store the data and send it to backend 
+
+BLOGS
+- fetch blog list
+- pagination
+- blog details
+    - fetch details
+    - about author
+    - comments
+    - write comments
+    - show categories
+    - show tags
+
+ADMIN DASHBOARD
+- Dashboard
+    - stats
+    - revenue
+    - booking summary
+    - top services
+    - top provider
+    - top countries
+    - booking stats
+- services 
+    - fetch services 
+    - fetch by status
+    - sort by alphabets
+    - fetch by name 
+    - create service
+    - pagination
+- categories (done)
+    - fetch categories (done)
+    - sort by alphabets (done)
+    - edit categories (done)
+    - delete categories (done)
+    - create categories (done)
+    - pagination (done)
+    - image upload (done)
+- sub categories (done)
+    - fetch sub categories (done)
+    - create sub categories (done)
+    - sort by alphabets (done)
+    - edit sub categories (done)
+    - delete subCategories (done)
+    - pagination (done)
+    - image upload (done)
+- reviews 
+    - fetch reviews 
+    - sort by alphabets
+    - fetch by name 
+    - pagination
+- Bookings 
+    - fetch bookings 
+    - fetch by status
+    - sort by alphabets
+    - fetch by name 
+    - pagination
+- blogs 
+    - fetch blogs 
+    - fetch by status
+    - sort by alphabets
+    - fetch by name 
+    - create blogs
+    - pagination
+- Location 
+    - fetch Country, state, city
+    - edit locaiton
+    - delte locaiton
+    - sort by alphabets
+    - fetch by name 
+    - create Country, state, city
+    - pagination
+- Testimonials 
+    - fetch Testimonials 
+    - sort by alphabets
+    - fetch by name 
+    - create tesitmonial
+    - Edit Testimonial
+    - delte Testimonial
+    - pagination
+- FAQ's 
+    - fetch FAQ's 
+    - sort by alphabets
+    - fetch by name 
+    - create faq's
+    - Edit faq's
+    - delte faq's
+    - pagination
+- Membership
+    - membership list 
+    - create membership
+- Admin Earnings
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Provider Earnings
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Provider Sales
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Provider Wallet
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Customer Wallet
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Membership transactions
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch transactions
+    - pagination
+    - filters
+- Refund Reports
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch report
+    - pagination
+    - filters
+- Services Report
+    - fetch data for graph
+    - download as pdf
+    - download as excel
+    - fetch report
+    - pagination
+    - filters
+- Users
+    - fetch users
+    - sort by alphabets
+    - pagination
+    - filters
+    - edit Users
+    - delete Users
+    - create Users
+- Providers
+    - fetch
+    - sort by alphabets
+    - pagination
+    - filters
+    - edit Providers
+    - delete Providers
+    - create Providers
+- Customers (done)
+    - fetch (done)
+    - pagination (done)
+    - edit Customers (done)
+    - delete Customers (done)
+    - sort by alphabets (done)
+    - create Customers (done)
+- Role and permission
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - filters
+    - edit Role and permission
+    - delete Role and permission
+    - create Role and permission
+- Verification requrests
+    - fetch applicaitons
+    - download files
+    - update status
+    - pagination
+- Coupons
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - edit Coupons
+    - delete Coupons
+    - create Coupons
+- Services Offers
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - edit Services Offers
+    - delete Services Offers
+- Featured Services
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - add featured service
+    - view featured Services
+    - edit Featured Services
+    - delete Featured Services
+- Email Newsletter
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - send eamil to all
+    - send Email to once
+    - delete 
+- Conatct messages
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - View Conatct messages
+    - delete Conatct messages
+- Abusive Report
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - View Abusive Report
+    - delete Abusive Report
+- Announcements
+    - fetch 
+    - sort by alphabets
+    - pagination
+    - Create Announcements
+    - Edit Announcements
+    - delete Announcements
+PAYMENT GATEWAY
+OTP VERIFICATION

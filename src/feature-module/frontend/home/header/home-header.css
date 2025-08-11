@@ -1,0 +1,13 @@
+.enquiry-container {
+  background-color: #011339; /* Dark blue background */
+  color: white;
+  position: fixed; /* Fixes it to the top */
+  top: 0; /* Ensures it sticks at the top */
+  left: 0;
+  width: 100%; /* Ensures full-width */
+  padding: 8px 0; /* More padding for better visibility */
+  text-align: center;
+  z-index: 10002;
+  font-size: small;
+  /* Ensures it stays above other elements */
+}
