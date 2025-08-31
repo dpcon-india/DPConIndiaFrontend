@@ -1,4 +1,5 @@
-name: Deploy NestJS to EC2
+
+name: Deploy Node.js Project to AWS VPS
 
 on:
   push:
@@ -7,47 +8,55 @@ on:
       - staging
 
 jobs:
-  deploy:
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    name: Deploy to Production
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Run Deployment on Production
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_VPS }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH }}
+        script: |
+          echo "Navigating to project directory..."
+          cd ${{ secrets.PROJECT_PATH }}
+          echo "Resetting and pulling latest code..."
+          git fetch --all
+          git reset --hard origin/${{ github.ref_name }}
+          git pull origin ${{ github.ref_name }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
+          echo "Writing .env file..."
+          echo "${{ secrets.ENV  }}" > .env
+          echo "Installing dependencies with NPM..."
+          echo "Installing dependencies..."
+          npm install --legacy-peer-deps
+          npm run build
+          
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    name: Deploy to Staging
 
-      - name: Deploy Project to EC2 via SCP
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.EC2_VPS }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH }}
-          source: "."
-          target: "${{ github.ref == 'refs/heads/main' && secrets.PROJECT_PATH || secrets.PROJECT_PATH_DEV }}"
-          rm: true
-          strip_components: 0
-
-      - name: Upload .env File
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-            host: ${{ secrets.EC2_VPS }}
-            username: ${{ secrets.EC2_USER }}
-            key: ${{ secrets.EC2_SSH }}
-            script: |
-                echo "${{ github.ref == 'refs/heads/main' && secrets.ENV || secrets.ENV_DEV }}" > ${{ github.ref == 'refs/heads/main' && secrets.PROJECT_PATH || secrets.PROJECT_PATH_DEV }}/.env
-
-      - name: Run Remote Deployment Script
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_VPS }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH }}
-          script: |
-            PROJECT_DIR="${{ github.ref == 'refs/heads/main' && secrets.PROJECT_PATH || secrets.PROJECT_PATH_DEV }}"
-            cd "$PROJECT_DIR"
-            echo "Installing dependencies..."
-            npm install
-            npm run build
+    steps:
+    - name: Run Deployment on Staging
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_VPS }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH }}
+        script: |
+          echo "Navigating to project directory..."
+          cd ${{ secrets.PROJECT_PATH_DEV }}
+          echo "Resetting and pulling latest code..."
+          git fetch --all
+          git reset --hard origin/${{ github.ref_name }}
+          git pull origin ${{ github.ref_name }}
+          echo "Writing .env file..."
+          echo "${{ secrets.ENV_DEV  }}" > .env
+          echo "Installing dependencies with NPM..."
+          echo "Installing dependencies..."
+          npm install --legacy-peer-deps
+          npm run build
