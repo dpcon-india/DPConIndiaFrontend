@@ -1,5 +1,56 @@
 import axios from 'axios';
-import { api, bearerHeader, formDataHeader } from './config';
+import { api, bearerHeader, formDataHeader } from './config.js';
+
+// Password Reset APIs
+export const forgotPassword = async (email) => {
+  try {
+    const { data } = await axios.post(`${api}profiles/forgot-password`, { email });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Failed to process forgot password request' };
+  }
+};
+
+export const resetPassword = async (token, password) => {
+  try {
+    console.log('Sending reset request with token:', token);
+    const { data } = await axios.post(`${api}profiles/tokens/reset-password`, {
+      token,
+      newPassword: password
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Failed to reset password. Please try again.' };
+  }
+};
+
+export const validateResetToken = async (token) => {
+  try {
+    console.log('Validating token:', token);
+    const response = await axios.get(`${api}profiles/tokens/validate`, {
+      params: { token },
+      validateStatus: status => status < 500 // Don't throw for 4xx errors
+    });
+
+    console.log('Token validation response:', response.data);
+
+    if (response.data?.valid === true) {
+      return { valid: true, email: response.data.email };
+    } else {
+      return {
+        valid: false,
+        error: response.data?.error || 'Invalid or expired reset link. Please request a new one.'
+      };
+    }
+  } catch (error) {
+    console.error('Error validating token:', error.response?.data || error.message);
+    return {
+      valid: false,
+      error: 'Unable to validate the reset link. Please try again later.'
+    };
+  }
+};
+
 const gettokenlocalStorage = localStorage.getItem('user')
   ? JSON.parse(localStorage.getItem('user'))
   : null;

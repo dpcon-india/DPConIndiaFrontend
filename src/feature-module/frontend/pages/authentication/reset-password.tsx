@@ -1,153 +1,249 @@
-import React, { useState } from 'react';
-import PagesAuthHeader from './common/header';
+import React, { useEffect, useState } from 'react';
 import { all_routes } from '../../../../core/data/routes/all_routes';
-import {  useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { resetPassword, validateResetToken } from '../../../../APICalls';
+import HomeHeader from '../../home/header/home-header';
 import AuthFooter from './common/footer';
-import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
+
+interface PasswordResponse {
+  text: string;
+  strength: 'weak' | 'medium' | 'strong' | '';
+}
 
 const ResetPassword = () => {
   const routes = all_routes;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
 
+  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState('');
-  const [passwordResponce, setPasswordResponce] = useState({
-    passwordResponceText: "Use 8 or more characters with a mix of letters, number's symbols.",
-    passwordResponceKey: '',
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const [passwordResponse, setPasswordResponse] = useState<PasswordResponse>({
+    text: 'Use 8 or more characters with a mix of letters, numbers & symbols',
+    strength: '',
   });
 
-  const onChangePassword = (password: string) => {
-    setPassword(password);
-    if (password.match(/^$|\s+/)) {
-      setPasswordResponce({
-        passwordResponceText: 'Whitespaces are not allowed',
-        passwordResponceKey: '',
-      });
-    } else if (password.length === 0) {
-      setPasswordResponce({
-        passwordResponceText: '',
-        passwordResponceKey: '',
-      });
-    } else if (password.length < 8) {
-      setPasswordResponce({
-        passwordResponceText: 'Weak. Must contain at least 8 characters',
-        passwordResponceKey: '0',
-      });
-    } else if (
-      password.search(/[a-z]/) < 0 ||
-      password.search(/[A-Z]/) < 0 ||
-      password.search(/[0-9]/) < 0
-    ) {
-      setPasswordResponce({
-        passwordResponceText:
-          'Average. Must contain at least 1 upper case and number',
-        passwordResponceKey: '1',
-      });
-    } else if (password.search(/(?=.*?[#?!@$%^&*-])/) < 0) {
-      setPasswordResponce({
-        passwordResponceText: 'Almost. Must contain a special symbol',
-        passwordResponceKey: '2',
-      });
-    } else {
-      setPasswordResponce({
-        passwordResponceText: 'Awesome! You have a secure password.',
-        passwordResponceKey: '3',
-      });
+  const getPasswordStrengthClass = () => {
+    switch (passwordResponse.strength) {
+      case 'weak':
+        return 'text-danger';
+      case 'medium':
+        return 'text-warning';
+      case 'strong':
+        return 'text-success';
+      default:
+        return 'text-muted';
     }
   };
+
+  const getPasswordStrengthIcon = () => {
+    switch (passwordResponse.strength) {
+      case 'weak':
+        return 'fas fa-exclamation-circle';
+      case 'medium':
+        return 'fas fa-exclamation-triangle';
+      case 'strong':
+        return 'fas fa-check-circle';
+      default:
+        return 'fas fa-info-circle';
+    }
+  };
+
+  useEffect(() => {
+    const validate = async () => {
+      if (!token) {
+        setError('No reset token found in URL');
+        setIsValidToken(false);
+        return;
+      }
+      try {
+        const { valid, error: validationError, email: userEmail } = await validateResetToken(token);
+        if (!valid) {
+          setError(validationError || 'This password reset link is invalid or has expired. Please request a new one.');
+          setIsValidToken(false);
+          return;
+        }
+        setEmail(userEmail || '');
+        setIsValidToken(true);
+        setError('');
+      } catch (e: any) {
+        setError(e?.message || 'An unexpected error occurred while validating your reset link.');
+        setIsValidToken(false);
+      }
+    };
+    validate();
+  }, [token]);
+
+  const onChangePassword = (newPassword: string) => {
+    setPassword(newPassword);
+    if (/^$|\s+/.test(newPassword)) {
+      setPasswordResponse({ text: 'Whitespaces are not allowed', strength: '' });
+    } else if (newPassword.length === 0) {
+      setPasswordResponse({ text: 'Use 8 or more characters with a mix of letters, numbers & symbols', strength: '' });
+    } else if (newPassword.length < 8) {
+      setPasswordResponse({ text: 'Weak. Must contain at least 8 characters', strength: 'weak' });
+    } else if (
+      newPassword.search(/[a-z]/) < 0 ||
+      newPassword.search(/[A-Z]/) < 0 ||
+      newPassword.search(/[0-9]/) < 0 ||
+      newPassword.search(/[^A-Za-z0-9]/) < 0
+    ) {
+      setPasswordResponse({ text: 'Medium. Include upper & lower case letters, numbers & symbols', strength: 'medium' });
+    } else {
+      setPasswordResponse({ text: 'Strong password', strength: 'strong' });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    if (passwordResponse.strength !== 'strong') {
+      toast.error('Please enter a strong password');
+      return;
+    }
+    try {
+      setIsLoading(true);
+      await resetPassword(token!, password);
+      toast.success('Password has been reset successfully');
+      navigate(routes.login);
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to reset password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <>
-      <PagesAuthHeader />
-      <div className="main-wrapper">
-  <div className="container">
-    <div className="row justify-content-center">
-      <div className="col-md-5 mx-auto">
-        <form onSubmit={()=>navigate(routes.success)}>
-          <div className="d-flex flex-column justify-content-center">
-            <div className="card p-sm-4 my-5">
-              <div className="card-body">
-                <div className="text-center mb-3">
-                  <h3 className="mb-2">Reset Password</h3>
-                  <p className="fs-14">
-                    Your new password must be different from previous used
-                    passwords.
-                  </p>
-                </div>
-                <div>
-                  <div className="input-block mb-3">
-                    <div className="mb-3">
-                      <label className="form-label">New Password</label>
-                      <div className="pass-group" id="passwordInput">
-                        <input
-                          type="password"
-                          value={password}
-                          onChange={(e) => onChangePassword(e.target.value)}
-                          className="form-control pass-input"
-                        />
-                      </div>
+    <div className="main-wrapper">
+      <HomeHeader type={11} />
+
+      {isValidToken === null ? (
+        <div className="content">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6 col-lg-5">
+                <div className="card shadow-sm my-5">
+                  <div className="card-body p-5 text-center">
+                    <h2 className="mb-4">Verifying Your Link</h2>
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
                     </div>
-                    <div
-                      className={`password-strength d-flex ${
-                        passwordResponce.passwordResponceKey === '0'
-                          ? 'poor-active'
-                          : passwordResponce.passwordResponceKey === '1'
-                          ? 'avg-active'
-                          : passwordResponce.passwordResponceKey === '2'
-                          ? 'strong-active'
-                          : passwordResponce.passwordResponceKey === '3'
-                          ? 'heavy-active'
-                          : ''
-                      }`}
-                      id="passwordStrength"
-                    >
-                      <span id="poor" className="active" />
-                      <span id="weak" className="active" />
-                      <span id="strong" className="active" />
-                      <span id="heavy" className="active" />
-                    </div>
-                    <div id="passwordInfo" className="mb-2" />
-                    <p className="fs-12">
-                      
-                      {passwordResponce.passwordResponceText}
-                    </p>
+                    <p className="mt-3 text-muted">Please wait while we verify your password reset link.</p>
                   </div>
-                  <div className="mb-3">
-                    <div className="d-flex align-items-center justify-content-between flex-wrap">
-                      <label className="form-label">Confirm Password</label>
-                    </div>
-                    <input type="password" className="form-control" />
-                  </div>
-                  <div>
-                    <button
-                      type="submit"
-                      className="btn btn-lg btn-linear-primary w-100"
-                    >
-                      Save Change
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <ImageWithBasePath
-                    src="assets/img/bg/authentication-bg.png"
-                    className="bg-left-top"
-                    alt="Img"
-                  />
-                  <ImageWithBasePath
-                    src="assets/img/bg/authentication-bg.png"
-                    className="bg-right-bottom"
-                    alt="Img"
-                  />
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
+      ) : !isValidToken ? (
+        <div className="content">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6 col-lg-5">
+                <div className="card shadow-sm my-5">
+                  <div className="card-body p-5">
+                    <h2 className="text-center mb-4">Invalid Reset Link</h2>
+                    <div className="alert alert-danger" role="alert">
+                      <i className="fas fa-exclamation-circle me-2"></i>
+                      {error || 'This password reset link is invalid or has expired.'}
+                    </div>
+                    <div className="text-center mt-4">
+                      <Link to={routes.forgotPassword} className="btn btn-primary">
+                        Request New Reset Link
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="content">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6 col-lg-5">
+                <div className="card shadow-sm my-5">
+                  <div className="card-body p-5">
+                    <div className="text-center mb-4">
+                      <h2>Reset Your Password</h2>
+                      <p className="text-muted">Enter your new password below {email ? `for ${email}` : ''}</p>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                      <div className="mb-3">
+                        <label htmlFor="newPassword" className="form-label">New Password</label>
+                        <input
+                          id="newPassword"
+                          type="password"
+                          className="form-control"
+                          value={password}
+                          onChange={(e) => onChangePassword(e.target.value)}
+                          placeholder="Enter new password"
+                          required
+                        />
+                        <div className={`form-text ${getPasswordStrengthClass()}`}>
+                          <i className={`${getPasswordStrengthIcon()} me-2`}></i>
+                          {passwordResponse.text}
+                        </div>
+                      </div>
 
-      <AuthFooter/>
-    </>
+                      <div className="mb-3">
+                        <label htmlFor="confirmPassword" className="form-label">Confirm New Password</label>
+                        <input
+                          id="confirmPassword"
+                          type="password"
+                          className="form-control"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Confirm new password"
+                          required
+                        />
+                        {password && confirmPassword && password !== confirmPassword && (
+                          <div className="text-danger small mt-1">
+                            <i className="fas fa-exclamation-circle me-1"></i>
+                            Passwords do not match
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="d-grid gap-2 mt-3">
+                        <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                          {isLoading ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                              Resetting...
+                            </>
+                          ) : (
+                            'Reset Password'
+                          )}
+                        </button>
+                      </div>
+
+                      <div className="text-center mt-3">
+                        <Link to={routes.login} className="text-primary">
+                          <i className="ti ti-arrow-left me-1"></i> Back to Login
+                        </Link>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <AuthFooter />
+    </div>
   );
 };
 
