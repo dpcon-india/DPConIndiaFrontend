@@ -243,8 +243,13 @@ const NewHeader: React.FC<props> = ({ type }) => {
                   )}
 
                   <li className="nav-item">
-                    <Link className="nav-link" to={routes.dashboard}>
-                      Admin
+                    <Link 
+                      className="nav-link" 
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#login-modal"
+                    >
+                      Login/Signup
                     </Link>
                   </li>
                   {/* <li className={`has-submenu ${type == 10 ? 'd-none' : ''}`}>

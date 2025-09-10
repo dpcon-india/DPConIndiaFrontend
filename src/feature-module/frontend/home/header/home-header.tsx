@@ -132,7 +132,18 @@ const HomeHeader: React.FC<props> = ({ type }) => {
     }
   };
   let route = '#';
-  const role = JSON.parse(localStorage.getItem('user') || '{}')?.role;
+  // Get user data from localStorage
+  const userString = localStorage.getItem('user');
+  let role = null;
+  
+  // Safely parse user data
+  try {
+    const userData = userString ? JSON.parse(userString) : null;
+    role = userData?.role || null;
+  } catch (e) {
+    console.error('Error parsing user data:', e);
+    role = null;
+  }
   switch (role) {
     case 'customer':
       route = '/customers/customer-dashboard';
@@ -165,10 +176,10 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 <i className="ti ti-lock me-2"></i>Sign In
               </Link>
             </li> */}
-            {role ? (
+            {role && role !== 'undefined' ? (
               <li className="nav-item">
                 <Link className="nav-link btn btn-linear-primary" to={route}>
-                  <i className="ti ti-user-filled me-2"></i>Dashboard
+                  <i className="ti ti-dashboard me-2"></i>Dashboard
                 </Link>
               </li>
             ) : (
@@ -177,9 +188,9 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   className="nav-link btn btn-linear-primary"
                   to="#"
                   data-bs-toggle="modal"
-                  data-bs-target="#register-modal"
+                  data-bs-target="#login-modal"
                 >
-                  <i className="ti ti-user-filled me-2"></i>Login / Signup
+                  <i className="ti ti-lock me-2"></i>Login / Signup
                 </Link>
               </li>
             )}
@@ -370,6 +381,18 @@ const HomeHeader: React.FC<props> = ({ type }) => {
         );
         break;
       case 11:
+        // If user not logged in, show a simple Login/Signup button instead of user dropdown
+        if (!role || role === 'undefined') {
+          return (
+            <ul className="nav header-navbar-rht">
+              <li className="nav-item">
+                <Link className="nav-link btn btn-linear-primary" to={routes.login}>
+                  <i className="ti ti-lock me-2"></i>Login / Signup
+                </Link>
+              </li>
+            </ul>
+          );
+        }
         return (
           <div className="header-btn d-flex align-items-center">
             <div className="provider-head-links">
@@ -696,7 +719,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 />
               </Link>
               <div className="navbar-brand logo-small" style={{ padding: 0 }}>
-                {role ? (
+                {role && role !== 'undefined' ? (
                   <Link className="fs-14" to={route}>
                     <i className="ti ti-user-filled me-2"></i>Dashboard
                   </Link>

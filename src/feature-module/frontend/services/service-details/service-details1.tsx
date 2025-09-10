@@ -728,14 +728,15 @@ import { jwtDecode } from 'jwt-decode';
 import AppointmentModal from './AppointmentModal';
 import PayAppointmentModal from './PayAppointmentModal';
 
-SwiperCore.use([Navigation, Pagination]);
-
 interface BookingComponentProps {
   chechHandler: (element: React.MouseEvent<HTMLDivElement>, data: any) => void;
   data: any;
 }
 
 const ServiceDetails1 = () => {
+  // Initialize Swiper modules
+  SwiperCore.use([Navigation, Pagination]);
+  
   const routes = all_routes;
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);

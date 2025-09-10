@@ -13,9 +13,9 @@ import { Category, IService } from '../../../../GlobleType';
 import { fetchServicesByCat } from '../../../../APICalls';
 import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
 
-SwiperCore.use([Navigation, Pagination]);
-
 const PopularSection = ({ featuredCat }: any) => {
+  // Initialize Swiper modules
+  SwiperCore.use([Navigation, Pagination]);
   const [select, setSelect] = useState('');
   const [services, setServices] = useState<IService[]>([]);
   const serviceListRef = useRef<HTMLDivElement>(null); // <-- Step 1

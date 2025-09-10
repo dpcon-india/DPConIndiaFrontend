@@ -111,7 +111,7 @@ const publicRoutes = [
   //   name: 'Root',
   //   element: <Navigate to="/home" />,
   //   route: Route,
-    
+
   // },
   {
     path: '/Place/:city',
@@ -174,9 +174,15 @@ const publicRoutes = [
     route: Route,
   },
   {
-    path: routes.customers,
-    name: 'customers',
-    element: <Customers />,
+    path: '/authentication/reset-password',
+    name: 'reset-password',
+    element: <ResetPassword />,
+    route: Route,
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password-alias',
+    element: <ResetPassword />,
     route: Route,
   },
   {
@@ -219,12 +225,6 @@ const publicRoutes = [
   },
 ];
 export const authRoutes = [
-  {
-    path: '/authentication/reset-password',
-    name: 'reset-password',
-    element: <ResetPassword />,
-    route: Route,
-  },
   {
     path: routes.passwordRecovery,
     name: 'password-recovery',

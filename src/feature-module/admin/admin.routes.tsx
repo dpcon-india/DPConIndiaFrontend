@@ -313,7 +313,7 @@ const AdminRoutes = () => {
     {
       path: '/gallery/all-gallery',
       name: 'all-gallery',
-      element: < AllGallery/>,
+      element: < AllGallery />,
       route: Route,
     },
     {

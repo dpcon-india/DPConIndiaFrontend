@@ -133,39 +133,77 @@ const CustomersRoutes = () => {
       route: Route,
     },
   ];
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [authStatus, setAuthStatus] = useState<'checking' | 'authenticated' | 'unauthenticated'>('checking');
   const navigate = useNavigate();
-  const { user }: any = useUser();
-  useEffect(() => {
-    // Check if user is logged in
+  const { user } = useUser();
 
-    if (
-      localStorage.getItem('user') == null ||
-      localStorage.getItem('user') == undefined
-    ) {
-      setLoggedIn(false);
-      return navigate('/home');
-    }
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    if (userData?.role == 'customer') {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-      navigate('/home');
+  useEffect(() => {
+    const checkAuth = () => {
+      const userDataStr = localStorage.getItem('user');
+      
+      // If no user data in localStorage, redirect to home
+      if (!userDataStr) {
+        setAuthStatus('unauthenticated');
+        navigate('/home');
+        return;
+      }
+
+      try {
+        const userData = JSON.parse(userDataStr);
+        
+        // If user data exists but no token, consider unauthenticated
+        if (!userData?.token) {
+          setAuthStatus('unauthenticated');
+          localStorage.removeItem('user');
+          navigate('/home');
+          return;
+        }
+
+        // If we have a valid customer token, allow access
+        if (userData?.role === 'customer') {
+          setAuthStatus('authenticated');
+        } else {
+          setAuthStatus('unauthenticated');
+          navigate('/home');
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('user');
+        setAuthStatus('unauthenticated');
+        navigate('/home');
+      }
+    };
+
+    // Only check auth if we're not already authenticated
+    if (authStatus === 'checking') {
+      checkAuth();
     }
   }, [user]);
+  if (authStatus === 'checking') {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, don't render anything (will be handled by the effect)
+  if (authStatus !== 'authenticated') {
+    return null;
+  }
+
   return (
-    <>
-      <Routes>
-        {loggedIn && (
-          <Route>
-            {all_customers_routes.map((route, idx) => (
-              <Route path={route.path} element={route.element} key={idx} />
-            ))}
-          </Route>
-        )}
-      </Routes>
-    </>
+    <Routes>
+      {/* Add a redirect from the base /customers path to the dashboard */}
+      <Route path="/" element={<Navigate to="customer-dashboard" replace />} />
+      {all_customers_routes.map((route, idx) => (
+        <Route key={idx} path={route.path.replace('/customers', '')} element={route.element} />
+      ))}
+      {/* Catch-all route for /customers/* to redirect to dashboard */}
+      <Route path="*" element={<Navigate to="customer-dashboard" replace />} />
+    </Routes>
   );
 };
 
