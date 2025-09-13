@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { all_routes } from '../../../../core/data/routes/all_routes';
 import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 import {
@@ -19,6 +20,22 @@ type props = {
 const HomeHeader: React.FC<props> = ({ type }) => {
   const routes = all_routes;
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
   // const header_data = useSelector((state: Header) => state.header_data);
   const header_data = header;
   const toggle_data = useSelector((state: AppState) => state.toggleSidebar);
@@ -135,7 +152,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
   // Get user data from localStorage
   const userString = localStorage.getItem('user');
   let role = null;
-  
+
   // Safely parse user data
   try {
     const userData = userString ? JSON.parse(userString) : null;
@@ -177,11 +194,23 @@ const HomeHeader: React.FC<props> = ({ type }) => {
               </Link>
             </li> */}
             {role && role !== 'undefined' ? (
-              <li className="nav-item">
-                <Link className="nav-link btn btn-linear-primary" to={route}>
-                  <i className="ti ti-dashboard me-2"></i>Dashboard
-                </Link>
-              </li>
+              <>
+                {role === 'provider' && (
+                  <li className="nav-item me-2">
+                    <Link className="nav-link btn btn-outline-primary" to="/providers/dashboard">
+                      <i className="ti ti-layout-dashboard me-1"></i>Dashboard
+                    </Link>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <button
+                    className="nav-link btn btn-primary"
+                    onClick={handleLogout}
+                  >
+                    <i className="ti ti-logout me-1"></i>Logout
+                  </button>
+                </li>
+              </>
             ) : (
               <li className="nav-item">
                 <Link
@@ -587,17 +616,36 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 </div>
               </Link>
               <ul className="dropdown-menu p-2">
+                {user?.role === 'provider' && (
+                  <li>
+                    <Link
+                      className="dropdown-item d-flex align-items-center"
+                      to="/providers/dashboard"
+                    >
+                      <i className="ti ti-layout-dashboard me-1" />
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
                 <li>
-                  <Link
-                    className="dropdown-item d-flex align-items-center"
-                    to={routes.signin}
+                  <button
+                    className="dropdown-item d-flex align-items-center w-100 text-start"
+                    onClick={handleLogout}
+                    style={{ background: 'none', border: 'none' }}
                   >
                     <i className="ti ti-logout me-1" />
                     Logout
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
+            {user?.role === 'provider' && (
+              <div className="d-none d-lg-flex align-items-center ms-3">
+                <Link to="/providers/dashboard" className="btn btn-primary">
+                  <i className="ti ti-layout-dashboard me-1" /> Dashboard
+                </Link>
+              </div>
+            )}
             <div className="header__hamburger d-lg-none my-auto">
               <div className="sidebar-menu">
                 <i className="fa-solid fa-bars" />
@@ -611,22 +659,57 @@ const HomeHeader: React.FC<props> = ({ type }) => {
       default:
         return (
           <ul className="nav header-navbar-rht">
-            <li className="nav-item">
-              <Link
-                className="nav-link header-reg"
-                to="/authentication/choose-signup"
-              >
-                Register
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link header-login"
-                to="/authentication/login"
-              >
-                <i className="fa-regular fa-circle-user me-2"></i>Login
-              </Link>
-            </li>
+            {user ? (
+              <>
+                {user.role === 'provider' && (
+                  <li className="nav-item d-none d-md-block">
+                    <Link to="/providers/dashboard" className="nav-link header-login">
+                      <i className="ti ti-layout-dashboard me-1"></i> Dashboard
+                    </Link>
+                  </li>
+                )}
+                <li className="nav-item dropdown">
+                  <Link
+                    className="nav-link header-login dropdown-toggle"
+                    to="#"
+                    data-bs-toggle="dropdown"
+                  >
+                    <i className="fa-regular fa-circle-user me-1"></i>
+                    {user.name || 'Account'}
+                  </Link>
+                  <ul className="dropdown-menu dropdown-menu-end p-2">
+                    <li>
+                      <button
+                        className="dropdown-item d-flex align-items-center"
+                        onClick={handleLogout}
+                      >
+                        <i className="ti ti-logout me-1" />
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link header-reg"
+                    to="/authentication/choose-signup"
+                  >
+                    Register
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link header-login"
+                    to="/authentication/login"
+                  >
+                    <i className="fa-regular fa-circle-user me-2"></i>Login
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         );
         break;
@@ -636,15 +719,15 @@ const HomeHeader: React.FC<props> = ({ type }) => {
   useEffect(() => {
     type == 1 || type == 4 || type == 10
       ? setImageUrl({
-          logo: 'assets/img/logo.png',
-          logoSmall: 'assets/img/logo-small.png',
-          logoSvg: 'assets/img/DPcon_A2.jpg',
-        })
+        logo: 'assets/img/logo.png',
+        logoSmall: 'assets/img/logo-small.png',
+        logoSvg: 'assets/img/DPcon_A2.jpg',
+      })
       : setImageUrl({
-          logo: 'assets/img/logo-02.svg',
-          logoSmall: 'assets/img/logo-icon.png',
-          logoSvg: 'assets/img/logo-02.svg',
-        });
+        logo: 'assets/img/logo-02.svg',
+        logoSmall: 'assets/img/logo-icon.png',
+        logoSvg: 'assets/img/logo-02.svg',
+      });
   }, [type]);
 
   return (
@@ -676,9 +759,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
         </Link>
       </div>
       <header
-        className={`header ${routerPath(type).className} ${
-          scrollYPosition > 200 ? 'fixed' : ''
-        }`}
+        className={`header ${routerPath(type).className} ${scrollYPosition > 200 ? 'fixed' : ''
+          }`}
       >
         <div
           // className={` ${type == 4 || type == 1 ? 'container-fluid' : 'container'}
@@ -799,8 +881,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/home"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     Home
                   </Link>
@@ -809,8 +891,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/services/service-list"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     Services
                   </Link>
@@ -821,9 +903,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                       {item.separateRoute == false && (
                         <li
                           key={index + 1}
-                          className={`has-submenu ${
-                            item.tittle == 'Home' ? 'megamenu' : ''
-                          } ${activeRouterPath(item.menu) ? 'active' : ''} `}
+                          className={`has-submenu ${item.tittle == 'Home' ? 'megamenu' : ''
+                            } ${activeRouterPath(item.menu) ? 'active' : ''} `}
                         >
                           <Link
                             to={''}
@@ -832,9 +913,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                             {item.tittle} <i className="fas fa-chevron-down" />
                           </Link>
                           <ul
-                            className={`submenu ${
-                              item.tittle == 'Home' ? 'mega-submenu' : ''
-                            } ${item.showAsTab == true ? 'show-sub-menu' : ''}`}
+                            className={`submenu ${item.tittle == 'Home' ? 'mega-submenu' : ''
+                              } ${item.showAsTab == true ? 'show-sub-menu' : ''}`}
                           >
                             {item.menu.map((menu: any, menuIndex: number) => {
                               return (
@@ -861,18 +941,17 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                                     >
                                       <Link
                                         onClick={() =>
-                                          (menu.showSubRoute =
-                                            !menu.showSubRoute)
+                                        (menu.showSubRoute =
+                                          !menu.showSubRoute)
                                         }
                                         to={menu.routes}
                                       >
                                         {menu.menuValue}
                                       </Link>
                                       <ul
-                                        className={`submenu ${
-                                          menu.showSubRoute === true &&
+                                        className={`submenu ${menu.showSubRoute === true &&
                                           'show-sub-menu'
-                                        }`}
+                                          }`}
                                       >
                                         {menu.subMenus.map(
                                           (
@@ -883,7 +962,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                                               <li
                                                 className={
                                                   subMenu.routes ==
-                                                  location.pathname
+                                                    location.pathname
                                                     ? 'active'
                                                     : ''
                                                 }
@@ -914,12 +993,11 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                                                   key={megaIndex + 1}
                                                 >
                                                   <div
-                                                    className={`single-demo ${
-                                                      menu.routes ==
-                                                      location.pathname
+                                                    className={`single-demo ${menu.routes ==
+                                                        location.pathname
                                                         ? 'active'
                                                         : ''
-                                                    }`}
+                                                      }`}
                                                   >
                                                     <div className="demo-img">
                                                       <Link to={menu.routes}>
@@ -972,8 +1050,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/pages/about-us"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     About
                   </Link>
@@ -982,8 +1060,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/pages/gallery"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     Gallery
                   </Link>
@@ -992,8 +1070,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/blog/blog-grid"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     Blogs
                   </Link>
@@ -1003,8 +1081,8 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <Link
                     className="nav-link"
                     to="/pages/contact-us"
-                    // data-bs-toggle="modal"
-                    // data-bs-target="#provider"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#provider"
                   >
                     Contact
                   </Link>
