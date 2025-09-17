@@ -58,13 +58,6 @@ export const adminSidebar = [
         icon: <Icon.FileText className="react-feather-icon" />,
       },
       {
-        menuValue: 'Sub Categories',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: routes.subCategories,
-        icon: <Icon.Clipboard className="react-feather-icon" />,
-      },
-      {
         menuValue: 'PinCode',
         hasSubRoute: false,
         showSubRoute: false,
