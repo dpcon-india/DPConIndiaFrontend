@@ -16,11 +16,13 @@ const BlogList = () => {
     <>
     <BreadCrumb title='Blog List' item1='Home' item2='Blog List'/>
     <div className="page-wrapper">
-  <div className="content">
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className="col-lg-8 col-md-8">
-          <div className="blog-list">
+      <div className="content">
+        <div className="container">
+          <h1 className="mb-3">DPCon India Blog</h1>
+          <h2 className="h4 mb-4">Latest Articles & Industry Insights</h2>
+          <div className="row justify-content-center">
+            <div className="col-lg-8 col-md-8">
+              <div className="blog-list">
             <div className="blog-img">
               <Link to={routes.blogDetails}>
                 <ImageWithBasePath

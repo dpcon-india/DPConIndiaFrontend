@@ -111,11 +111,11 @@ const ServiceList = () => {
                 />
               </div>
               <div className="col-xl-9 col-lg-8">
+                <h1 className="mb-4">Professional Services in Mumbai - DPCon India</h1>
+                <h2 className="h4 mb-4">
+                  Discover {filteredService.length} Expert Services
+                </h2>
                 <div className="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                  <h4>
-                    Found
-                    <span className="text-dark-blue">{` ${filteredService.length} Services`}</span>
-                  </h4>
                   <div className="d-flex align-items-center">
                     <span className="text-dark me-2">Sort</span>
                     <div className="dropdown me-2">

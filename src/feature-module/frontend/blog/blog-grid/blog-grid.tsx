@@ -53,6 +53,8 @@ const BlogGrid = () => {
       <div className="page-wrapper">
         <div className="content">
           <div className="container">
+            <h1 className="mb-4">Latest Articles & News - DPCon India Blog</h1>
+            <h2 className="h4 mb-4">Discover Expert Insights and Industry Updates</h2>
             <div className="row">
               {currentBlogs.length > 0 ? (
                 currentBlogs.map((blog) => (

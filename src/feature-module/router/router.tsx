@@ -15,6 +15,9 @@ import {
 } from '../../APICalls';
 import './requestingModal.css';
 import tone from '../../hooks/tone.mp3';
+
+// This reference makes TypeScript aware of our custom type declarations
+/// <reference path="../../@types/custom.d.ts" />
 const AllRoutes = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { bookings, setBookings } = useRealTimeBookings();

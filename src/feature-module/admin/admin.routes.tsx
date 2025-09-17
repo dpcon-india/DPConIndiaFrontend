@@ -62,7 +62,6 @@ import SocialProfile from './setting/social-profile';
 import StorageSettings from './setting/storage-settings';
 import CategoriesList from './categories/categories-list';
 import Categories from '../frontend/pages/categories/categories';
-import SubCategoriesList from './categories/subcategories-list';
 import States from './location/states';
 import VerficationRequest from './verfication-request/verfication-request';
 import Roles from './roles-permission/roles';
@@ -585,12 +584,6 @@ const AdminRoutes = () => {
       path: '/finance-accounts/rejected-tranferlist',
       name: 'rejected-tranferlist',
       element: <RejectTransferlist />,
-      route: Route,
-    },
-    {
-      path: '/sub-categories',
-      name: 'SubcategoriesList',
-      element: <SubCategoriesList />,
       route: Route,
     },
     {
