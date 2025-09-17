@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   fetchCategories,
   fetchStaff,
-  fetchSubCategoriesByCategory,
 } from '../../../../APICalls';
 import { Category, faq, FAQ, IAdditionalService } from '../../../../GlobleType';
 import TemplateDemo from '../../common/multi-select/multiSelect';
@@ -15,7 +14,6 @@ const SetpOne = ({ setStep }: any) => {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [fetchStaffs, setfetchStaff] = useState<Category[]>([]);
-  const [subCategories, setSubCategories] = useState<Category[]>([]);
   const [error, setError] = useState('');
   const [slug, setslug] = useState('');
   const [price, setPrice] = useState('');
@@ -23,7 +21,6 @@ const SetpOne = ({ setStep }: any) => {
   const [includes, setIncludes] = useState<string[]>(['']);
   const [serviceTitle, setServiceTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedSubCat, setSelectedSubCat] = useState<any>([]);
   const [selectedStaff, setSelectedStaff] = useState<any>([]);
   const [faq, setFaq] = useState<faq[]>([]);
   const [active, setActive] = useState<boolean>(false);
@@ -85,23 +82,6 @@ const SetpOne = ({ setStep }: any) => {
 
     loadfetchStaff();
   }, []);
-  useEffect(() => {
-    if (!selectedCategoryId) return;
-
-    const loadSubCategories = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchSubCategoriesByCategory(selectedCategoryId);
-        setSubCategories(data);
-      } catch (err) {
-        setError('Failed to load subcategories.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadSubCategories();
-  }, [selectedCategoryId]);
   const handleNext = () => {
     setStep(1 + 1);
     window.scrollTo({
@@ -120,12 +100,11 @@ const SetpOne = ({ setStep }: any) => {
     serviceTitle: Yup.string().required('Service Title is required'),
     slug: Yup.string().required('Slug is required').min(1),
     selectedCategoryId: Yup.string().required('Category is required'),
-    selectedSubCat: Yup.string().required('SubCategory is required'),
     price: Yup.number()
       .required('Price is required')
       .positive('Price must be greater than 0'),
     status: Yup.string().required('Service Status is required'),
-    description: Yup.string().required('Desctiption Status is required'),
+    description: Yup.string().required('Description Status is required'),
   });
 
   // Formik Hook
@@ -135,7 +114,6 @@ const SetpOne = ({ setStep }: any) => {
       slug: '',
       selectedCategoryId: '',
       description: '',
-      selectedSubCat: '',
       price: '',
       status: 'active', // Default value for radio buttons
     },
@@ -243,44 +221,6 @@ const SetpOne = ({ setStep }: any) => {
                           formik.errors.selectedCategoryId ? (
                             <div className="text-danger">
                               {formik.errors.selectedCategoryId}
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="mb-3">
-                          <label className="form-label">
-                            SubCategory <span className="text-danger">*</span>
-                          </label>
-                          {loading ? (
-                            <p>Loading...</p>
-                          ) : error ? (
-                            <p className="text-danger">{error}</p>
-                          ) : (
-                            <select
-                              className="form-select"
-                              name="selectedSubCat"
-                              value={formik.values.selectedSubCat}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                            >
-                              <option value="" disabled>
-                                Select SubCategory
-                              </option>
-                              {subCategories.map((subCategory) => (
-                                <option
-                                  key={subCategory._id}
-                                  value={subCategory._id}
-                                >
-                                  {subCategory.SubcategoryName}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                          {formik.touched.selectedSubCat &&
-                          formik.errors.selectedSubCat ? (
-                            <div className="text-danger">
-                              {formik.errors.selectedSubCat}
                             </div>
                           ) : null}
                         </div>

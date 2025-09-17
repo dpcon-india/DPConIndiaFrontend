@@ -218,7 +218,6 @@ export const all_routes = {
   salesReport: '/admin/reports/service-sales',
   socialAuthentication: '/admin/setting/social-authentication',
   socialProfile: '/admin/setting/social-profile',
-  subCategories: '/admin/sub-categories',
   pincode: '/admin/pincode',
   searchhistory: '/admin/searchhistory',
   taxRates: '/admin/setting/tax-rates',
