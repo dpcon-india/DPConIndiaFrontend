@@ -119,7 +119,6 @@ const AuthModals = () => {
       setRError('Password is required');
       return;
     }
-
     try {
       console.log('Attempting login with:', { email: numberOrEmail });
       const response = await axios.post(`${api}profiles/login-user`, {
@@ -132,7 +131,7 @@ const AuthModals = () => {
       if (response.status === 200 && response.data.profile) {
         const { _id, token, role, name, email } = response.data.profile;
         const userData = { _id, token, role, name, email };
-        
+
         // Store user data in localStorage and context
         console.log('Storing user data:', userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -147,10 +146,10 @@ const AuthModals = () => {
 
         // Redirect based on role using React Router's navigate
         const redirectPath = role === 'admin' ? '/admin/dashboard' :
-                          role === 'provider' ? '/providers/dashboard' :
-                          role === 'staff' ? '/staff/staff-dashboard' :
-                          '/customers/customer-dashboard';
-        
+          role === 'provider' ? '/providers/dashboard' :
+            role === 'staff' ? '/staff/staff-dashboard' :
+              '/customers/customer-dashboard';
+
         console.log('Redirecting to:', redirectPath);
         window.location.href = window.location.origin + redirectPath;
       } else {
