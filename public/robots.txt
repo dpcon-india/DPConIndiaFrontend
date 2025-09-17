@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /account/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://www.dpconindia.com/sitemap.xml

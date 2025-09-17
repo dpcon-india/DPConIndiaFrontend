@@ -96,11 +96,6 @@ export const addgalleryImage = async (formData, fetchGallery) => {
   }
 };
 
-export const fetchSubCategories = async () => {
-  const { data } = await axios.get(`${api}subcategory`);
-  if (!data) return [];
-  return data;
-};
 export const fetchNotifications = async () => {
   const { data } = await axios.get(
     `${api}notifications/${gettokenlocalStorage._id}`,
@@ -115,11 +110,6 @@ export const fetchNotificationCount = async () => {
   if (!data) return 0;
   return data.count;
 };
-export const fetchAnnouceent = async (role) => {
-  const { data } = await axios.get(`${api}subcategory`);
-  if (!data) return [];
-  return data;
-};
 export const fetchpinCode = async () => {
   const { data } = await axios.get(`${api}pinCode`, bearerHeader);
   if (!data) return [];
@@ -127,11 +117,6 @@ export const fetchpinCode = async () => {
 };
 export const fetchNotAvailable = async () => {
   const { data } = await axios.get(`${api}NotAvailable`);
-  if (!data) return [];
-  return data;
-};
-export const fetchSubCategoriesByCategory = async (id) => {
-  const { data } = await axios.get(`${api}getSubCategoriesByCategoryId/${id}`);
   if (!data) return [];
   return data;
 };
@@ -654,17 +639,6 @@ export const deleteCategory = async () => {
   }
 };
 
-export const deleteSubCategory = async (id) => {
-  try {
-    const { data } = await axios.delete(
-      `${api}subcategory/${id}`,
-      bearerHeader,
-    );
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 export const deleteCustomer = async () => {
   if (!localStorage.getItem('customerId')) return;
   try {

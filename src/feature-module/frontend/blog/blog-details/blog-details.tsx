@@ -57,12 +57,39 @@ const BlogDetails: React.FC = () => {
     return <p>No blog details available.</p>;
   }
 
+  // Update document title and meta tags when blog data is loaded
+  useEffect(() => {
+    if (blog) {
+      document.title = `${blog.title} | DPCon India Blog`;
+      
+      // Update or create meta description
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        document.head.appendChild(metaDescription);
+      }
+      metaDescription.setAttribute('content', blog.description.substring(0, 160));
+      
+      // Update canonical URL
+      let linkCanonical = document.querySelector('link[rel="canonical"]');
+      if (!linkCanonical) {
+        linkCanonical = document.createElement('link');
+        linkCanonical.setAttribute('rel', 'canonical');
+        document.head.appendChild(linkCanonical);
+      }
+      linkCanonical.setAttribute('href', `https://www.dpconindia.com/blog/${blog.id}`);
+    }
+  }, [blog]);
+
   return (
     <>
       <BreadCrumb title="Blog Details" item1="Home" item2="Blog Details" />
       <div className="page-wrapper">
         <div className="content">
           <div className="container">
+            <h1 className="mb-3">{blog?.title}</h1>
+            <h2 className="h4 mb-4">Expert Insights from DPCon India</h2>
             <div className="row">
               <div className="col-lg-8 col-md-12 blog-details">
                 <div className="blog-head">
@@ -74,7 +101,6 @@ const BlogDetails: React.FC = () => {
                       </li>
                     </ul>
                   </div>
-                  <h4 className="mb-3">{blog?.title}</h4>
                 </div>
                 {/* Blog Post */}
                 <div className="card blog-list shadow-none">

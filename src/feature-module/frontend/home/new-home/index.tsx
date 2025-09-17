@@ -84,17 +84,20 @@ const NewHome = () => {
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-lg-6">
-                  <div
-                    className="wow fadeInUp"
-                    data-wow-duration="1s"
-                    data-wow-delay=".25s"
-                  >
-                    <h1 className="mb-2">
+                  <div className="banner-content">
+                    <h1
+                      className="wow fadeInUp"
+                      data-wow-duration="1s"
+                      data-wow-delay=".25s"
+                    >
+                      DPConIndia - Professional Services & Solutions
+                    </h1>
+                    <h2 className="mb-2">
                       Connect with Nearby Top-rated{' '}
                       <span className="typed" data-type-text="Carpenters">
                         Professionals
                       </span>
-                    </h1>
+                    </h2>
                     <p className="mb-3 sub-title">
                       We can connect you to the right Service, first time and
                       every time.

@@ -26,8 +26,6 @@ const CreateService = () => {
     serviceTitle: '',
     slug: '',
     categoryId: '',
-    SubcategoryId: '',
-    subCategory: '', // Default value for subCategory
     price: 0,
     duration: '',
     description: '',

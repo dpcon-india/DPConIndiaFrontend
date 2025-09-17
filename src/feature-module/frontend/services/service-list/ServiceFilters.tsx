@@ -4,7 +4,7 @@ import { Slider, SliderSingleProps } from 'antd';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import { Category, IService } from '../../../../GlobleType';
-import { fetchCategories, fetchSubCategories } from '../../../../APICalls';
+import { fetchCategories } from '../../../../APICalls';
 
 const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
   const loc = useLocation();
@@ -13,13 +13,8 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
   const [selectedItems, setSelectedItems] = useState(Array(13).fill(false));
   const [isExpanded, setIsExpanded] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [subCategories, setSubCategories] = useState<any[]>([]);
-  const [filteredCat, setFilteredCat] = useState<any[]>([]);
   const [selectedCat, setSelectedCat] = useState<string[]>(
-    JSON.parse(quers.get('categories') || '[]'),
-  );
-  const [selectedSubCat, setSubSelectedCat] = useState<string>(
-    quers.get('sub') || '',
+    JSON.parse(quers.get('categories') || '[]')
   );
   const [location, setLocation] = useState<string>(quers.get('location') || '');
   const [name, setName] = useState<string>(quers.get('name') || '');
@@ -57,19 +52,12 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
       });
       newData = filter;
     }
-    if (selectedSubCat) {
-      updatedQuers.set('sub', selectedSubCat);
-      const filter = newData?.filter(
-        (e: IService) => e?.SubcategoryId?._id == selectedSubCat,
-      );
-      newData = filter;
-    }
     setServices(newData);
     navigate(`?${updatedQuers.toString()}`);
   };
   useEffect(() => {
     filterFromAllFields();
-  }, [location, name, selectedSubCat, selectedCat, services]);
+  }, [location, name, selectedCat, services]);
 
   const filterCheckboxStyle = {
     height: isExpanded ? 'auto' : '150px',
@@ -78,18 +66,9 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
   const fetchData = async () => {
     try {
       const res = await fetchCategories();
-      const subC = await fetchSubCategories();
       setCategories(res);
-      setSubCategories(subC);
-      setFilteredCat(subC);
-      if (selectedSubCat) {
-        const filtered = subC.filter((e: any) => e._id == selectedSubCat);
-        if (filtered.length > 0) {
-          setSelectedValue1(filtered[0]);
-        }
-      }
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching categories:', error);
     }
   };
   useEffect(() => {
@@ -99,19 +78,12 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
   const toggleHeight = () => {
     setIsExpanded(!isExpanded);
   };
-  const changeSubCategories = (updatedCat: any) => {
-    const filtered = subCategories.filter((e) => {
-      if (updatedCat.length > 0) return updatedCat.includes(e?.categoryId?._id);
-    });
-    setFilteredCat(filtered);
-  };
 
   const resetHandler = () => {
     setSelectedCat([]);
-    setName('');
     setLocation('');
-    setSubSelectedCat('');
-    // setServices(services);
+    setName('');
+    navigate(loc.pathname);
   };
   return (
     <StickyBox>
@@ -161,40 +133,6 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
                     id="fill-more"
                     style={filterCheckboxStyle}
                   >
-                    {/* {categories?.map((e: Category, i) => (
-                      <div className="form-check mb-2" key={i}>
-                        <label className="form-check-label">
-                          <input
-                            checked={
-                              e?._id && selectedCat.includes(e._id)
-                                ? true
-                                : false
-                            }
-                            className="form-check-input"
-                            type="checkbox"
-                            onChange={() => {
-                              setSelectedCat((prevSelectedCat: any) => {
-                                let updatedCat;
-                                if (prevSelectedCat.includes(e?._id)) {
-                                  // Remove the category if already selected
-                                  updatedCat = prevSelectedCat.filter(
-                                    (id: string) => id !== e?._id,
-                                  );
-                                } else {
-                                  // Add the new category
-                                  updatedCat = [...prevSelectedCat, e?._id];
-                                }
-
-                                changeSubCategories(updatedCat); // Pass the updated state to the function
-                                return updatedCat; // Update the state
-                              });
-                            }}
-                          />
-                          {e?.categoryName}
-                        </label>
-                      </div>
-                    ))} */}
-
                     {categories?.map((e: Category, i) => (
                       <div className="form-check mb-2" key={i}>
                         <label className="form-check-label">
@@ -214,14 +152,11 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
                                   updatedCat = prevSelectedCat.filter(
                                     (id: string) => id !== e?._id,
                                   );
-                                  // Reset the selected subcategory if the category is unselected
-                                  setSubSelectedCat('');
                                 } else {
                                   // Add the new category
                                   updatedCat = [...prevSelectedCat, e?._id];
                                 }
 
-                                changeSubCategories(updatedCat); // Pass the updated state to the function
                                 filterFromAllFields(); // Refresh the filtered data
                                 return updatedCat; // Update the state
                               });
@@ -248,42 +183,6 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
                       </>
                     )}
                   </Link>
-                </div>
-              </div>
-            </div>
-            <div className="accordion border-bottom mb-3">
-              <div className="accordion-header" id="accordion-headingFour">
-                <div
-                  className="accordion-button p-0 mb-3"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#accordion-collapseFour"
-                  aria-expanded="true"
-                  aria-controls="accordion-collapseFour"
-                  role="button"
-                >
-                  Sub Category
-                </div>
-              </div>
-              <div
-                id="accordion-collapseFour"
-                className="accordion-collapse collapse show"
-                aria-labelledby="accordion-headingFour"
-              >
-                <div className="mb-3">
-                  <Dropdown
-                    // editable
-                    value={selectedValue1}
-                    onChange={(e) => {
-                      setSelectedValue1(e.value);
-                      if (selectedSubCat == e?.value?._id)
-                        setSubSelectedCat('');
-                      else setSubSelectedCat(e?.value?._id);
-                    }}
-                    options={filteredCat}
-                    optionLabel="SubcategoryName"
-                    placeholder="All Sub Category"
-                    className="w-100 select"
-                  />
                 </div>
               </div>
             </div>

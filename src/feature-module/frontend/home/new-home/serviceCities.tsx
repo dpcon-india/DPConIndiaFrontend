@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchSubCategories } from '../../../../APICalls';
 
 const ServiceCities = () => {
-  type subCategorie = {
-    SubcategoryName: string;
-    SubcategorySlug: string;
-    categoryId: string;
-    createdAt: Date;
-    isFeatured: boolean;
-    _id: string;
-  };
-  const [profession, setProfession] = useState<subCategorie[]>([]);
+  const [profession] = useState([
+    { name: 'Beauty & Spa', slug: 'beauty-spa', id: '1', isFeatured: true },
+    { name: 'Home Cleaning', slug: 'home-cleaning', id: '2', isFeatured: true },
+    { name: 'Repair & Maintenance', slug: 'repair-maintenance', id: '3', isFeatured: true },
+    { name: 'Health & Wellness', slug: 'health-wellness', id: '4', isFeatured: true },
+  ]);
   const [cities, setCities] = useState<string[]>([
     'Colaba',
     'Nariman Point',
@@ -38,14 +34,6 @@ const ServiceCities = () => {
     'Sion',
   ]);
 
-  const FetchData = async () => {
-    const pro = await fetchSubCategories();
-    setProfession(pro);
-  };
-
-  useEffect(() => {
-    FetchData();
-  }, []);
 
   return (
     <>
@@ -78,15 +66,12 @@ const ServiceCities = () => {
                     <div className="accordion-body border-0 px-0">
                       <div className="row row-cols-xl-6 row-cols-md-4 row-cols-sm-2 row-cols-1">
                         {profession
-                          ?.filter((e) => e?.isFeatured)
-                          ?.map((service, index) => (
+                          .filter((service) => service.isFeatured)
+                          .map((service, index) => (
                             <div className="col" key={index}>
                               <div className="main-links">
-                                {/* <Link to="#">{service.SubcategoryName}</Link> */}
-                                <Link
-                                  to={`/services/service-list?sub=${service._id}`}
-                                >
-                                  {service.SubcategoryName}
+                                <Link to={`/services/service-list?category=${service.id}`}>
+                                  {service.name}
                                 </Link>
                               </div>
                             </div>

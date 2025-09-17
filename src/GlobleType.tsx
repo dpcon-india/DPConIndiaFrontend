@@ -83,8 +83,6 @@ export interface IService {
   staff?: any[];
   serviceTitle: string;
   categoryId: string | any;
-  SubcategoryId: string | any;
-  subCategory?: string;
   price: number;
   image?: string[];
   duration: string;
@@ -205,7 +203,6 @@ export interface BookingDetails {
   service: {
     serviceTitle: string;
     categoryId: string;
-    SubcategoryId: string;
     price: number;
     duration: string;
     description: string;
@@ -277,7 +274,6 @@ export interface Service {
   staff: string | any;
   serviceTitle: string;
   categoryId: string | any;
-  SubcategoryId: string | any;
   price: number;
   image?: string;
   duration: string;
