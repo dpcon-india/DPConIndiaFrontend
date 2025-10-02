@@ -3,7 +3,6 @@ import axios from 'axios';
 // Base API URL - update this with your actual API base URL
 export const api = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// Validate API URL is configured
 if (!process.env.REACT_APP_API_URL) {
   console.warn('REACT_APP_API_URL environment variable is not set. Using default: http://localhost:5000');
 }
