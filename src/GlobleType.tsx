@@ -83,6 +83,8 @@ export interface IService {
   staff?: any[];
   serviceTitle: string;
   categoryId: string | any;
+  SubcategoryId?: string | any; // Legacy subcategory field
+  categories?: string[]; // New multiple categories array
   price: number;
   image?: string[];
   duration: string;
@@ -159,12 +161,12 @@ export interface BookingDetails {
   address: string; // Booking address
   notes: string; // Notes for the booking
   status:
-    | 'pending'
-    | 'accepted'
-    | 'completed'
-    | 'cancelled'
-    | 'progress'
-    | 'rejected'; // Booking status
+  | 'pending'
+  | 'accepted'
+  | 'completed'
+  | 'cancelled'
+  | 'progress'
+  | 'rejected'; // Booking status
   paymentStatus: 'paid' | 'unpaid'; // Payment status
   createdAt: Date; // Creation timestamp
   updatedAt: Date; // Update timestamp

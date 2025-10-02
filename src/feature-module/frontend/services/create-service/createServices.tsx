@@ -151,17 +151,18 @@ const CreateService = () => {
         <div className="content">
           <div className="container">
             <div className="row">
-              <div className="col-lg-9">
-                <div className="service-wizard mb-4">
+              <div className="col-12">
+                {/* <div className="service-wizard mb-4">
                   <Progress currentStep={currentStep} />
-                </div>
+                </div> */}
                 <div className="service-inform-fieldset">
                   {currentStep === 1 && (
                     <SetpOne
-                      setStep={handleStepChange}
-                      updateState={saveFirst}
-                      data={serviceData}
                       providerId={serviceData?.providerId}
+                      onSuccess={() => {
+                        setCurrentStep(1);
+                        handelOpen();
+                      }}
                     />
                   )}
                   {currentStep === 2 && (
@@ -194,7 +195,7 @@ const CreateService = () => {
                   )}
                 </div>
               </div>
-              <div className="col-lg-3">
+              {/* <div className="col-lg-3">
                 <div>
                   <div className="text-end mb-4"></div>
                   <h4 className="mb-4">Quick Preview</h4>
@@ -237,26 +238,26 @@ const CreateService = () => {
                       {serviceData?.location?.pincode == ''
                         ? 'Mumbai'
                         : serviceData?.location?.city +
-                          ' ' +
-                          serviceData?.location?.locality +
-                          ' ' +
-                          serviceData?.location?.pincode}
+                        ' ' +
+                        serviceData?.location?.locality +
+                        ' ' +
+                        serviceData?.location?.pincode}
                     </p>
                     <p className="service-price">
                       {serviceData?.price == 0
-                        ? '20.00'
-                        : '$' + serviceData?.price}
+                        ? '₹20.00'
+                        : '₹' + serviceData?.price}
                       <span className="text-decoration-line-through">
                         {serviceData?.price == 0
-                          ? ' 20.00'
-                          : ' $' +
-                            (serviceData?.price + serviceData?.price / 10)}
+                          ? ' ₹20.00'
+                          : ' ₹' +
+                          (serviceData?.price + serviceData?.price / 10)}
                       </span>
                       <span>{` in ${serviceData?.duration == '0' ? '0' : serviceData?.duration}hr`}</span>
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

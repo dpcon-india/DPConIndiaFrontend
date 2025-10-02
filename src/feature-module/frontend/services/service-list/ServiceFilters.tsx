@@ -1,33 +1,81 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useCallback } from 'react';
 import StickyBox from 'react-sticky-box';
-import { Slider, SliderSingleProps } from 'antd';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Dropdown } from 'primereact/dropdown';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Category, IService } from '../../../../GlobleType';
 import { fetchCategories } from '../../../../APICalls';
+import { FiFilter, FiX, FiChevronDown, FiChevronUp, FiMapPin, FiSearch } from 'react-icons/fi';
 
-const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
+interface ServiceFiltersProps {
+  services?: IService[];
+  setServices: (services: IService[]) => void;
+}
+
+// Add prop-types to satisfy ESLint
+import PropTypes from 'prop-types';
+
+// Define prop types for runtime validation
+const propTypes = {
+  services: PropTypes.array,
+  setServices: PropTypes.func.isRequired,
+} as const;
+
+interface CategoryWithId extends Omit<Category, '_id'> {
+  _id: string;
+}
+
+const ServiceFilters: React.FC<ServiceFiltersProps> = memo(({ services = [], setServices }) => {
   const loc = useLocation();
   const quers = new URLSearchParams(loc.search);
   const [selectedValue1, setSelectedValue1] = useState(null);
   const [selectedItems, setSelectedItems] = useState(Array(13).fill(false));
   const [isExpanded, setIsExpanded] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryWithId[]>([]);
   const [selectedCat, setSelectedCat] = useState<string[]>(
-    JSON.parse(quers.get('categories') || '[]')
+    JSON.parse(quers.get('categories') || '[]') as string[]
   );
   const [location, setLocation] = useState<string>(quers.get('location') || '');
   const [name, setName] = useState<string>(quers.get('name') || '');
+  // Show all categories by default
+  const [visibleCategories, setVisibleCategories] = useState(Number.MAX_SAFE_INTEGER);
   const navigate = useNavigate();
 
-  const filterFromAllFields = () => {
-    let newData = services;
+  // Function to count services for a specific category
+  const getServiceCountForCategory = useCallback((categoryId: string): number => {
+    if (!services || services.length === 0) return 0;
+
+    return services.filter((service: IService) => {
+      // Handle both old and new service structures
+      const oldCategoryId = service?.categoryId?._id;
+      const oldSubcategoryId = (service as any)?.SubcategoryId;
+      const newCategories = (service as any)?.categories || [];
+
+      return categoryId === oldCategoryId ||
+        categoryId === oldSubcategoryId ||
+        newCategories.includes(categoryId);
+    }).length;
+  }, [services]);
+
+  const filterFromAllFields = useCallback((): void => {
+    if (!services || services.length === 0) return;
+    let newData = [...services];
     const updatedQuers = new URLSearchParams();
     if (selectedCat.length > 0) {
       updatedQuers.set('categories', JSON.stringify(selectedCat));
-      const filter = newData?.filter((e: IService) =>
-        selectedCat.includes(e?.categoryId?._id),
-      );
+      const filter = newData?.filter((e: IService) => {
+        // Handle both old and new service structures
+        // Old structure: categoryId._id or SubcategoryId
+        // New structure: categories array
+        const oldCategoryId = e?.categoryId?._id;
+        const oldSubcategoryId = (e as any)?.SubcategoryId;
+        const newCategories = (e as any)?.categories || [];
+
+        // Check if any selected category matches the service's categories
+        return selectedCat.some(selectedCategoryId =>
+          selectedCategoryId === oldCategoryId ||
+          selectedCategoryId === oldSubcategoryId ||
+          newCategories.includes(selectedCategoryId)
+        );
+      });
       newData = filter;
     }
     if (name) {
@@ -54,19 +102,25 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
     }
     setServices(newData);
     navigate(`?${updatedQuers.toString()}`);
-  };
+  }, [services, selectedCat, name, location, navigate]);
   useEffect(() => {
     filterFromAllFields();
-  }, [location, name, selectedCat, services]);
+  }, [filterFromAllFields]);
 
-  const filterCheckboxStyle = {
-    height: isExpanded ? 'auto' : '150px',
-  };
+  // Handle initial services filter
+  useEffect(() => {
+    if (services?.length > 0) {
+      filterFromAllFields();
+    }
+  }, [services, filterFromAllFields]);
+
 
   const fetchData = async () => {
     try {
       const res = await fetchCategories();
-      setCategories(res);
+      // Ensure we only keep categories with valid _id
+      const validCategories = res.filter((cat: Category): cat is CategoryWithId => Boolean(cat._id));
+      setCategories(validCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -75,189 +129,195 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
     fetchData();
   }, []);
 
-  const toggleHeight = () => {
-    setIsExpanded(!isExpanded);
-  };
+  const toggleHeight = useCallback((): void => {
+    setIsExpanded(prev => !prev);
+    setVisibleCategories(prev => prev === 10 ? (categories?.length || 0) : 10);
+  }, [categories?.length]);
 
-  const resetHandler = () => {
+  const resetHandler = useCallback((): void => {
     setSelectedCat([]);
     setLocation('');
     setName('');
+    setVisibleCategories(10);
     navigate(loc.pathname);
-  };
+  }, [navigate, loc.pathname]);
   return (
-    <StickyBox>
-      <div className="card ">
-        <div className="card-body">
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <div className="card shadow-sm">
+        <div className="card-body p-4">
           <form>
-            <div className="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
-              <h5>
-                <i className="ti ti-filter-check me-2" />
-                Filters
+            <div className="d-flex align-items-center justify-content-between mb-4">
+              <h5 className="m-0 d-flex align-items-center">
+                <FiFilter className="me-2" style={{ fontSize: '1.25rem' }} />
+                <span>Filters</span>
+                {(selectedCat.length > 0 || location || name) && (
+                  <span className="badge bg-primary ms-2">
+                    {selectedCat.length + (location ? 1 : 0) + (name ? 1 : 0)}
+                  </span>
+                )}
               </h5>
-              <Link to="#" onClick={() => resetHandler()}>
-                Reset Filter
-              </Link>
-            </div>
-            <div className="mb-3 pb-3 border-bottom">
-              <label className="form-label">Search By Keyword</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="What are you looking for?"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="accordion border-bottom mb-3">
-              <div className="accordion-item mb-3">
-                <div className="accordion-header" id="accordion-headingThree">
-                  <div
-                    className="accordion-button p-0 mb-3"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#accordion-collapseThree"
-                    aria-expanded="true"
-                    aria-controls="accordion-collapseThree"
-                    role="button"
-                  >
-                    Categories
-                  </div>
-                </div>
-                <div
-                  id="accordion-collapseThree"
-                  className="accordion-collapse collapse show"
-                  aria-labelledby="accordion-headingThree"
-                >
-                  <div
-                    className="content-list mb-3"
-                    id="fill-more"
-                    style={filterCheckboxStyle}
-                  >
-                    {categories?.map((e: Category, i) => (
-                      <div className="form-check mb-2" key={i}>
-                        <label className="form-check-label">
-                          <input
-                            checked={
-                              e?._id && selectedCat.includes(e._id)
-                                ? true
-                                : false
-                            }
-                            className="form-check-input"
-                            type="checkbox"
-                            onChange={() => {
-                              setSelectedCat((prevSelectedCat: any) => {
-                                let updatedCat;
-                                if (prevSelectedCat.includes(e?._id)) {
-                                  // Remove the category if already selected
-                                  updatedCat = prevSelectedCat.filter(
-                                    (id: string) => id !== e?._id,
-                                  );
-                                } else {
-                                  // Add the new category
-                                  updatedCat = [...prevSelectedCat, e?._id];
-                                }
-
-                                filterFromAllFields(); // Refresh the filtered data
-                                return updatedCat; // Update the state
-                              });
-                            }}
-                          />
-                          {e?.categoryName}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <Link
-                    to="#"
-                    id="more"
-                    className="more-view text-dark-blue fs-14"
-                    onClick={toggleHeight}
-                  >
-                    {isExpanded ? (
-                      <>
-                        View Less <i className="ti ti-chevron-up ms-1" />
-                      </>
-                    ) : (
-                      <>
-                        View More <i className="ti ti-chevron-down ms-1" />
-                      </>
-                    )}
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="accordion border-bottom mb-3">
-              <div className="accordion-header" id="accordion-headingFive">
-                <div
-                  className="accordion-button p-0 mb-3"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#accordion-collapseFive"
-                  aria-expanded="true"
-                  aria-controls="accordion-collapseFive"
-                  role="button"
-                >
-                  Location
-                </div>
-              </div>
-              <div
-                id="accordion-collapseFive"
-                className="accordion-collapse collapse show"
-                aria-labelledby="accordion-headingFive"
+              <button
+                type="button"
+                onClick={resetHandler}
+                className="btn btn-sm btn-outline-secondary"
+                disabled={!selectedCat.length && !location && !name}
               >
-                <div className="mb-3">
-                  <div className="position-relative">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Select Location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                    />
-                    <span className="icon-addon">
-                      <i className="ti ti-map-pin" />
+                <FiX className="me-1" /> Clear All
+              </button>
+            </div>
+            <div className="mb-4">
+              <div className="input-group">
+                <span className="input-group-text bg-white">
+                  <FiSearch className="text-muted" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search services..."
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                {name && (
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setName('')}
+                  >
+                    <FiX />
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="mb-4">
+              <div
+                className="d-flex justify-content-between align-items-center mb-2"
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ cursor: 'pointer' }}
+              >
+                <h6 className="mb-0 fw-semibold">Categories</h6>
+                {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+              </div>
+
+              <div
+                className="category-filters"
+                style={{
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  border: '1px solid #e9ecef',
+                  borderRadius: '0.375rem',
+                  padding: '0.5rem',
+                }}
+              >
+                {categories?.slice(0, visibleCategories).map((category: CategoryWithId, index: number) => (
+                  <div
+                    key={category._id}
+                    className="d-flex align-items-center mb-2 p-2 rounded"
+                    style={{
+                      backgroundColor: selectedCat.includes(category._id) ? '#f0f7ff' : 'transparent',
+                      transition: 'all 0.2s',
+                      cursor: 'pointer'
+                    } as React.CSSProperties}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!selectedCat.includes(category._id)) {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                    onClick={() => {
+                      setSelectedCat(prev =>
+                        prev.includes(category._id)
+                          ? [...prev.filter(id => id !== category._id)]
+                          : [...prev, category._id]
+                      );
+                    }}
+                  >
+                    <div
+                      className="me-2 d-flex align-items-center justify-content-center"
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        border: `2px solid ${selectedCat.includes(category._id) ? '#0d6efd' : '#adb5bd'}`,
+                        borderRadius: '3px',
+                        backgroundColor: selectedCat.includes(category._id) ? '#0d6efd' : 'transparent',
+                        position: 'relative',
+                        flexShrink: 0
+                      } as React.CSSProperties}
+                    >
+                      {selectedCat.includes(category._id) && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            color: 'white',
+                            fontSize: '12px',
+                            lineHeight: 1,
+                            marginTop: '-1px'
+                          }}
+                        >
+                          ✓
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-muted">{category.categoryName}</span>
+                    <span className="ms-auto badge bg-secondary">
+                      {getServiceCountForCategory(category._id)}
                     </span>
                   </div>
-                </div>
+                ))}
+
+                {categories?.length === 0 && (
+                  <div className="text-muted small p-2">No categories available</div>
+                )}
+
+                {categories && categories.length > 10 && (
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      className="btn btn-link p-0 text-decoration-none"
+                      onClick={toggleHeight}
+                    >
+                      <small className="text-primary">
+                        {isExpanded ? 'Show less' : `Show ${categories.length - 10} more`}
+                      </small>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            {/* <div className="accordion border-bottom mb-3">
-              <div className="accordion-header" id="accordion-headingSix">
-                <div
-                  className="accordion-button p-0 mb-3"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#accordion-collapseSix"
-                  aria-expanded="true"
-                  aria-controls="accordion-collapseSix"
-                  role="button"
-                >
-                  Price Range
-                </div>
+            <div className="mb-4">
+              <h6 className="fw-semibold mb-2">Location</h6>
+              <div className="input-group">
+                <span className="input-group-text bg-white">
+                  <FiMapPin className="text-muted" />
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Filter by location..."
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+                {location && (
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setLocation('')}
+                  >
+                    <FiX />
+                  </button>
+                )}
               </div>
-              <div
-                id="accordion-collapseSix"
-                className="accordion-collapse collapse show"
-                aria-labelledby="accordion-headingSix"
+            </div>
+            <div className="d-grid gap-2">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={filterFromAllFields}
               >
-                <div className="filter-range">
-                  <Slider
-                    range
-                    tooltip={{ formatter }}
-                    step={10}
-                    defaultValue={[20, 50]}
-                    onChange={onChange}
-                    onChangeComplete={onChangeComplete}
-                  />
-                </div>
-                <div className="filter-range-amount mb-3">
-                  <p className="fs-14">
-                    Price: <span>₹ 5 - ₹ 210</span>
-                  </p>
-                </div>
-              </div>
-            </div> */}
-            <Link to={'#'} className="btn btn-dark w-100">
-              Search
-            </Link>
+                Apply Filters
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -265,115 +325,6 @@ const ServiceFilters = memo(({ services, setServices }: IService[] | any) => {
   );
 });
 ServiceFilters.displayName = 'ServiceFilters';
-export default ServiceFilters;
+ServiceFilters.propTypes = propTypes;
 
-{
-  /* <div className="accordion">
-<div className="accordion-item mb-3">
-<div
-className="accordion-header"
-id="accordion-headingTwo"
->
-<div
-className="accordion-button fs-18 p-0 mb-3"
-data-bs-toggle="collapse"
-data-bs-target="#accordion-collapseTwo"
-aria-expanded="true"
-aria-controls="accordion-collapseTwo"
-role="button"
->
-Ratings
-</div>
-</div>
-<div
-id="accordion-collapseTwo"
-className="accordion-collapse collapse show"
-aria-labelledby="accordion-headingTwo"
->
-<div className="mb-3">
-<div className="form-check mb-2">
-<label className="form-check-label d-block">
-<input
-  className="form-check-input"
-  type="checkbox"
-  defaultChecked
-/>
-<span className="rating">
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <span className="float-end">(55)</span>
-</span>
-</label>
-</div>
-<div className="form-check mb-2">
-<label className="form-check-label d-block">
-<input
-  className="form-check-input"
-  type="checkbox"
-/>
-<span className="rating">
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <span className="float-end">(48)</span>
-</span>
-</label>
-</div>
-<div className="form-check mb-2">
-<label className="form-check-label d-block">
-<input
-  className="form-check-input"
-  type="checkbox"
-/>
-<span className="rating">
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <span className="float-end">(13)</span>
-</span>
-</label>
-</div>
-<div className="form-check mb-2">
-<label className="form-check-label d-block">
-<input
-  className="form-check-input"
-  type="checkbox"
-/>
-<span className="rating">
-  <i className="fas fa-star filled" />
-  <i className="fas fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <span className="float-end">(05)</span>
-</span>
-</label>
-</div>
-<div className="form-check mb-2">
-<label className="form-check-label d-block">
-<input
-  className="form-check-input"
-  type="checkbox"
-/>
-<span className="rating">
-  <i className="fas fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <i className="fa-regular fa-star filled" />
-  <span className="float-end">(00)</span>
-</span>
-</label>
-</div>
-</div>
-</div>
-</div>
-</div> */
-}
+export default ServiceFilters;
