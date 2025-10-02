@@ -159,10 +159,16 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       const staffData = await fetchStaff(providerId);
       console.log('Staff API response:', staffData);
 
-      // Handle the API response - it should be an array of staff members
+      // Handle the API response - check for both old and new response formats
       if (Array.isArray(staffData)) {
+        // Old format: direct array
         setStaff(staffData);
+      } else if (staffData && staffData.success && Array.isArray(staffData.data)) {
+        // New format: {success: true, data: [...], message: "..."}
+        setStaff(staffData.data);
+        console.log('Staff API message:', staffData.message);
       } else if (staffData && staffData.message) {
+        // Error format: {success: false, message: "error message"}
         console.warn('Staff API message:', staffData.message);
         setStaff([]);
         setStaffError(staffData.message);
