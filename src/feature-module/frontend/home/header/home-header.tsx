@@ -12,6 +12,7 @@ import * as Icon from 'react-feather';
 import { AppState, Header } from '../../../../core/models/interface';
 import { header } from '../../../../core/data/json/header';
 import { FaWhatsapp } from 'react-icons/fa';
+import { useUser } from '../../../../core/data/context/UserContext';
 import '../../../../feature-module/frontend/home/header/home-header.css';
 type props = {
   type: number;
@@ -22,17 +23,11 @@ const HomeHeader: React.FC<props> = ({ type }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<any>(null);
+  const { user, logout } = useUser();
 
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    logout();
     toast.success('Logged out successfully');
     navigate('/login');
   };
@@ -193,11 +188,20 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 <i className="ti ti-lock me-2"></i>Sign In
               </Link>
             </li> */}
-            {role && role !== 'undefined' ? (
+            {user ? (
               <>
-                {role === 'provider' && (
+                {(user.role === 'admin' || user.role === 'provider' || user.role === 'customer' || user.role === 'staff') && (
                   <li className="nav-item me-2">
-                    <Link className="nav-link btn btn-outline-primary" to="/providers/dashboard">
+                    <Link
+                      className="nav-link btn btn-outline-primary"
+                      to={
+                        user.role === 'admin' ? '/admin/dashboard' :
+                          user.role === 'provider' ? '/providers/dashboard' :
+                            user.role === 'customer' ? '/customers/customer-dashboard' :
+                              user.role === 'staff' ? '/staff/staff-dashboard' :
+                                '/'
+                      }
+                    >
                       <i className="ti ti-layout-dashboard me-1"></i>Dashboard
                     </Link>
                   </li>
@@ -661,9 +665,18 @@ const HomeHeader: React.FC<props> = ({ type }) => {
           <ul className="nav header-navbar-rht">
             {user ? (
               <>
-                {user.role === 'provider' && (
+                {(user.role === 'admin' || user.role === 'provider' || user.role === 'customer' || user.role === 'staff') && (
                   <li className="nav-item d-none d-md-block">
-                    <Link to="/providers/dashboard" className="nav-link header-login">
+                    <Link
+                      to={
+                        user.role === 'admin' ? '/admin/dashboard' :
+                          user.role === 'provider' ? '/providers/dashboard' :
+                            user.role === 'customer' ? '/customers/customer-dashboard' :
+                              user.role === 'staff' ? '/staff/staff-dashboard' :
+                                '/'
+                      }
+                      className="nav-link header-login"
+                    >
                       <i className="ti ti-layout-dashboard me-1"></i> Dashboard
                     </Link>
                   </li>
@@ -994,9 +1007,9 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                                                 >
                                                   <div
                                                     className={`single-demo ${menu.routes ==
-                                                        location.pathname
-                                                        ? 'active'
-                                                        : ''
+                                                      location.pathname
+                                                      ? 'active'
+                                                      : ''
                                                       }`}
                                                   >
                                                     <div className="demo-img">
