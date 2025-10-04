@@ -45,74 +45,116 @@ const ServiceFilters: React.FC<ServiceFiltersProps> = memo(({ services = [], set
 
     return services.filter((service: IService) => {
       // Handle both old and new service structures
-      const oldCategoryId = service?.categoryId?._id;
-      const oldSubcategoryId = (service as any)?.SubcategoryId;
+      const oldCategoryId = typeof service?.categoryId === 'object' ? service?.categoryId?._id : service?.categoryId;
       const newCategories = (service as any)?.categories || [];
 
-      return categoryId === oldCategoryId ||
-        categoryId === oldSubcategoryId ||
-        newCategories.includes(categoryId);
+      // Check old structure
+      if (categoryId === oldCategoryId) return true;
+
+      // Check new structure - handle both array of strings and array of objects
+      if (Array.isArray(newCategories)) {
+        return newCategories.some(category => {
+          if (typeof category === 'string') {
+            return category === categoryId;
+          } else if (category && typeof category === 'object' && category._id) {
+            return category._id === categoryId;
+          }
+          return false;
+        });
+      }
+
+      return false;
     }).length;
   }, [services]);
 
   const filterFromAllFields = useCallback((): void => {
-    if (!services || services.length === 0) return;
+    if (!services || services.length === 0) {
+      setServices([]);
+      return;
+    }
     let newData = [...services];
     const updatedQuers = new URLSearchParams();
+
+    // Category filtering
     if (selectedCat.length > 0) {
       updatedQuers.set('categories', JSON.stringify(selectedCat));
-      const filter = newData?.filter((e: IService) => {
+      newData = newData.filter((service: IService) => {
         // Handle both old and new service structures
-        // Old structure: categoryId._id or SubcategoryId
-        // New structure: categories array
-        const oldCategoryId = e?.categoryId?._id;
-        const oldSubcategoryId = (e as any)?.SubcategoryId;
-        const newCategories = (e as any)?.categories || [];
+        const oldCategoryId = typeof service?.categoryId === 'object' ? service?.categoryId?._id : service?.categoryId;
+        const newCategories = (service as any)?.categories || [];
 
-        // Check if any selected category matches the service's categories
-        return selectedCat.some(selectedCategoryId =>
-          selectedCategoryId === oldCategoryId ||
-          selectedCategoryId === oldSubcategoryId ||
-          newCategories.includes(selectedCategoryId)
-        );
+        // Debug logging for category filtering
+        console.log('🔍 Filtering service:', service.serviceTitle);
+        console.log('  - Old categoryId:', oldCategoryId);
+        console.log('  - New categories:', newCategories);
+        console.log('  - Selected categories:', selectedCat);
+
+        // Check if service matches any selected category
+        return selectedCat.some(selectedCategoryId => {
+          // Check old structure (both object and string formats)
+          if (oldCategoryId === selectedCategoryId) {
+            console.log('  ✅ Match found via old categoryId');
+            return true;
+          }
+
+          // Check new structure - handle both array of strings and array of objects
+          if (Array.isArray(newCategories)) {
+            // Check if categories array contains the selected category ID
+            const hasCategory = newCategories.some(category => {
+              if (typeof category === 'string') {
+                return category === selectedCategoryId;
+              } else if (category && typeof category === 'object' && category._id) {
+                return category._id === selectedCategoryId;
+              }
+              return false;
+            });
+
+            if (hasCategory) {
+              console.log('  ✅ Match found via new categories array');
+              return true;
+            }
+          }
+
+          return false;
+        });
       });
-      newData = filter;
     }
+    // Name filtering
     if (name) {
       updatedQuers.set('name', name);
-      const filter = newData?.filter((e: IService) => {
-        const string = JSON.stringify(e);
-        return string.toLowerCase().includes(name.toLowerCase());
+      newData = newData.filter((service: IService) => {
+        const searchString = JSON.stringify(service).toLowerCase();
+        return searchString.includes(name.toLowerCase());
       });
-      newData = filter;
     }
+
+    // Location filtering
     if (location) {
       updatedQuers.set('location', location);
-      const filter = newData?.filter((e: IService) => {
-        const string =
-          e?.location?.address +
-          e?.location?.city +
-          e?.location.country +
-          e?.location.locality +
-          e?.location?.pincode +
-          e?.location.state;
-        return string?.toLowerCase().includes(location.toLowerCase());
+      newData = newData.filter((service: IService) => {
+        const locationString = (
+          service?.location?.address +
+          service?.location?.city +
+          service?.location?.country +
+          service?.location?.locality +
+          service?.location?.pincode +
+          service?.location?.state
+        ).toLowerCase();
+        return locationString.includes(location.toLowerCase());
       });
-      newData = filter;
     }
+
+    // Apply filtered results
     setServices(newData);
     navigate(`?${updatedQuers.toString()}`);
-  }, [services, selectedCat, name, location, navigate]);
-  useEffect(() => {
-    filterFromAllFields();
-  }, [filterFromAllFields]);
+  }, [services, selectedCat, name, location, navigate, setServices]);
 
-  // Handle initial services filter
+  // Apply filters when filter criteria change (but not when services change to avoid infinite loop)
   useEffect(() => {
-    if (services?.length > 0) {
+    if (services && services.length > 0) {
       filterFromAllFields();
     }
-  }, [services, filterFromAllFields]);
+  }, [selectedCat, name, location, filterFromAllFields]);
 
 
   const fetchData = async () => {
@@ -260,9 +302,6 @@ const ServiceFilters: React.FC<ServiceFiltersProps> = memo(({ services = [], set
                       )}
                     </div>
                     <span className="text-muted">{category.categoryName}</span>
-                    <span className="ms-auto badge bg-secondary">
-                      {getServiceCountForCategory(category._id)}
-                    </span>
                   </div>
                 ))}
 

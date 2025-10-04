@@ -7,7 +7,6 @@ import { axiosInstance, bearerHeader } from '../../../../core/api/axiosCore';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useNavigate, Link } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
 import { all_routes } from '../../../../core/data/routes/all_routes';
 
 // Define interfaces
@@ -87,8 +86,8 @@ const customStyles = {
 
 const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }) => {
   const [loading, setLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdService, setCreatedService] = useState<any>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
   const routes = all_routes;
   const [categories, setCategories] = useState<Category[]>([]);
@@ -99,7 +98,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
   const [staffError, setStaffError] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>('');
   const [mainImage, setMainImage] = useState<File | null>(null);
-  const [galleryImages, setGalleryImages] = useState<File[]>([]);
+  const [galleryImages, setGalleryImages] = useState<Array<File & { id: string; url: string }>>([]);
   const [additionalServices, setAdditionalServices] = useState<AdditionalService[]>([
     { service: '', desc: '', price: 0, duration: '' }
   ]);
@@ -238,11 +237,11 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     duration: Yup.string().required('Duration is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.object().shape({
-      city: Yup.string().required('City is required'),
-      state: Yup.string().required('State is required'),
-      locality: Yup.string().required('Locality is required'),
-      pincode: Yup.string().required('Pincode is required'),
-      address: Yup.string().required('Address is required'),
+      city: Yup.string(),
+      state: Yup.string(),
+      locality: Yup.string(),
+      pincode: Yup.string(),
+      address: Yup.string(),
     }),
     seo: Yup.object().shape({
       metaTitle: Yup.string().required('Meta title is required'),
@@ -279,21 +278,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     if (!values.description?.trim()) {
       errors.description = 'Description is required';
     }
-    if (!values.location?.city?.trim()) {
-      errors['location.city'] = 'City is required';
-    }
-    if (!values.location?.state?.trim()) {
-      errors['location.state'] = 'State is required';
-    }
-    if (!values.location?.locality?.trim()) {
-      errors['location.locality'] = 'Locality is required';
-    }
-    if (!values.location?.pincode?.trim()) {
-      errors['location.pincode'] = 'Pincode is required';
-    }
-    if (!values.location?.address?.trim()) {
-      errors['location.address'] = 'Address is required';
-    }
+    // Location fields are now optional - no validation needed
 
     // If there are validation errors, show them and don't submit
     if (Object.keys(errors).length > 0) {
@@ -334,14 +319,19 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       formData.append('duration', values.duration);
       formData.append('description', values.description);
 
-      // Location as JSON string (backend expects this format)
-      formData.append('location', JSON.stringify({
-        city: values.location.city,
-        state: values.location.state,
-        locality: values.location.locality,
-        pincode: values.location.pincode,
-        address: values.location.address
-      }));
+      // Location as JSON string (backend expects this format) - Optional
+      const locationData = {
+        city: values.location.city || '',
+        state: values.location.state || '',
+        locality: values.location.locality || '',
+        pincode: values.location.pincode || '',
+        address: values.location.address || ''
+      };
+
+      // Only append location if at least one field has a value
+      if (Object.values(locationData).some(value => value.trim() !== '')) {
+        formData.append('location', JSON.stringify(locationData));
+      }
 
       // Add providerId for admin users
       if (userRole === 'admin') {
@@ -389,13 +379,13 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       // Append gallery images - send as individual files (backend expects this format)
       if (galleryImages.length > 0) {
         console.log('✅ Adding gallery images:', galleryImages.length);
-        galleryImages.forEach((file, index) => {
-          if (file instanceof File) {
-            console.log(`✅ Gallery image ${index}:`, file.name, file.size, file.type);
-            formData.append('gallery', file);
+        galleryImages.forEach((fileWithId, index) => {
+          if (fileWithId instanceof File) {
+            console.log(`✅ Gallery image ${index}:`, fileWithId.name, fileWithId.size, fileWithId.type);
+            formData.append('gallery', fileWithId);
             console.log(`✅ Gallery image ${index} added to FormData`);
           } else {
-            console.log(`❌ Gallery image ${index} is not a File object:`, file);
+            console.log(`❌ Gallery image ${index} is not a File object:`, fileWithId);
           }
         });
       } else {
@@ -431,19 +421,11 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
       if (response.status >= 200 && response.status < 300) {
         if (response.data && response.data.success !== false) {
-          toast.success('Service created successfully');
-
           // Store the created service data
           setCreatedService(response.data.data);
 
-          // Show success modal
-          setShowSuccessModal(true);
-
-          // Auto redirect to admin services list after 3 seconds
-          setTimeout(() => {
-            setShowSuccessModal(false);
-            navigate('/admin/services/all-service');
-          }, 3000);
+          // Mark form as submitted and show success state
+          setIsSubmitted(true);
 
           // Call the onSuccess callback if provided
           if (onSuccess) onSuccess();
@@ -721,24 +703,187 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     }
   };
 
-  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 10) {
-      toast.error('Maximum 10 gallery images allowed');
+  const processGalleryFiles = (files: File[]) => {
+    // Check total count including existing images
+    if (galleryImages.length + files.length > 10) {
+      toast.error(`Maximum 10 gallery images allowed. You already have ${galleryImages.length} images.`);
       return;
     }
 
     const validFiles = files.filter(file => validateFile(file));
 
-    console.log('Valid gallery files:', validFiles.length);
-    setGalleryImages(validFiles);
+    if (validFiles.length !== files.length) {
+      toast.warning(`${files.length - validFiles.length} file(s) were skipped due to validation errors`);
+    }
+
+    if (validFiles.length === 0) return;
+
+    // Add unique IDs and create object URLs for new files
+    const newFilesWithIds = validFiles.map((file, index) => {
+      const fileWithId = Object.assign(file, {
+        id: `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+        url: URL.createObjectURL(file)
+      });
+      return fileWithId;
+    });
+
+    // Append new files to existing ones instead of replacing
+    setGalleryImages(prev => [...prev, ...newFilesWithIds]);
   };
 
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    processGalleryFiles(files);
+    // Clear the input so the same files can be selected again
+    e.target.value = '';
+  };
+
+  const handleGalleryDrop = (files: File[]) => {
+    processGalleryFiles(files);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    const fileToRemove = galleryImages[index];
+    if (fileToRemove && fileToRemove.url) {
+      // Clean up object URL to prevent memory leaks
+      URL.revokeObjectURL(fileToRemove.url);
+    }
+
+    const updatedImages = galleryImages.filter((_, i) => i !== index);
+    setGalleryImages(updatedImages);
+  };
+
+  // Clean up object URLs when component unmounts or images change
+  useEffect(() => {
+    return () => {
+      galleryImages.forEach(file => {
+        if (file.url) {
+          URL.revokeObjectURL(file.url);
+        }
+      });
+    };
+  }, [galleryImages]);
+
+  // Show loading state initially
   if (loading && !formik.values.serviceTitle) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show success state after successful submission
+  if (isSubmitted) {
+    return (
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <div className="card">
+              <div className="card-body text-center py-5">
+                <div className="success-icon mb-4">
+                  <span
+                    className="d-inline-flex align-items-center justify-content-center"
+                    style={{
+                      width: '80px',
+                      height: '80px',
+                      backgroundColor: '#28a745',
+                      borderRadius: '50%',
+                      color: 'white',
+                      fontSize: '40px',
+                      margin: '0 auto'
+                    }}
+                  >
+                    <i className="ti ti-check" />
+                  </span>
+                </div>
+
+                <h3 className="mb-3 text-success">Service Created Successfully!</h3>
+
+                <div className="alert alert-success mb-4">
+                  <h5 className="mb-2">{createdService?.serviceTitle || 'Your service'}</h5>
+                  <p className="mb-0">has been successfully created and added to your service list.</p>
+                </div>
+
+                <div className="service-details mb-4">
+                  {createdService && (
+                    <div className="row text-center">
+                      <div className="col-md-4">
+                        <div className="border rounded p-3">
+                          <h6 className="text-muted mb-1">Service ID</h6>
+                          <code className="small">{createdService._id}</code>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="border rounded p-3">
+                          <h6 className="text-muted mb-1">Categories</h6>
+                          <span className="badge bg-primary">
+                            {formik.values.categories.length} selected
+                          </span>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="border rounded p-3">
+                          <h6 className="text-muted mb-1">Staff Assigned</h6>
+                          <span className="badge bg-secondary">
+                            {formik.values.staff.length} members
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="action-buttons">
+                  <div className="d-flex justify-content-center gap-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => {
+                        setIsSubmitted(false);
+                        formik.resetForm();
+                        setMainImage(null);
+                        setGalleryImages([]);
+                        setAdditionalServices([{ service: '', desc: '', price: 0, duration: '' }]);
+                        setIncludes(['']);
+                        setFaq([{ question: '', answer: '' }]);
+                        setCreatedService(null);
+                      }}
+                    >
+                      <i className="ti ti-plus me-2"></i>
+                      Create Another Service
+                    </button>
+
+                    <Link
+                      to="/admin/services/all-service"
+                      className="btn btn-outline-primary"
+                    >
+                      <i className="ti ti-list me-2"></i>
+                      View All Services
+                    </Link>
+
+                    {createdService?._id && (
+                      <Link
+                        to={`/services/service-details/${createdService._id}`}
+                        className="btn btn-outline-secondary"
+                      >
+                        <i className="ti ti-eye me-2"></i>
+                        Preview Service
+                      </Link>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <small className="text-muted">
+                    <i className="ti ti-info-circle me-1"></i>
+                    You can monitor the API response in your browser&apos;s Network tab
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -1061,11 +1206,11 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
                 </div>
 
                 {/* Location Information */}
-                <h5 className="mb-3">Location Information</h5>
+                <h5 className="mb-3">Location Information <span className="text-muted">(Optional)</span></h5>
                 <div className="row mb-4">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Address *</label>
+                      <label>Address</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.location?.address &&
@@ -1089,7 +1234,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Locality *</label>
+                      <label>Locality</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.location?.locality &&
@@ -1115,7 +1260,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
                 <div className="row mb-4">
                   <div className="col-md-4">
                     <div className="form-group">
-                      <label>City *</label>
+                      <label>City</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.location?.city && formik.errors.location?.city
@@ -1138,7 +1283,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
                   <div className="col-md-4">
                     <div className="form-group">
-                      <label>State *</label>
+                      <label>State</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.location?.state &&
@@ -1162,7 +1307,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
                   <div className="col-md-4">
                     <div className="form-group">
-                      <label>Pincode *</label>
+                      <label>Pincode</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.location?.pincode &&
@@ -1214,22 +1359,124 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Gallery Images (Optional)</label>
+
+                      {/* Drop Zone */}
+                      <div
+                        className="border-2 border-dashed border-secondary rounded p-4 text-center"
+                        style={{
+                          borderColor: '#dee2e6',
+                          backgroundColor: '#f8f9fa',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.style.borderColor = '#0d6efd';
+                          e.currentTarget.style.backgroundColor = '#f0f7ff';
+                        }}
+                        onDragLeave={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.style.borderColor = '#dee2e6';
+                          e.currentTarget.style.backgroundColor = '#f8f9fa';
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.style.borderColor = '#dee2e6';
+                          e.currentTarget.style.backgroundColor = '#f8f9fa';
+
+                          const files = Array.from(e.dataTransfer.files);
+                          if (files.length > 0) {
+                            handleGalleryDrop(files);
+                          }
+                        }}
+                        onClick={() => document.getElementById('gallery-upload')?.click()}
+                      >
+                        <i className="ti ti-cloud-upload" style={{ fontSize: '2rem', color: '#6c757d' }}></i>
+                        <div className="mt-2">
+                          <p className="mb-1 text-muted">Drop images here or click to browse</p>
+                          <small className="text-muted">Supports: JPEG, PNG, JPG, WebP (max 10 files, 5MB each)</small>
+                        </div>
+                      </div>
+
+                      {/* Hidden File Input */}
                       <input
+                        id="gallery-upload"
                         type="file"
-                        className="form-control"
+                        className="d-none"
                         accept="image/*"
                         multiple
                         onChange={handleGalleryChange}
                       />
-                      <small className="form-text text-muted">
-                        Gallery images (max 10 files, 5MB each)
-                      </small>
+
+                      {/* Selected Files Preview */}
                       {galleryImages.length > 0 && (
-                        <div className="mt-2">
-                          <small className="text-success">
-                            <i className="ti ti-check me-1"></i>
-                            Selected {galleryImages.length} image(s)
-                          </small>
+                        <div className="mt-3">
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <small className="text-success fw-semibold">
+                              <i className="ti ti-check-circle me-1"></i>
+                              {galleryImages.length} image(s) selected
+                            </small>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => setGalleryImages([])}
+                            >
+                              <i className="ti ti-trash me-1"></i>Clear All
+                            </button>
+                          </div>
+
+                          <div className="gallery-preview">
+                            <div className="row g-2">
+                              {galleryImages.map((file, index) => (
+                                <div key={file.id} className="col-6 col-md-4">
+                                  <div className="position-relative">
+                                    <div className="card">
+                                      <img
+                                        src={file.url || '#'}
+                                        alt={`Preview ${index + 1}`}
+                                        className="card-img-top"
+                                        style={{
+                                          height: '80px',
+                                          objectFit: 'cover'
+                                        }}
+                                        onError={(e) => {
+                                          console.error('Failed to load image preview:', file.name);
+                                          e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTAwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iODAiIGZpbGw9IiNmOGY5ZmEiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW1hZ2U8L3RleHQ+PC9zdmc+';
+                                        }}
+                                      />
+                                      <div className="card-body p-2">
+                                        <small className="text-muted d-block text-truncate" title={file.name}>
+                                          {file.name}
+                                        </small>
+                                        <small className="text-muted">
+                                          {file.size ? (file.size / 1024 / 1024).toFixed(1) : 'Unknown'} MB
+                                        </small>
+                                      </div>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-sm btn-danger position-absolute"
+                                      style={{
+                                        top: '5px',
+                                        right: '5px',
+                                        width: '24px',
+                                        height: '24px',
+                                        padding: '0',
+                                        borderRadius: '50%',
+                                        fontSize: '12px'
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeGalleryImage(index);
+                                      }}
+                                    >
+                                      <i className="ti ti-x"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1573,56 +1820,6 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
         </div>
       </div>
 
-      {/* Success Modal */}
-      <Modal centered show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
-        <div className="modal-body">
-          <div className="text-center py-4">
-            <span className="success-check mb-3 mx-auto d-inline-flex align-items-center justify-content-center"
-              style={{
-                width: '60px',
-                height: '60px',
-                backgroundColor: '#28a745',
-                borderRadius: '50%',
-                color: 'white',
-                fontSize: '24px'
-              }}>
-              <i className="ti ti-check" />
-            </span>
-            <h4 className="mb-2">Service Created Successfully!</h4>
-            <p className="text-muted mb-3">
-              {createdService?.serviceTitle} has been created and is now available in your service list.
-            </p>
-            <p className="text-info small mb-3">
-              <i className="ti ti-clock me-1"></i>
-              Redirecting to services list in 3 seconds...
-            </p>
-            <div className="d-flex align-items-center justify-content-center gap-3 mt-4">
-              <button
-                className="btn btn-light"
-                onClick={() => setShowSuccessModal(false)}
-              >
-                Close
-              </button>
-              <Link
-                to="/admin/services/all-service"
-                className="btn btn-primary"
-                onClick={() => setShowSuccessModal(false)}
-              >
-                View Services
-              </Link>
-              {createdService?._id && (
-                <Link
-                  to={`/services/service-details/${createdService._id}`}
-                  className="btn btn-outline-primary"
-                  onClick={() => setShowSuccessModal(false)}
-                >
-                  Preview Service
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

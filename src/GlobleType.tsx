@@ -84,7 +84,7 @@ export interface IService {
   serviceTitle: string;
   categoryId: string | any;
   SubcategoryId?: string | any; // Legacy subcategory field
-  categories?: string[]; // New multiple categories array
+  categories?: (string | Category)[]; // New multiple categories array - can be string IDs or full category objects
   price: number;
   image?: string[];
   duration: string;

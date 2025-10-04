@@ -218,9 +218,8 @@ const ViewService = () => {
                       <div key={1} onClick={() => handleItemClick(1)}>
                         <Link
                           to="#"
-                          className={`fav-icon ${
-                            selectedItems[1] ? 'selected' : ''
-                          }`}
+                          className={`fav-icon ${selectedItems[1] ? 'selected' : ''
+                            }`}
                         ></Link>
                       </div>
                       <div className="item-info">
@@ -258,9 +257,8 @@ const ViewService = () => {
                       <div key={2} onClick={() => handleItemClick(2)}>
                         <Link
                           to="#"
-                          className={`fav-icon ${
-                            selectedItems[2] ? 'selected' : ''
-                          }`}
+                          className={`fav-icon ${selectedItems[2] ? 'selected' : ''
+                            }`}
                         ></Link>
                       </div>
                       <div className="item-info">
@@ -288,9 +286,8 @@ const ViewService = () => {
                       <div key={3} onClick={() => handleItemClick(3)}>
                         <Link
                           to="#"
-                          className={`fav-icon ${
-                            selectedItems[3] ? 'selected' : ''
-                          }`}
+                          className={`fav-icon ${selectedItems[3] ? 'selected' : ''
+                            }`}
                         ></Link>
                       </div>
                       <div className="item-info">
@@ -318,9 +315,8 @@ const ViewService = () => {
                       <div key={4} onClick={() => handleItemClick(4)}>
                         <Link
                           to="#"
-                          className={`fav-icon ${
-                            selectedItems[4] ? 'selected' : ''
-                          }`}
+                          className={`fav-icon ${selectedItems[4] ? 'selected' : ''
+                            }`}
                         ></Link>
                       </div>
                       <div className="item-info">
