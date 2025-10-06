@@ -86,7 +86,7 @@ const AllService = () => {
       <div className="action-language">
         <div
           onClick={() => {
-            navigate('/services/edit-service', { state: res });
+            navigate('/admin/services/edit-service', { state: res });
           }}
           className="table-edit"
         >
