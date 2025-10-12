@@ -300,7 +300,7 @@ const Booking = () => {
                       sortable
                       field="paymentStatus"
                       header="Payment"
-                      // body={statusButton}
+                    // body={statusButton}
                     ></Column>
                     <Column
                       sortable

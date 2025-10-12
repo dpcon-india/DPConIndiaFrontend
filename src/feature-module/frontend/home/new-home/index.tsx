@@ -372,28 +372,43 @@ const NewHome = () => {
                 ?.filter((e) => e?.isFeatured)
                 ?.map((category, index) => (
                   <div className="col d-flex" key={index}>
-                    <div
-                      className="category-item text-center flex-fill wow fadeInUp"
+                    <Link
+                      to={`/services/service-list?categories=${JSON.stringify([category?._id])}`}
+                      className="category-item text-center flex-fill wow fadeInUp text-decoration-none"
                       data-wow-delay="0.2s"
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        padding: '1.5rem 1rem',
+                        borderRadius: '12px',
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f8f9fa';
+                        e.currentTarget.style.transform = 'translateY(-5px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     >
-                      <div className="mx-auto mb-3 d-flex justify-content-center align-items-center" style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#f8f9fa', border: '2px solid #e9ecef' }}>
+                      <div className="mb-3 d-flex justify-content-center align-items-center" style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#f8f9fa', border: '2px solid #e9ecef', flexShrink: 0 }}>
                         {getCategoryIcon(category?.categoryName)}
                       </div>
-                      <h6 className="fs-14 mb-1">
-                        {category?.categoryName?.slice(0, 20) + '...'}
+                      <h6 className="fs-14 mb-2 text-dark" style={{ minHeight: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {category?.categoryName}
                       </h6>
-                      {/* <p className="fs-14 mb-0">{generateRandomNumber()}</p> */}
-                      <Link
-                        // to={routes.categories}
-                        to={`/services/service-list?categories=${JSON.stringify([category?._id])}`}
+                      <span
                         className="link-primary text-decoration-underline fs-14"
+                        style={{ marginTop: 'auto' }}
                       >
                         View All
-                      </Link>
-                      {/* {category?.newBadge && (
-                      <span className="badge bg-success">New</span>
-                    )} */}
-                    </div>
+                      </span>
+                    </Link>
                   </div>
                 ))}
             </div>

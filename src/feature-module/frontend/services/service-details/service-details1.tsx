@@ -1873,95 +1873,123 @@ const ServiceDetails1 = () => {
           <div className="container">
 
             {/* Hero Section */}
-            <div className="row mb-4">
-              <div className="col-12">
+            <div className="row mb-4" style={{ alignItems: 'flex-start' }}>
+              <div className="col-md-8">
                 <div className="card border-0 shadow-sm">
-                  <div className="card-body p-2">
-                    <div className="row align-items-center">
-                      <div className="col-md-8">
-                        <div className="d-flex align-items-center mb-3">
-                          <h1 className="h3 mb-0 me-3">{data?.serviceTitle}</h1>
-                          {data?.count && data?.count > 0 && (
-                            <span className="badge bg-primary-subtle text-primary px-3 py-2">
-                              <i className="ti ti-calendar-check me-1" />
-
-                              {data?.count}+ Bookings
-
-                            </span>
-
-                          )}
-
-                        </div>
-
-
-                        {/* Categories */}
-                        {data?.categories && data?.categories.length > 0 && (
-                          <div className="mb-3">
-                            <div className="d-flex flex-wrap gap-2">
-                              {data.categories.map((category, index) => (
-                                <span key={index} className="badge bg-light text-dark border px-3 py-2">
-                                  <i className="ti ti-tag me-1" />
-                                  {typeof category === 'string' ? category : (category as any).categoryName}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Location */}
-                        {data?.location && (
-                          <div className="d-flex align-items-center mb-3">
-                            <i className="ti ti-map-pin text-muted me-2" />
-                            <span className="text-muted">
-                              {data.location.address}, {data.location.locality}, {data.location.city}, {data.location.state} - {data.location.pincode}
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Duration */}
-                        {data?.duration && (
-                          <div className="d-flex align-items-center mb-3">
-                            <i className="ti ti-clock text-muted me-2" />
-                            <span className="text-muted">Duration: {data.duration}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="col-md-4 text-md-end">
-                        <div className="pricing-card bg-light rounded-3 p-3">
-                          <div className="text-center">
-                            <p className="text-muted mb-1">Starting From</p>
-                            {data?.price === 0 ? (
-                              <h2 className="text-success mb-0">Free</h2>
-                            ) : (
-                              <div>
-                                <h2 className="text-primary mb-0">₹{data?.price}</h2>
-                                <p className="text-decoration-line-through text-muted small mb-0">
-                                  ₹{data?.price ? data.price + data.price / 10 : 0}
-                                </p>
-                                <span className="badge bg-success mt-1">
-                                  <i className="ti ti-circle-percentage me-1" />
-                                  10% Off
-                                </span>
-                              </div>
-
-                            )}
-                          </div>
-                        </div>
-                      </div>
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-center mb-3">
+                      <h1 className="h3 mb-0 me-3">{data?.serviceTitle}</h1>
+                      {data?.count && data?.count > 0 && (
+                        <span className="badge bg-primary-subtle text-primary px-3 py-2">
+                          <i className="ti ti-calendar-check me-1" />
+                          {data?.count}+ Bookings
+                        </span>
+                      )}
                     </div>
+
+                    {/* Categories */}
+                    {data?.categories && data?.categories.length > 0 && (
+                      <div className="mb-3">
+                        <div className="d-flex flex-wrap gap-2">
+                          {data.categories.map((category, index) => (
+                            <span key={index} className="badge bg-light text-dark border px-3 py-2">
+                              <i className="ti ti-tag me-1" />
+                              {typeof category === 'string' ? category : (category as any).categoryName}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Location */}
+                    {data?.location && (
+                      <div className="d-flex align-items-center mb-3">
+                        <i className="ti ti-map-pin text-muted me-2" />
+                        <span className="text-muted">
+                          {data.location.address}, {data.location.locality}, {data.location.city}, {data.location.state} - {data.location.pincode}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Duration */}
+                    {data?.duration && (
+                      <div className="d-flex align-items-center mb-3">
+                        <i className="ti ti-clock text-muted me-2" />
+                        <span className="text-muted">Duration: {data.duration}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-
               </div>
 
+              {/* Booking Card - Moved to same row */}
+              <div className="col-md-4">
+                <StickyBox offsetTop={80} offsetBottom={20}>
+                  <div className="card border-0 shadow-sm mb-4">
+                    <div className="card-body">
+                      <h5 className="card-title mb-4">Book This Service</h5>
+
+                      {data?.categories?.some(cat => (typeof cat === 'string' ? cat : (cat as any).categoryName) === 'Plumber') ? (
+                        <>
+                          <div
+                            onClick={() => setShowModal1(true)}
+                            className="btn btn-secondary btn-lg w-100 d-flex align-items-center justify-content-center"
+                            style={{
+                              backgroundColor: '#cf832c',
+                              border: 'none',
+                              color: 'white',
+                            }}
+                          >
+                            <i className="ti ti-calendar me-2" />
+                            Book Free Survey
+                          </div>
+                        </>
+                      ) : (
+                        <div
+                          onClick={handleFreeServiceClick}
+                          className="btn btn-secondary btn-lg w-100 d-flex align-items-center justify-content-center"
+                          style={{
+                            backgroundColor: '#cf832c',
+                            border: 'none',
+                            color: 'white',
+                          }}
+                        >
+                          <i className="ti ti-calendar me-2" />
+                          Book Free Service
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Video Link */}
+                  {data?.videoLink && (
+                    <div className="card border-0 shadow-sm mb-4">
+                      <div className="card-body">
+                        <h5 className="card-title mb-3">
+                          <i className="ti ti-video me-2 text-danger" />
+                          Service Video
+                        </h5>
+                        <a
+                          href={data.videoLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline-danger w-100"
+                        >
+                          <i className="ti ti-external-link me-2" />
+                          Watch Video
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </StickyBox>
+              </div>
             </div>
 
 
 
             <div className="row">
               {/* Main Content */}
-              <div className="col-xl-8">
+              <div className="col-md-8">
                 {/* Image Gallery */}
                 <div className="card border-0 shadow-sm mb-4">
                   <div className="card-body p-0">
@@ -2232,147 +2260,6 @@ const ServiceDetails1 = () => {
                     </div>
                   </div>
                 )}
-              </div>
-
-
-              {/* Sidebar */}
-              <div className="col-xl-4">
-                <StickyBox offsetTop={20} offsetBottom={20}>
-                  {/* Booking Card */}
-                  <div className="card border-0 shadow-sm mb-4">
-                    <div className="card-body">
-                      <h5 className="card-title mb-4">Book This Service</h5>
-
-
-                      <div
-
-                        onClick={(element) => chechHandler(element, data)}
-
-                        className="btn btn-primary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center"
-                        style={{
-
-                          backgroundColor: '#011339',
-
-                          border: 'none',
-
-                          color: 'white',
-
-                        }}
-
-                      >
-
-                        <i className="ti ti-calendar me-2" />
-
-                        Book Detailed Estimation - ₹{data?.price}
-
-                      </div>
-
-
-
-                      {data?.categories?.some(cat => (typeof cat === 'string' ? cat : (cat as any).categoryName) === 'Plumber') ? (
-                        <>
-
-                          <div
-
-                            onClick={() => setShowModal1(true)}
-
-                            className="btn btn-secondary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center"
-                            style={{
-
-                              backgroundColor: '#cf832c',
-
-                              border: 'none',
-
-                              color: 'white',
-
-                            }}
-
-                          >
-
-                            <i className="ti ti-calendar me-2" />
-
-                            Book Free Survey
-                          </div>
-
-                          <div
-
-                            onClick={() => setShowModal2(true)}
-
-                            className="btn btn-secondary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center"
-                            style={{
-
-                              backgroundColor: '#cf832c',
-
-                              border: 'none',
-
-                              color: 'white',
-
-                            }}
-
-                          >
-
-                            <i className="ti ti-calendar me-2" />
-
-                            Detailed Estimation Survey - ₹1000
-                          </div>
-
-                        </>
-
-                      ) : (
-
-                        <div
-
-                          onClick={handleFreeServiceClick}
-
-                          className="btn btn-secondary btn-lg w-100 mb-3 d-flex align-items-center justify-content-center"
-                          style={{
-
-                            backgroundColor: '#cf832c',
-
-                            border: 'none',
-
-                            color: 'white',
-
-                          }}
-
-                        >
-
-                          <i className="ti ti-calendar me-2" />
-
-                          Book Free Service
-                        </div>
-
-                      )}
-                      <hr className="my-4" />
-                    </div>
-
-                  </div>
-
-
-                  {/* Video Link */}
-                  {data?.videoLink && (
-                    <div className="card border-0 shadow-sm mb-4">
-                      <div className="card-body">
-                        <h5 className="card-title mb-3">
-                          <i className="ti ti-video me-2 text-danger" />
-                          Service Video
-                        </h5>
-                        <a
-                          href={data.videoLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-outline-danger w-100"
-                        >
-                          <i className="ti ti-external-link me-2" />
-                          Watch Video
-                        </a>
-                      </div>
-
-                    </div>
-
-                  )}
-                </StickyBox>
-
               </div>
 
             </div>
