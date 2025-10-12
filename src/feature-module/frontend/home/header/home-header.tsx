@@ -157,9 +157,6 @@ const HomeHeader: React.FC<props> = ({ type }) => {
     role = null;
   }
   switch (role) {
-    case 'customer':
-      route = '/customers/customer-dashboard';
-      break;
     case 'staff':
       route = '/staff/staff-dashboard';
       break;
@@ -190,16 +187,15 @@ const HomeHeader: React.FC<props> = ({ type }) => {
             </li> */}
             {user ? (
               <>
-                {(user.role === 'admin' || user.role === 'provider' || user.role === 'customer' || user.role === 'staff') && (
+                {(user.role === 'admin' || user.role === 'provider' || user.role === 'staff') && (
                   <li className="nav-item me-2">
                     <Link
                       className="nav-link btn btn-outline-primary"
                       to={
                         user.role === 'admin' ? '/admin/dashboard' :
                           user.role === 'provider' ? '/providers/dashboard' :
-                            user.role === 'customer' ? '/customers/customer-dashboard' :
-                              user.role === 'staff' ? '/staff/staff-dashboard' :
-                                '/'
+                            user.role === 'staff' ? '/staff/staff-dashboard' :
+                              '/'
                       }
                     >
                       <i className="ti ti-layout-dashboard me-1"></i>Dashboard
@@ -665,15 +661,14 @@ const HomeHeader: React.FC<props> = ({ type }) => {
           <ul className="nav header-navbar-rht">
             {user ? (
               <>
-                {(user.role === 'admin' || user.role === 'provider' || user.role === 'customer' || user.role === 'staff') && (
+                {(user.role === 'admin' || user.role === 'provider' || user.role === 'staff') && (
                   <li className="nav-item d-none d-md-block">
                     <Link
                       to={
                         user.role === 'admin' ? '/admin/dashboard' :
                           user.role === 'provider' ? '/providers/dashboard' :
-                            user.role === 'customer' ? '/customers/customer-dashboard' :
-                              user.role === 'staff' ? '/staff/staff-dashboard' :
-                                '/'
+                            user.role === 'staff' ? '/staff/staff-dashboard' :
+                              '/'
                       }
                       className="nav-link header-login"
                     >
@@ -814,7 +809,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 />
               </Link>
               <div className="navbar-brand logo-small" style={{ padding: 0 }}>
-                {role && role !== 'undefined' ? (
+                {role && role !== 'undefined' && (role === 'admin' || role === 'provider' || role === 'staff') ? (
                   <Link className="fs-14" to={route}>
                     <i className="ti ti-user-filled me-2"></i>Dashboard
                   </Link>

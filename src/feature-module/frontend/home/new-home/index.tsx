@@ -20,6 +20,21 @@ import AuthModals from './authModals';
 import { fetchCategories, fetchServices } from '../../../../APICalls';
 import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
 import { FaEnvelope, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
+import {
+  TbBuilding,
+  TbDroplet,
+  TbPaint,
+  TbTools,
+  TbToiletPaper,
+  TbCircleDashed,
+  TbPlug,
+  TbBuildingSkyscraper,
+  TbHammer,
+  TbArmchair,
+  TbRulerMeasure,
+  TbCube,
+  TbSettings,
+} from "react-icons/tb";
 
 const NewHome = () => {
   type Category = {
@@ -45,6 +60,58 @@ const NewHome = () => {
   const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [featuredCat, setFeaturedCat] = useState<Category[]>();
   const routes = all_routes;
+
+  // Function to get uniform black outlined icon based on category name
+  const getCategoryIcon = (categoryName: string) => {
+    const name = categoryName.toLowerCase();
+
+    if (name.includes('repair') || name.includes('restoration') || name.includes('building')) {
+      return <TbBuilding size={40} color="#333" />;
+    }
+
+    if (name.includes('waterproof')) {
+      return <TbDroplet size={40} color="#333" />;
+    }
+
+    if (name.includes('paint')) {
+      return <TbPaint size={40} color="#333" />;
+    }
+
+    if (name.includes('marble') || name.includes('tiles') || name.includes('tile')) {
+      return <TbCube size={40} color="#333" />;
+    }
+
+    if (name.includes('plumb')) {
+      return <TbToiletPaper size={40} color="#333" />;
+    }
+
+    if (name.includes('core') || name.includes('cutting')) {
+      return <TbCircleDashed size={40} color="#333" />;
+    }
+
+    if (name.includes('electric')) {
+      return <TbPlug size={40} color="#333" />;
+    }
+
+    if (name.includes('facade') || name.includes('clean')) {
+      return <TbBuildingSkyscraper size={40} color="#333" />;
+    }
+
+    if (name.includes('fabrication')) {
+      return <TbSettings size={40} color="#333" />;
+    }
+
+    if (name.includes('furniture')) {
+      return <TbArmchair size={40} color="#333" />;
+    }
+
+    if (name.includes('estimation') || name.includes('survey')) {
+      return <TbRulerMeasure size={40} color="#333" />;
+    }
+
+    // Default icon for unmatched categories
+    return <TbBuilding size={40} color="#333" />;
+  };
 
   const fetchData = async () => {
     const fetCat = await fetchCategories();
@@ -182,7 +249,7 @@ const NewHome = () => {
                         ))}
                       </div>
                     )}
-                    <div className="d-flex align-items-center flex-wrap banner-info">
+                    {/* <div className="d-flex align-items-center flex-wrap banner-info">
                       <div className="d-flex align-items-center me-4 mt-4">
                         <ImageWithBasePath
                           src="assets/img/icons/success-01.svg"
@@ -213,7 +280,7 @@ const NewHome = () => {
                           <p>Reviews Globally</p>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div
@@ -240,7 +307,7 @@ const NewHome = () => {
                 </span>
                 <i className="border-edge" />
               </div> */}
-              <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
+              {/* <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
                 <span className="me-2">
                   <ImageWithBasePath
                     src="assets/img/icons/tick-banner.svg"
@@ -249,7 +316,7 @@ const NewHome = () => {
                 </span>
                 <p className="fs-15 text-dark mb-0">300 Booking Completed</p>
                 <i className="border-edge" />
-              </div>
+              </div> */}
               <ImageWithBasePath
                 src="assets/img/bg/bg-03.svg"
                 alt="img"
@@ -266,7 +333,7 @@ const NewHome = () => {
                 className="shape-05"
               />
             </div>
-            <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
+            {/* <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
               <span className="me-2">
                 <ImageWithBasePath
                   src="assets/img/icons/tick-banner.svg"
@@ -275,7 +342,7 @@ const NewHome = () => {
               </span>
               <p className="fs-15 text-dark mb-0">250 Estimation Completed</p>
               <i className="border-edge" />
-            </div>
+            </div> */}
           </div>
         </section>
         {/* /Hero Section */}
@@ -309,12 +376,8 @@ const NewHome = () => {
                       className="category-item text-center flex-fill wow fadeInUp"
                       data-wow-delay="0.2s"
                     >
-                      <div className="mx-auto mb-3">
-                        <ImageWithoutBasePath
-                          src={category?.image}
-                          className="img-fluid"
-                          alt={category?.categoryName}
-                        />
+                      <div className="mx-auto mb-3 d-flex justify-content-center align-items-center" style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#f8f9fa', border: '2px solid #e9ecef' }}>
+                        {getCategoryIcon(category?.categoryName)}
                       </div>
                       <h6 className="fs-14 mb-1">
                         {category?.categoryName?.slice(0, 20) + '...'}
@@ -353,11 +416,11 @@ const NewHome = () => {
         {/* /Category Section */}
         {/* <FeatureSection /> */}
         {featuredCat && <PopularSection featuredCat={featuredCat} />}
-        <WorkSection />
+        {/* <WorkSection /> */}
         {/* <PreferredSection /> */}
         {/* <ProviderSection/> */}
         {/* <RateServiceSection /> */}
-        <CustomerSection />
+        {/* <CustomerSection /> */}
         {/* <BlogAndJoinus /> */}
         {/* <BussinessWithUs /> */}
         <ServiceCities />
