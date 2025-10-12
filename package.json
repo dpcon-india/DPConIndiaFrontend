@@ -81,6 +81,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "node scripts/generate-seo-pages.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
@@ -119,7 +120,6 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.0.3",
-    "react-snap": "^1.23.0"
+    "prettier": "^3.0.3"
   }
 }
