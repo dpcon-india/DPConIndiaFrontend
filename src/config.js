@@ -1,7 +1,7 @@
-export const api = 'https://api.dpconindia.com/api/';
-export const BaseApi = 'https://api.dpconindia.com/';
-// export const api = 'http://localhost:5000/api/';
-// export const BaseApi = 'http://localhost:5000/';
+// export const api = 'https://api.dpconindia.com/api/';
+// export const BaseApi = 'https://api.dpconindia.com/';
+export const api = 'http://localhost:5000/api/';
+export const BaseApi = 'http://localhost:5000/';
 
 const gettokenlocalStorage = localStorage.getItem('user')
   ? JSON.parse(localStorage.getItem('user'))

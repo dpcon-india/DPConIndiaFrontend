@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'aos/dist/aos.css';
 import './style/icon/tabler-icons/webfont/tabler-icons.css';
 import './style/icon/feather/css/iconfont.css';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -43,7 +43,7 @@ const initializeApp = async () => {
 
   // Initialize Bootstrap components
   const { Tooltip, Popover, Modal } = window.bootstrap;
-  
+
   // Initialize tooltips
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(
     (el) => new Tooltip(el)
@@ -77,7 +77,6 @@ const initializeApp = async () => {
 
 const App = () => {
   const location = useLocation();
-  const [isInitialized, setIsInitialized] = useState(false);
   const isAdmin = useMemo(
     () => location.pathname.startsWith('/admin'),
     [location.pathname],
@@ -124,25 +123,24 @@ const App = () => {
 };
 
 const rootElement = document.getElementById('root');
+
+// Create a new app with all providers
+const AppWithProviders = () => (
+  <React.StrictMode>
+    <HelmetProvider>
+      <UserProvider>
+        <Provider store={store}>
+          <Router>
+            <App />
+          </Router>
+        </Provider>
+      </UserProvider>
+    </HelmetProvider>
+  </React.StrictMode>
+);
+
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
-  
-  // Create a new app with all providers
-  const AppWithProviders = () => (
-    <React.StrictMode>
-      <HelmetProvider>
-        <UserProvider>
-          <Provider store={store}>
-            <Router>
-              <App />
-            </Router>
-          </Provider>
-        </UserProvider>
-      </HelmetProvider>
-    </React.StrictMode>
-  );
-
-  // Render the app
   root.render(<AppWithProviders />);
 } else {
   console.error("Element with id 'root' not found.");
