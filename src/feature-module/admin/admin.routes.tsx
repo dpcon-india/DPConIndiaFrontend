@@ -125,7 +125,7 @@ import AddService from './services/add-service';
 import PincodeList from './categories/pincode-list';
 import SearchHistory from './categories/search-history';
 import { useUser } from '../../core/data/context/UserContext';
-import EditService from '../frontend/services/edit-service/editServices';
+import EditService from './services/edit-service';
 import AllGallery from './gallery/all-gallery';
 import AddGallery from './gallery/add-gallery';
 import AppointmentModal from './support/appointment';
