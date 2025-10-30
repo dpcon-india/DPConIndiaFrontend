@@ -1,188 +1,158 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { all_routes } from '../../../../core/data/routes/all_routes';
-import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
-import moment from 'moment';
 
 const NewFooter = () => {
   const routes = all_routes;
   return (
     <>
       {/* Footer */}
-      <footer>
-        <div className="footer-top">
+      <footer className="bg-dark text-white" style={{ marginTop: '5rem' }}>
+        <div className="py-5">
           <div className="container">
-            <div className="row">
-              <div className="col-md-6 col-xl-4">
-                <div className="footer-widget">
-                  <h5 className="mb-4">Product</h5>
-                  <ul className="footer-menu">
-                    <li>
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                      <Link to="/services/service-list">Services</Link>
-                    </li>
-                    <li>
-                      <Link to="/pages/contact-us">Contact</Link>
-                    </li>
-                    <li>
-                      <Link to="/pages/about-us">About</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog/blog-grid">Blogs</Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-md-6 col-xl-4">
-                <div className="footer-widget">
-                  <h5 className="mb-4">Support</h5>
-                  <ul className="footer-menu">
-                    <li>
-                      <Link to="#">Getting started</Link>
-                    </li>
-                    <li>
-                      <Link to="/pages/terms-condition">Term & Conditions</Link>
-                    </li>
-                    <li>
-                      <Link to="/pages/privacy-policy">Privacy Policy</Link>
-                    </li>
-                    {/* <li>
-                      <Link to="#">Payment Policy</Link>
-                    </li> */}
-                    {/* <li>
-                      <Link to="#">FAQ</Link>
-                    </li> */}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="col-md-6 col-xl-4">
-                {/* <div className="footer-widget">
-                  <div className="card bg-light-200 border-0 mb-3">
-                    <div className="card-body">
-                      <h5 className="mb-3">SignUp For Subscription</h5>
-                      <div className="mb-3">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter Email Address"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="btn btn-linear-primary btn-lg w-100"
-                      >
-                        Subscribe
-                      </button>
+            {/* Main Footer Content */}
+            <div className="row g-4">
+              {/* Company Info */}
+              <div className="col-lg-4 col-md-6">
+                <div className="mb-4">
+                  <h3 className="fw-bold mb-3 text-primary">DPCON India</h3>
+                  <p className="text-light mb-4 lh-lg">
+                    Your trusted partner for professional engineering services.
+                    Connecting you with top-rated professionals across India.
+                  </p>
+                  <div className="d-flex gap-3">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-3 d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px' }}>
+                      <i className="fas fa-phone text-primary"></i>
+                    </div>
+                    <div>
+                      <h6 className="mb-1 text-white">24/7 Support</h6>
+                      <p className="text-light mb-0 small">Always here to help</p>
                     </div>
                   </div>
-                  <div className="d-flex align-items-center flex-wrap">
-                    <h6 className="fs-14 me-2">Download Our App</h6>
-                    <ImageWithBasePath
-                      src="assets/img/icons/app-store.svg"
-                      className="me-2"
-                      alt="img"
-                    />
-                    <ImageWithBasePath
-                      src="assets/img/icons/goolge-play.svg"
-                      className="me-2"
-                      alt="img"
-                    />
-                  </div>
-                </div> */}
+                </div>
               </div>
-            </div>
-            <div className="d-flex align-items-center justify-content-between flex-wrap mt-3">
-              {/* <ul className="social-icon mb-3">
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/fb.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/instagram.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/twitter.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/whatsapp.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/youtube.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">
-                    <ImageWithBasePath
-                      src="assets/img/icons/linkedin.svg"
-                      className="img"
-                      alt="Img"
-                    />
-                  </Link>
-                </li>
-              </ul> */}
-            </div>
-          </div>
-        </div>
-        {/* Footer Bottom */}
-        <div className="footer-bottom">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="d-flex align-items-center justify-content-between flex-wrap">
-                  <p className="mb-2">
-                    Copyright © {new Date().getFullYear()} - All Rights
-                    Reserved dpcon engineers india pvt Ltd. ( Dpcon India )
-                  </p>
 
-                  <ul className="menu-links mb-2">
-                    <li>
-                      <Link to="/pages/terms-condition">
-                        Terms and Conditions
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/pages/privacy-policy">Privacy Policy</Link>
-                    </li>
-                  </ul>
+              {/* Quick Links */}
+              <div className="col-lg-2 col-md-6">
+                <h5 className="fw-semibold mb-4 text-white">Quick Links</h5>
+                <ul className="list-unstyled">
+                  <li className="mb-3">
+                    <Link to="/" className="text-light text-decoration-none hover-primary">
+                      Home
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/services/service-list" className="text-light text-decoration-none hover-primary">
+                      Services
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/pages/about-us" className="text-light text-decoration-none hover-primary">
+                      About Us
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/pages/contact-us" className="text-light text-decoration-none hover-primary">
+                      Contact
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/blog/blog-grid" className="text-light text-decoration-none hover-primary">
+                      Blog
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Support */}
+              <div className="col-lg-2 col-md-6">
+                <h5 className="fw-semibold mb-4 text-white">Support</h5>
+                <ul className="list-unstyled">
+                  <li className="mb-3">
+                    <Link to="#" className="text-light text-decoration-none hover-primary">
+                      Help Center
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/pages/terms-condition" className="text-light text-decoration-none hover-primary">
+                      Terms & Conditions
+                    </Link>
+                  </li>
+                  <li className="mb-3">
+                    <Link to="/pages/privacy-policy" className="text-light text-decoration-none hover-primary">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Newsletter */}
+              <div className="col-lg-4 col-md-6">
+                <h5 className="fw-semibold mb-4 text-white">Stay Connected</h5>
+                <p className="text-light mb-4">Subscribe to get updates on new services and offers.</p>
+                <div className="d-flex mb-4">
+                  <input
+                    type="email"
+                    className="form-control me-2 bg-white border-0"
+                    placeholder="Enter your email"
+                    style={{ borderRadius: '8px' }}
+                  />
+                  <button className="btn btn-primary px-4" style={{ borderRadius: '8px' }}>
+                    Subscribe
+                  </button>
+                </div>
+
+                {/* Social Links */}
+                <div className="d-flex gap-3">
+                  <Link to="#" className="text-light hover-primary">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                      <i className="fab fa-facebook-f"></i>
+                    </div>
+                  </Link>
+                  <Link to="#" className="text-light hover-primary">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                      <i className="fab fa-twitter"></i>
+                    </div>
+                  </Link>
+                  <Link to="#" className="text-light hover-primary">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                      <i className="fab fa-linkedin-in"></i>
+                    </div>
+                  </Link>
+                  <Link to="#" className="text-light hover-primary">
+                    <div className="bg-primary bg-opacity-10 rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                      <i className="fab fa-instagram"></i>
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* /Footer Bottom */}
+
+        {/* Footer Bottom */}
+        <div className="border-top border-secondary py-4">
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-md-8">
+                <p className="mb-0 text-light small">
+                  © {new Date().getFullYear()} DPCON Engineers India Pvt Ltd. All rights reserved.
+                </p>
+              </div>
+              <div className="col-md-4 text-md-end">
+                <div className="d-flex justify-content-md-end gap-4 mt-3 mt-md-0">
+                  <Link to="/pages/terms-condition" className="text-light text-decoration-none small hover-primary">
+                    Terms
+                  </Link>
+                  <Link to="/pages/privacy-policy" className="text-light text-decoration-none small hover-primary">
+                    Privacy
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </footer>
-      {/* /Footer */}
     </>
   );
 };

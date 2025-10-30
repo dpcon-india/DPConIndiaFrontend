@@ -776,3 +776,12 @@ export const getUserById = async (id) => {
     return null;
   }
 };
+
+export const subscribeNewsletter = async (email) => {
+  try {
+    const res = await axios.post(`${api}subscribe`, { email });
+    return { message: res.data.message, status: res.status };
+  } catch (error) {
+    throw error.response?.data || { message: 'Subscription failed' };
+  }
+};

@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import QuoteModal from '../../common/modals/quote-modal';
 import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 import BecomeProvider from '../../common/modals/provider-modal';
+
 import { Link } from 'react-router-dom';
 import { all_routes } from '../../../../core/data/routes/all_routes';
 import FeatureSection from './feature-section';
+import Slider from 'react-slick';
+import ServiceCarousel from './ServiceCarousel';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import './new-home.css';
 import PopularSection from './popular-section';
 import WorkSection from './workSection';
 import PreferredSection from './preferredSection';
@@ -59,7 +66,102 @@ const NewHome = () => {
   const [location, setLocation] = useState('');
   const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [featuredCat, setFeaturedCat] = useState<Category[]>();
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   const routes = all_routes;
+
+  // Carousel settings for 2x2 grid layout
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 2, // Show 2 items (rows) at a time
+    slidesToScroll: 2, // Scroll 2 items at a time
+    rows: 2, // 2 rows per slide
+    slidesPerRow: 1, // 1 slide per row
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          rows: 2,
+          slidesPerRow: 1
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          rows: 2,
+          slidesPerRow: 2 // On tablets, show 2 columns in 2 rows
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          rows: 2,
+          slidesPerRow: 1 // On mobile, show 1 column in 2 rows
+        }
+      }
+    ]
+  };
+
+  // Service categories data
+  const serviceCategories = [
+    {
+      name: "Building Repair & Restoration",
+      img: "/assets/home/service-categories/b&r2.png",
+      color: "#e3f2fd"
+    },
+    {
+      name: "Waterproofing Work",
+      img: "/assets/home/service-categories/waterproofing.png",
+      color: "#e1f5fe"
+    },
+    {
+      name: "Painting",
+      img: "/assets/home/service-categories/painting.png",
+      color: "#f3e5f5"
+    },
+    {
+      name: "Interior Design",
+      img: "/assets/home/service-categories/arch.png",
+      color: "#f1f8e9"
+    },
+    {
+      name: "Plumbing work",
+      img: "/assets/home/service-categories/plumbing.png",
+      color: "#e8f5e9"
+    },
+    {
+      name: "Core Cutting",
+      img: "/assets/home/service-categories/core-cutting.png",
+      color: "#fff3e0"
+    },
+    {
+      name: "Electrical work",
+      img: "/assets/home/service-categories/electrical.png",
+      color: "#fff8e1"
+    },
+    {
+      name: "Facade Cleaning",
+      img: "/assets/home/service-categories/facade.png",
+      color: "#e8eaf6"
+    },
+    {
+      name: "Fabrication Work",
+      img: "/assets/home/service-categories/fabrication.png",
+      color: "#fce4ec"
+    },
+    {
+      name: "Furniture",
+      img: "/assets/home/service-categories/furniture.png",
+      color: "#f1f8e9"
+    }
+  ];
 
   // Function to get uniform black outlined icon based on category name
   const getCategoryIcon = (categoryName: string) => {
@@ -122,6 +224,7 @@ const NewHome = () => {
     });
     setFeaturedCat(filtered);
     setCategories(fetCat.length > 12 ? fetCat.slice(0, 12) : fetCat);
+
   };
   useEffect(() => {
     fetchData();
@@ -147,207 +250,140 @@ const NewHome = () => {
       <>
         {/* Hero Section */}
         <section className="hero-section" id="home">
-          <div className="hero-content position-relative overflow-hidden">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-lg-6">
-                  <div className="banner-content">
-                    <h1
-                      className="wow fadeInUp"
-                      data-wow-duration="1s"
-                      data-wow-delay=".25s"
-                    >
-                      DPConIndia - Professional Services & Solutions
-                    </h1>
-                    <h2 className="mb-2">
-                      Connect with Nearby Top-rated{' '}
-                      <span className="typed" data-type-text="Carpenters">
-                        Professionals
-                      </span>
-                    </h2>
-                    <p className="mb-3 sub-title">
-                      We can connect you to the right Service, first time and
-                      every time.
-                    </p>
-                    <div className="banner-form bg-white border mb-3">
-                      <form action="#">
-                        <div className="d-md-flex align-items-center">
-                          <div className="input-group mb-2">
-                            <span className="input-group-text px-1">
-                              <i className="ti ti-search" />
-                            </span>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Search for Service"
-                              value={searchTerm}
-                              onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                updateSearch();
-                              }}
-                            />
-                          </div>
-                          <div className="input-group mb-2">
-                            <span className="input-group-text px-1">
-                              <i className="ti ti-map-pin" />
-                            </span>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter you pin code"
-                              onChange={(e) => {
-                                setLocation(e.target.value);
-                              }}
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <Link
-                              to={`/services/service-list?name=${searchTerm}&location=${location}`}
-                              className="btn btn-linear-primary d-inline-flex align-items-center w-100"
-                            >
-                              <i className="feather icon-search me-2"></i>
-                              Search
-                            </Link>
-                          </div>
-                        </div>
-                      </form>
-                      {filteredServices.length > 0 && searchTerm.length > 0 && (
-                        <div className="suggestions-list bg-white border mt-1 p-2">
-                          {filteredServices.map((service) => (
-                            <div
-                              // to={`/`}
-                              key={service._id}
-                              className="suggestion-item d-block p-1 text-dark"
-                              onClick={() => {
-                                setSearchTerm(service?.serviceTitle);
-                              }}
-                            >
-                              {service.serviceTitle}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <ImageWithBasePath
-                        src="assets/img/bg/bg-06.svg"
-                        alt="img"
-                        className="shape-06 round-animate"
-                      />
+          <div className="hero-content position-relative overflow-hidden py-5">
+            <div className="container h-100">
+              <div className="row align-items-center h-100">
+                {/* Left Section - 50% width */}
+                <div className="col-lg-6 mb-4 mb-lg-0">
+                  <div className="home-service-card p-4 rounded-4 shadow-sm bg-white">
+                    <h2 className="fw-bold mb-4">Connect with Nearby Top-rated Professionals</h2>
+
+                    <div className="service-box" style={{
+                      background: '#f8f9fa',
+                      border: '1px solid #e9ecef',
+                      borderRadius: '16px',
+                      padding: '24px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                    }}>
+                      <h5 className="fw-bold mb-4" style={{
+                        color: '#2d3748',
+                        fontSize: '18px',
+                        letterSpacing: '-0.02em'
+                      }}>What are you looking for?</h5>
+
+                      <ServiceCarousel serviceCategories={serviceCategories} />
+
                     </div>
-                    {categories && (
-                      <div className="d-flex align-items-center flex-wrap">
-                        <h6 className="mb-2 me-2 fw-medium">
-                          Popular Searches
-                        </h6>
-                        {categories?.slice(0, 3).map((category, index) => (
-                          <Link
-                            key={index}
-                            to={`/services/service-list?categories=${JSON.stringify([category?._id])}`}
-                            className="badge badge-dark-transparent badge-hover-orange fs-14 fw-normal mb-2 me-2"
-                          >
-                            {category?.categoryName}
-                          </Link>
-                        ))}
+
+                    <div className="d-flex justify-content-between align-items-center mt-4">
+                      <div className="text-center flex-fill">
+                        <div className="fw-bold fs-4">⭐ 4.8</div>
+                        <small className="text-muted">Service Rating*</small>
                       </div>
-                    )}
-                    {/* <div className="d-flex align-items-center flex-wrap banner-info">
-                      <div className="d-flex align-items-center me-4 mt-4">
-                        <ImageWithBasePath
-                          src="assets/img/icons/success-01.svg"
-                          alt="icon"
-                        />
-                        <div className="ms-2">
-                          <h6>215,292 +</h6>
-                          <p>Verified Providers</p>
-                        </div>
+                      <div className="text-center flex-fill">
+                        <div className="fw-bold fs-4">👥 12M+</div>
+                        <small className="text-muted">Customers Globally*</small>
                       </div>
-                      <div className="d-flex align-items-center me-4 mt-4">
-                        <ImageWithBasePath
-                          src="assets/img/icons/success-02.svg"
-                          alt="icon"
-                        />
-                        <div className="ms-2">
-                          <h6>90,000+</h6>
-                          <p>Services Completed</p>
-                        </div>
-                      </div>
-                      <div className="d-flex align-items-center me-4 mt-4">
-                        <ImageWithBasePath
-                          src="assets/img/icons/success-03.svg"
-                          alt="icon"
-                        />
-                        <div className="ms-2">
-                          <h6>2,390,968 </h6>
-                          <p>Reviews Globally</p>
-                        </div>
-                      </div>
-                    </div> */}
+                    </div>
                   </div>
+
                 </div>
-                <div
-                  className="banner-img wow fadeInUp"
-                  data-wow-duration="1s"
-                  data-wow-delay=".25s"
-                >
-                  <img
-                    src={`${process.env.PUBLIC_URL}/assets/img/Black_Simple_Image_Gallery_Logo-removebg-preview.png`}
-                    alt="img"
-                    className="img-fluid animation-float"
-                  />
+
+                {/* Right Section - 50% width - Image Grid */}
+                <div className="col-lg-6">
+                  <div className="h-100 d-flex align-items-center">
+                    <div className="w-100">
+                      <div className="row g-3">
+                        {/* Large Top Left Image */}
+                        <div className="col-md-8">
+                          <div className="position-relative overflow-hidden rounded-4" style={{
+                            height: '200px',
+                            marginBottom: '0.5rem'
+                          }}>
+                            <img
+                              src="/assets/home/service (1).jpg"
+                              alt="Service 1"
+                              className="w-100 h-100"
+                              style={{
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s ease',
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Small Top Right Image */}
+                        <div className="col-md-4">
+                          <div className="position-relative overflow-hidden rounded-4" style={{
+                            height: '96px',
+                            marginBottom: '0.5rem'
+                          }}>
+                            <img
+                              src="/assets/home/service (2).jpg"
+                              alt="Service 2"
+                              className="w-100 h-100"
+                              style={{
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s ease',
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Small Bottom Left Image */}
+                        <div className="col-md-4">
+                          <div className="position-relative overflow-hidden rounded-4" style={{
+                            height: '96px',
+                            marginBottom: '0.5rem'
+                          }}>
+                            <img
+                              src="/assets/home/service (3).jpg"
+                              alt="Service 3"
+                              className="w-100 h-100"
+                              style={{
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s ease',
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Large Bottom Right Image */}
+                        <div className="col-md-8">
+                          <div className="position-relative overflow-hidden rounded-4" style={{
+                            height: '200px',
+                            marginBottom: '0.5rem'
+                          }}>
+                            <img
+                              src="/assets/home/service (4).jpg"
+                              alt="Service 4"
+                              className="w-100 h-100"
+                              style={{
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s ease',
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="hero-image">
-              {/* <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-01 floating-x">
-                <span className="avatar avatar-md bg-warning rounded-circle me-2">
-                  <i className="ti ti-star-filled" />
-                </span>
-                <span>
-                  4.9 / 5<small className="d-block">(255 reviews)</small>
-                </span>
-                <i className="border-edge" />
-              </div> */}
-              {/* <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
-                <span className="me-2">
-                  <ImageWithBasePath
-                    src="assets/img/icons/tick-banner.svg"
-                    alt=""
-                  />
-                </span>
-                <p className="fs-15 text-dark mb-0">300 Booking Completed</p>
-                <i className="border-edge" />
-              </div> */}
-              <ImageWithBasePath
-                src="assets/img/bg/bg-03.svg"
-                alt="img"
-                className="shape-03"
-              />
-              <ImageWithBasePath
-                src="assets/img/bg/bg-04.svg"
-                alt="img"
-                className="shape-04"
-              />
-              <ImageWithBasePath
-                src="assets/img/bg/bg-05.svg"
-                alt="img"
-                className="shape-05"
-              />
-            </div>
-            {/* <div className="d-inline-flex bg-white p-2 rounded align-items-center shape-02 floating-x">
-              <span className="me-2">
-                <ImageWithBasePath
-                  src="assets/img/icons/tick-banner.svg"
-                  alt=""
-                />
-              </span>
-              <p className="fs-15 text-dark mb-0">250 Estimation Completed</p>
-              <i className="border-edge" />
-            </div> */}
           </div>
         </section>
         {/* /Hero Section */}
         {/* Category Section */}
-        <section className="section category-section">
+        <section className="section category-section pt-0">
           <div className="container">
             <div className="row justify-content-center">
               <div
@@ -429,8 +465,122 @@ const NewHome = () => {
           </div>
         </section>
         {/* /Category Section */}
-        {/* <FeatureSection /> */}
+        
+        {/* Urban Company Style - Quality Promise Section */}
+        <section className="py-5" style={{backgroundColor: '#f8f9fa'}}>
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-lg-6">
+                <h2 className="fw-bold mb-4">Quality you can trust</h2>
+                <div className="row g-4">
+                  <div className="col-6">
+                    <div className="d-flex align-items-start">
+                      <div className="bg-success rounded-circle p-2 me-3 flex-shrink-0">
+                        <TbSettings size={20} className="text-white" />
+                      </div>
+                      <div>
+                        <h6 className="fw-semibold mb-1">Verified professionals</h6>
+                        <small className="text-muted">Background verified & rated professionals</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="d-flex align-items-start">
+                      <div className="bg-success rounded-circle p-2 me-3 flex-shrink-0">
+                        <TbBuilding size={20} className="text-white" />
+                      </div>
+                      <div>
+                        <h6 className="fw-semibold mb-1">Transparent pricing</h6>
+                        <small className="text-muted">See fixed prices before you book</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="d-flex align-items-start">
+                      <div className="bg-success rounded-circle p-2 me-3 flex-shrink-0">
+                        <TbHammer size={20} className="text-white" />
+                      </div>
+                      <div>
+                        <h6 className="fw-semibold mb-1">Timely service</h6>
+                        <small className="text-muted">Professionals arrive on time</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="d-flex align-items-start">
+                      <div className="bg-success rounded-circle p-2 me-3 flex-shrink-0">
+                        <FaPhoneAlt size={16} className="text-white" />
+                      </div>
+                      <div>
+                        <h6 className="fw-semibold mb-1">Post-service support</h6>
+                        <small className="text-muted">Get help even after service completion</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <img src="/assets/home/service (1).jpg" alt="Quality Service" className="img-fluid rounded-4" />
+              </div>
+            </div>
+          </div>
+        </section>
+        
         {featuredCat && <PopularSection featuredCat={featuredCat} />}
+        
+        {/* Urban Company Style - Service Booking CTA */}
+        <section className="py-5" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+          <div className="container">
+            <div className="row align-items-center text-white">
+              <div className="col-lg-6">
+                <h2 className="fw-bold mb-3">Ready to book a service?</h2>
+                <p className="mb-4 opacity-75">Get instant quotes, compare professionals, and book your service in minutes</p>
+                <div className="d-flex gap-3">
+                  <Link to="/services/service-list" className="btn btn-light btn-lg px-4">
+                    <TbSettings size={20} className="me-2" />
+                    Book Service
+                  </Link>
+                  <button 
+                    className="btn btn-outline-light btn-lg px-4"
+                    onClick={() => setShowQuoteModal(true)}
+                  >
+                    <FaPhoneAlt size={16} className="me-2" />
+                    Get Quote
+                  </button>
+                </div>
+              </div>
+              <div className="col-lg-6 text-center">
+                <img src="/assets/home/service (3).jpg" alt="Professional Service" className="img-fluid rounded-4" style={{maxHeight: '300px'}} />
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        
+        {/* Urban Company Style - Stats Section */}
+        <section className="py-5" style={{backgroundColor: '#f8f9fa'}}>
+          <div className="container">
+            <div className="row text-center g-4">
+              <div className="col-6 col-md-3">
+                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>12M+</div>
+                <p className="mb-0 text-muted fw-medium">Customers globally</p>
+              </div>
+              <div className="col-6 col-md-3">
+                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>25K+</div>
+                <p className="mb-0 text-muted fw-medium">Trained professionals</p>
+              </div>
+              <div className="col-6 col-md-3">
+                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>50+</div>
+                <p className="mb-0 text-muted fw-medium">Cities covered</p>
+              </div>
+              <div className="col-6 col-md-3">
+                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>4.8★</div>
+                <p className="mb-0 text-muted fw-medium">Average rating</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
         {/* <WorkSection /> */}
         {/* <PreferredSection /> */}
         {/* <ProviderSection/> */}
@@ -438,12 +588,13 @@ const NewHome = () => {
         {/* <CustomerSection /> */}
         {/* <BlogAndJoinus /> */}
         {/* <BussinessWithUs /> */}
-        <ServiceCities />
+        {/* <ServiceCities /> */}
         <NewFooter />
       </>
       <AuthModals />
-      <QuoteModal />
+      <QuoteModal show={showQuoteModal} onHide={() => setShowQuoteModal(false)} />
       <BecomeProvider />
+
     </>
   );
 };

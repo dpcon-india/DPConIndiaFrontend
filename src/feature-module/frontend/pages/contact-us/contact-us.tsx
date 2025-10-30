@@ -123,52 +123,14 @@ const ContactUs = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-6 col-lg-4 d-flex">
-                    <div className="card flex-fill">
-                      <div className="card-body">
-                        <div className="d-flex align-items-center">
-                          <span className="rounded-circle">
-                            <i className="ti ti-map-pin text-dark-blue" />
-                          </span>
-                          <div>
-                            <h6 className="fs-18 mb-1">Address</h6>
-                            <p className="fs-14">
-                              B.D.D Building No.59 Room No.05 Grd Flr, G.M
-                              Bhosale, Near Mahindra Tower, Worli Mumbai-
-                              400018.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                   {/* More cards can go here */}
                 </div>
               </div>
               {/* /Contact Details */}
 
               {/* Get In Touch */}
-              <div className="row">
-                <div className="col-md-6 d-flex align-items-center">
-                  {/* <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241316.67292570192!2d72.71637142884185!3d19.082502006419165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sus!4v1731406601531!5m2!1sen!2sus"
-                    width="600"
-                    height="450"
-                    style={{ border: '0' }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe> */}
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.345628918454!2d72.81841937454816!3d19.004485654215074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce96a80437f3%3A0xd6bbabbe84e8c26f!2sDPCON%20INDIA!5e0!3m2!1sen!2sin!4v1731406955621!5m2!1sen!2sin"
-                    width="600"
-                    height="450"
-                    style={{ border: '0' }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div>
+              <div className="row justify-content-center">
                 <div className="col-md-6 d-flex align-items-center justify-content-center">
                   <div className="contact-queries flex-fill">
                     <h2>Get In Touch</h2>
@@ -270,19 +232,6 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-
-        {/* Map */}
-        {/* <div className="map-grid">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6509170.989457427!2d-123.80081967108484!3d37.192957227641294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb9fe5f285e3d%3A0x8b5109a227086f55!2sCalifornia%2C%20USA!5e0!3m2!1sen!2sin!4v1669181581381!5m2!1sen!2sin"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="contact-map"
-          />
-        </div> */}
-        {/* /Map */}
       </div>
       <AuthModals />
     </>
