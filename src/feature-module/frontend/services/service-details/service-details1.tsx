@@ -1876,11 +1876,11 @@ const ServiceDetails1 = () => {
             <div className="row mb-4" style={{ alignItems: 'flex-start' }}>
               <div className="col-md-8">
                 <div className="card border-0 shadow-sm">
-                  <div className="card-body p-4">
-                    <div className="d-flex align-items-center mb-3">
-                      <h1 className="h3 mb-0 me-3">{data?.serviceTitle}</h1>
+                  <div className="card-body p-2">
+                    <div className="d-flex align-items-center mb-4">
+                      <h2 className="display-6 mb-0 me-3 text-primary">{data?.serviceTitle}</h2>
                       {data?.count && data?.count > 0 && (
-                        <span className="badge bg-primary-subtle text-primary px-3 py-2">
+                        <span className="badge bg-success text-white rounded-pill px-3 py-2">
                           <i className="ti ti-calendar-check me-1" />
                           {data?.count}+ Bookings
                         </span>
@@ -1892,7 +1892,7 @@ const ServiceDetails1 = () => {
                       <div className="mb-3">
                         <div className="d-flex flex-wrap gap-2">
                           {data.categories.map((category, index) => (
-                            <span key={index} className="badge bg-light text-dark border px-3 py-2">
+                            <span key={index} className="badge bg-secondary text-white rounded-pill px-3 py-2">
                               <i className="ti ti-tag me-1" />
                               {typeof category === 'string' ? category : (category as any).categoryName}
                             </span>
@@ -1900,22 +1900,11 @@ const ServiceDetails1 = () => {
                         </div>
                       </div>
                     )}
-
-                    {/* Location */}
-                    {data?.location && (
-                      <div className="d-flex align-items-center mb-3">
-                        <i className="ti ti-map-pin text-muted me-2" />
-                        <span className="text-muted">
-                          {data.location.address}, {data.location.locality}, {data.location.city}, {data.location.state} - {data.location.pincode}
-                        </span>
-                      </div>
-                    )}
-
                     {/* Duration */}
                     {data?.duration && (
                       <div className="d-flex align-items-center mb-3">
                         <i className="ti ti-clock text-muted me-2" />
-                        <span className="text-muted">Duration: {data.duration}</span>
+                        <span className="text-muted fw-semibold">Duration: {data.duration}</span>
                       </div>
                     )}
                   </div>

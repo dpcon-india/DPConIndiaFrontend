@@ -729,7 +729,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
       ? setImageUrl({
         logo: 'assets/img/logo.png',
         logoSmall: 'assets/img/logo-small.png',
-        logoSvg: 'assets/img/DPcon_A2.jpg',
+        logoSvg: 'assets/img/dpconlogo.png',
       })
       : setImageUrl({
         logo: 'assets/img/logo-02.svg',
@@ -783,20 +783,27 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <span />
                 </span>
               </Link>
-              <Link to={routes.index} className="navbar-brand logo">
-                <img
-                  src="/assets/img/DPcon_A2.jpg"
-                  className="img-fluid"
-                  alt="Logo"
-                  style={{
-                    maxHeight: '70px',
-                    // height: '100px',
-                  }}
-                />
-              </Link>
+              <div className="logo-container">
+                <Link to={routes.index} className="navbar-brand logo">
+                  <img
+                    src="/assets/img/dpconlogo.png"
+                    className="img-fluid"
+                    alt="Logo"
+                    style={{
+                      maxHeight: '70px',
+                      display: 'block',
+                      margin: '0 auto',
+                    }}
+                  />
+                  <div className="logo-text">
+                    <div className="logo-main">DPCON</div>
+                    <div className="logo-sub">Engineers India Pvt Ltd</div>
+                  </div>
+                </Link>
+              </div>
               <Link to={routes.index} className="navbar-brand logo-small p-0">
                 <img
-                  src="/assets/img/DPcon_A2.jpg"
+                  src="/assets/img/dpconlogo.png"
                   // className="img-fluid"
                   alt="Logo"
                   style={{
@@ -829,7 +836,7 @@ const HomeHeader: React.FC<props> = ({ type }) => {
               <div className="menu-header">
                 <Link to={routerPath(type).path} className="menu-logo">
                   <img
-                    src="/assets/img/DPcon_A2.jpg"
+                    src="/assets/img/dpconlogo.png"
                     className="img-fluid"
                     alt="Logo"
                     style={{

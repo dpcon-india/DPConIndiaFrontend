@@ -1,0 +1,85 @@
+/* Service Carousel Styles */
+.service-carousel {
+  padding: 0 10px 10px;
+  position: relative;
+  width: 100%;
+}
+
+.service-carousel .slick-slider {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.service-carousel .slick-track {
+  display: flex;
+  align-items: stretch;
+}
+
+.service-carousel .slick-prev:before,
+.service-carousel .slick-next:before {
+  color: #333;
+}
+
+.service-carousel .slick-list {
+  margin-bottom: 5px;
+}
+
+.service-carousel .slick-dots {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin: 8px 0 0 !important;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  height: 12px;
+  line-height: 1;
+}
+
+.service-carousel .slick-dots li {
+  margin: 0 !important;
+  padding: 0;
+  width: 6px;
+  height: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-carousel .slick-dots li button {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border-radius: 50%;
+  background: #ddd;
+  border: none;
+  opacity: 1;
+  transition: all 0.2s ease;
+  transform: scale(1);
+}
+
+.service-carousel .slick-dots li button:before {
+  display: none;
+}
+
+.service-carousel .slick-dots li.slick-active button {
+  background: #20c0f0;
+  width: 8px;
+  height: 8px;
+  transform: scale(1.2);
+}
+
+.service-carousel .slick-slide > div {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.service-carousel .slick-slide > div > div {
+  margin-bottom: 8px;
+}

@@ -4,7 +4,7 @@ import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 
 const CustomerHeader = () => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const openMobileSidebar = () => {};
+  const openMobileSidebar = () => { };
   return (
     <>
       <header className="header">
@@ -19,11 +19,11 @@ const CustomerHeader = () => {
                 </span>
               </Link>
               <Link to="index.html" className="navbar-brand logo">
-                <ImageWithBasePath
+                {/* <ImageWithBasePath
                   src="assets/img/DPcon_A2.jpg"
                   className="img-fluid"
                   alt="Logo"
-                />
+                /> */}
               </Link>
               <Link to="index.html" className="navbar-brand logo-small">
                 <ImageWithBasePath

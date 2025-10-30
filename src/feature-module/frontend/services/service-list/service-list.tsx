@@ -171,10 +171,6 @@ const ServiceList = () => {
                                 {e?.serviceTitle}
                               </Link>
                             </h3>
-                            <p className="mb-1">
-                              <i className="feather icon-map-pin" />
-                              {e?.location?.city}, {e?.location?.locality}, {e?.location?.pincode}
-                            </p>
                             <div className="badge bg-success-light text-success">
                               <i className="fas fa-check-circle me-1"></i> Free visit and consulting services
                             </div>

@@ -1,40 +1,96 @@
 .breadcrumb-bar {
     background: $light-200;
-    padding: 40px 0;
+    padding: 15px 0;
     position: relative;
-    .breadcrumb-title {
-        font-size: $font-size-36;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
     }
-}
-.breadcrumb {
-    .breadcrumb-item {
-        color: $gray-600;
-        & +.breadcrumb-item {
-            &:before {
-                content: "\f054";
-                font-family: 'fontawesome';
-                line-height: 2;
-                font-size: $font-size-12;
+    
+    .breadcrumb-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: $gray-900;
+        line-height: 1.2;
+        margin-bottom: 8px;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        font-size: 0.875rem;
+        
+        .breadcrumb-item {
+            color: $gray-600;
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+            
+            a {
+                color: $gray-600;
+                text-decoration: none;
+                transition: color 0.2s ease;
+                
+                &:hover {
+                    color: $primary;
+                    text-decoration: none;
+                }
+                
+                i {
+                    font-size: 1rem;
+                    margin-right: 4px;
+                }
+            }
+            
+            & + .breadcrumb-item {
+                &:before {
+                    content: "/";
+                    font-family: inherit;
+                    color: $gray-500;
+                    font-size: 0.75rem;
+                    padding: 0 0.5rem;
+                    line-height: 1;
+                }
+            }
+            
+            &.active {
+                color: $primary;
+                font-weight: 500;
             }
         }
-        &.active {
-            color: $gray-900;
+    }
+    
+    .breadcrumb-bg {
+        display: none; // Hide background images for a cleaner look
+    }
+}
+
+// Responsive adjustments
+@include respond-below(md) {
+    .breadcrumb-bar {
+        padding: 12px 0;
+        
+        .breadcrumb-title {
+            font-size: 1.25rem;
+            margin-bottom: 6px;
         }
-    }
-}
-.breadcrumb-bg-1 {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    @include respond-below(md) {
-        display: none;
-    }
-}
-.breadcrumb-bg-2 {
-    position: absolute;
-    right: 0;
-    top: 0;
-    @include respond-below(md) {
-        display: none;
+        
+        .breadcrumb {
+            font-size: 0.8125rem;
+            
+            .breadcrumb-item {
+                padding: 0 0.35rem;
+                
+                & + .breadcrumb-item:before {
+                    padding: 0 0.35rem;
+                }
+            }
+        }
     }
 }

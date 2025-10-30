@@ -10,6 +10,7 @@ const AuthModals = () => {
   const [numberOrEmail, setNumberOrEmail] = useState<string>(''); // phone/email
   const [rName, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [role, setRole] = useState<string>('customer');
   const [rError, setRError] = useState<string>('');
   const [otp, setOtp] = useState('');
   const [requestId, setRequestId] = useState('');
@@ -38,6 +39,7 @@ const AuthModals = () => {
     setEmail('');
     setNumberOrEmail('');
     setPassword('');
+    setRole('customer');
     setOtp('');
     setRequestId('');
     setRError('');
@@ -119,9 +121,10 @@ const AuthModals = () => {
       setRError('Password is required');
       return;
     }
+    setIsLoading(true);
     try {
       console.log('Attempting login with:', { email: numberOrEmail });
-      const response = await axios.post(`${api}profiles/login-user`, {
+      const response = await axios.post(`${api}profiles/login`, {
         email: numberOrEmail,
         password
       });
@@ -158,6 +161,14 @@ const AuthModals = () => {
     } catch (error: any) {
       console.error('Login error:', error);
       setRError(error.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      submitHandler();
     }
   };
 
@@ -174,15 +185,31 @@ const AuthModals = () => {
     if (!password || password.length < 8) { setPasswordError('Password must be at least 8 characters'); isValid = false; }
     if (!isValid) return;
 
+    setIsLoading(true);
     try {
-      const { data } = await axios.post(`${api}profiles/signup`, {
-        name: rName, email, number: numberOrEmail, password, role: 'customer',
+      console.log('Attempting registration with:', { name: rName, email, number: numberOrEmail, role });
+      const response = await axios.post(`${api}profiles/signup`, {
+        name: rName, email, number: numberOrEmail, password, role,
       });
 
-      if (data.error) { setRError(data.error); return; }
+      console.log('Full registration response:', response);
+      console.log('Registration response data:', response.data);
+      console.log('Registration response status:', response.status);
 
-      // Store requestId and show OTP modal (hide register modal first)
-      setRequestId(data.requestId || '');
+      if (response.data.error) { 
+        setRError(response.data.error); 
+        return; 
+      }
+
+      // Check if the response indicates OTP was sent
+      if (response.data.message && response.data.message.includes('OTP sent')) {
+        toast.success('OTP sent to your email. Please check your inbox.');
+        console.log('OTP should be sent to email:', email);
+      } else {
+        toast.success('Registration initiated. Please check your email for OTP.');
+        console.log('Registration response:', response.data);
+      }
+      
       setRError('');
       // hide any open bootstrap modals (register)
       hideAllBootstrapModals();
@@ -195,7 +222,17 @@ const AuthModals = () => {
         input?.focus();
       }, 50);
     } catch (error: any) {
-      setRError(error.response.data.error || 'Something went wrong');
+      console.error('Registration error:', error);
+      console.error('Error response:', error.response);
+      setRError(error.response?.data?.error || error.response?.data?.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegisterKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      registerHandler();
     }
   };
 
@@ -205,16 +242,16 @@ const AuthModals = () => {
 
     try {
       const payload = {
-        requestId,
-        otp,
-        number: numberOrEmail
+        email,
+        otp
       };
 
       const { data } = await axios.post(`${api}profiles/verify-otp`, payload);
 
       if (data && (data.success || data.message?.toLowerCase()?.includes('verified'))) {
-        alert('Phone verified successfully! Please login.');
+        toast.success('Email verified successfully! Please login.');
         hideModalById('otp-modal');
+        showModalById('login-modal');
         resetRegisterForm();
       } else {
         setRError(data.message || 'OTP verification failed');
@@ -322,15 +359,32 @@ const AuthModals = () => {
 
                 <div className="mb-3">
                   <label className="form-label">Email</label>
-                  <input type="text" className="form-control" onChange={(e) => setNumberOrEmail(e.target.value)} placeholder="Enter phone or email" />
+                  <input 
+                    type="email" 
+                    className="form-control" 
+                    value={numberOrEmail}
+                    onChange={(e) => setNumberOrEmail(e.target.value)} 
+                    onKeyPress={handleLoginKeyPress}
+                    placeholder="Enter your email" 
+                    disabled={isLoading}
+                    autoFocus
+                  />
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label">Password</label>
-                  <input type="password" className="form-control" onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" />
+                  <input 
+                    type="password" 
+                    className="form-control" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)} 
+                    onKeyPress={handleLoginKeyPress}
+                    placeholder="Enter your password" 
+                    disabled={isLoading}
+                  />
                 </div>
 
-                {rError && <p style={{ color: 'red' }}>{rError}</p>}
+                {rError && <div className="alert alert-danger py-2 small">{rError}</div>}
 
                 {/* Forgot Password Link */}
                 <div className="mb-3 text-end">
@@ -346,7 +400,20 @@ const AuthModals = () => {
                   </button>
                 </div>
                 <div className="mb-3">
-                  <button type="button" className="btn btn-lg btn-linear-primary w-100" onClick={submitHandler}>Sign In</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-lg btn-linear-primary w-100" 
+                    onClick={submitHandler}
+                    disabled={isLoading}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {isLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Signing In...
+                      </>
+                    ) : 'Sign In'}
+                  </button>
                 </div>
 
                 <div className="d-flex justify-content-center">
@@ -427,31 +494,88 @@ const AuthModals = () => {
 
                 <div className="mb-3">
                   <label className="form-label">Full Name</label>
-                  <input type="text" className="form-control" value={rName} onChange={(e) => setName(e.target.value)} placeholder="Enter your full name" />
-                  {nameError && <p style={{ color: 'red' }}>{nameError}</p>}
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    value={rName} 
+                    onChange={(e) => setName(e.target.value)} 
+                    onKeyPress={handleRegisterKeyPress}
+                    placeholder="Enter your full name" 
+                    disabled={isLoading}
+                    autoFocus
+                  />
+                  {nameError && <div className="text-danger small mt-1">{nameError}</div>}
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label">Email</label>
-                  <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
-                  {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
+                  <input 
+                    type="email" 
+                    className="form-control" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    onKeyPress={handleRegisterKeyPress}
+                    placeholder="Enter your email" 
+                    disabled={isLoading}
+                  />
+                  {emailError && <div className="text-danger small mt-1">{emailError}</div>}
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label">Phone</label>
-                  <input type="text" className="form-control" value={numberOrEmail} onChange={(e) => setNumberOrEmail(e.target.value)} placeholder="Enter your phone number" />
-                  {phoneError && <p style={{ color: 'red' }}>{phoneError}</p>}
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    value={numberOrEmail} 
+                    onChange={(e) => setNumberOrEmail(e.target.value)} 
+                    onKeyPress={handleRegisterKeyPress}
+                    placeholder="Enter your phone number" 
+                    disabled={isLoading}
+                  />
+                  {phoneError && <div className="text-danger small mt-1">{phoneError}</div>}
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Account Type</label>
+                  <select className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
+                    <option value="customer">Customer</option>
+                    <option value="provider">Service Provider</option>
+                  </select>
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label">Password</label>
-                  <input type="password" className="form-control" value={password} onChange={(e) => onChangePassword(e.target.value)} placeholder="Enter your password" />
-                  {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
-                  <small>{passwordResponce.passwordResponceText}</small>
+                  <input 
+                    type="password" 
+                    className="form-control" 
+                    value={password} 
+                    onChange={(e) => onChangePassword(e.target.value)} 
+                    onKeyPress={handleRegisterKeyPress}
+                    placeholder="Enter your password" 
+                    disabled={isLoading}
+                  />
+                  {passwordError && <div className="text-danger small mt-1">{passwordError}</div>}
+                  <small className={passwordResponce.passwordResponceKey === '3' ? 'text-success' : 'text-muted'}>
+                    {passwordResponce.passwordResponceText}
+                  </small>
                 </div>
 
                 <div className="mb-3">
-                  <button type="button" className="btn btn-lg btn-linear-primary w-100" onClick={registerHandler} ref={RegisterRef}>Register</button>
+                  <button 
+                    type="button" 
+                    className="btn btn-lg btn-linear-primary w-100" 
+                    onClick={registerHandler} 
+                    disabled={isLoading}
+                    style={{ cursor: 'pointer' }}
+                    ref={RegisterRef}
+                  >
+                    {isLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Registering...
+                      </>
+                    ) : 'Register'}
+                  </button>
                 </div>
 
                 <div className="d-flex justify-content-center">
@@ -481,8 +605,8 @@ const AuthModals = () => {
             </div>
             <div className="modal-body p-4">
               <div className="text-center mb-4">
-                <h3 className="mb-2">Verify OTP</h3>
-                <p className="text-muted">Enter the OTP sent to your phone number</p>
+                <h3 className="mb-2">Verify Email OTP</h3>
+                <p className="text-muted">Enter the 4-digit OTP sent to your email address</p>
                 {rError && <div className="alert alert-danger py-2">{rError}</div>}
               </div>
               <div className="mb-4">
@@ -491,8 +615,8 @@ const AuthModals = () => {
                   className="form-control form-control-lg text-center"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter OTP"
-                  maxLength={6}
+                  placeholder="Enter 4-digit OTP"
+                  maxLength={4}
                   onKeyPress={(e) => {
                     if (!/[0-9]/.test(e.key)) {
                       e.preventDefault();

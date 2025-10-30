@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 
 const CustomerHeader = () => {
-  const openMobileSidebar = () => {};
+  const openMobileSidebar = () => { };
   return (
     <>
       <header className="header">

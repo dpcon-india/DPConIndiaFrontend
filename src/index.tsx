@@ -9,6 +9,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import store from './core/data/redux/store';
 import { UserProvider } from './core/data/context/UserContext';
 import AllRoutes from './feature-module/router/router';
@@ -118,6 +120,17 @@ const App = () => {
       <DocumentHead />
       <AllRoutes />
       {!isAdmin && <FloatingIcons />}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };
