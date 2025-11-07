@@ -27,16 +27,7 @@ const ProviderHeader = () => {
   const [count, setCount] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [notificaions, setNotfications] = useState<any>();
-  const style: any = {
-    position: 'absolute',
-    top: '-8px',
-    background: 'red',
-    fontSize: '10px',
-    color: 'white',
-    borderRadius: '50%',
-    paddingInline: '0.3rem',
-    right: '-7px',
-  };
+
   const fetchData = async () => {
     try {
       const notif = await fetchNotifications();
@@ -48,6 +39,7 @@ const ProviderHeader = () => {
       console.log(error);
     }
   };
+
   const fetchCount = async () => {
     try {
       const c = await fetchNotificationCount();
@@ -56,41 +48,44 @@ const ProviderHeader = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchCount();
   }, []);
+
   const toggleFullscreen = () => {
     if (!isFullscreen) {
-      // Request fullscreen
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
       }
     } else {
-      // Exit fullscreen
       if (document.exitFullscreen) {
         document.exitFullscreen();
       }
     }
-
-    // Toggle the state
     setIsFullscreen(!isFullscreen);
   };
+
   const toogle = () => {
     dispatch(set_toggleSidebar_data_2(toggle_data ? false : true));
   };
+
   const mobileSidebar = useSelector((state: AppState) => state.mobileSidebar);
 
   const handleClick = () => {
     dispatch(set_is_mobile_sidebar(!mobileSidebar));
   };
+
   const toggle = () => {
     dispatch(set_mouseoversidebar_data(true));
   };
+
   const toggle2 = () => {
     dispatch(set_mouseoversidebar_data(false));
   };
 
   const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode'));
+
   const LayoutDark = () => {
     const htmlElement = document.documentElement;
     if (darkMode === 'enabled') {
@@ -105,10 +100,12 @@ const ProviderHeader = () => {
       htmlElement.classList.remove('dark');
     }
   };
+
   useEffect(() => {
     setDarkMode(localStorage.getItem('darkMode'));
     LayoutDark();
   }, [darkMode]);
+
   return (
     <div className="header provider-header">
       {/* Logo */}
@@ -117,11 +114,44 @@ const ProviderHeader = () => {
         onMouseEnter={toggle}
         onMouseLeave={toggle2}
       >
-        <Link to={routes.index} className="logo logo-normal">
-          <ImageWithBasePath src="assets/img/DPcon_A2.jpg" alt="Logo" />
+        <Link to={routes.index} className="logo logo-normal d-flex align-items-center">
+          <img
+            src="/assets/img/dpconlogo.png"
+            alt="Logo"
+            style={{
+              height: '45px',
+              width: 'auto',
+              objectFit: 'contain',
+              marginRight: '12px'
+            }}
+          />
+          <div>
+            <div style={{ 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              color: '#000', 
+              lineHeight: '1.1',
+              letterSpacing: '0.5px'
+            }}>DPCON</div>
+            <div style={{ 
+              fontSize: '10px', 
+              color: '#666', 
+              lineHeight: '1.1',
+              fontWeight: '400',
+              textAlign: 'center'
+            }}>Engineers India Pvt Ltd</div>
+          </div>
         </Link>
         <Link to={routes.index} className="logo-small">
-          <ImageWithBasePath src="assets/img/logo-small.svg" alt="Logo" />
+          <img
+            src="/assets/img/dpconlogo.png"
+            alt="Logo"
+            style={{
+              height: '40px',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
         </Link>
         <Link id="toggle_btn" onClick={toogle} to="#">
           <i className="ti ti-menu-deep" />
@@ -142,35 +172,7 @@ const ProviderHeader = () => {
       </Link>
       <div className="header-user">
         <div className="nav user-menu">
-          {/* Search */}
-          {/* <div className="nav-item nav-search-inputs">
-            <div className="top-nav-search">
-              <Link to="#" className="responsive-search">
-                <i className="fa fa-search" />
-              </Link>
-              <form action="#" className="dropdown">
-                <div className="searchinputs" id="dropdownMenuClickable">
-                  <input type="text" placeholder="Search" />
-                  <div className="search-addon">
-                    <span>
-                      <i className="feather icon-user" />
-                    </span>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div> */}
-          {/* /Search */}
           <div className="d-flex align-items-center">
-            {/* <div className="me-2 site-link">
-              <Link
-                to="/"
-                className="d-flex align-items-center justify-content-center me-2"
-              >
-                <i className="feather icon-globe me-1" />
-                Visit Website
-              </Link>
-            </div> */}
             <div className="provider-head-links">
               <div>
                 <Link
@@ -204,7 +206,16 @@ const ProviderHeader = () => {
               >
                 <i className="feather icon-bell" />
                 {count != 0 && (
-                  <span className="" style={style}>
+                  <span style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    background: 'red',
+                    fontSize: '10px',
+                    color: 'white',
+                    borderRadius: '50%',
+                    paddingInline: '0.3rem',
+                    right: '-7px',
+                  }}>
                     {count > 9 ? '9+' : count}
                   </span>
                 )}
@@ -217,39 +228,6 @@ const ProviderHeader = () => {
                       <span className="fs-16 text-gray"> {`(${count})`}</span>
                     )}
                   </h6>
-                  {/* <div className="d-flex align-items-center">
-                    <Link to="#" className="text-dark-blue fs-15 me-3 lh-1">
-                      Mark all as read
-                    </Link>
-                    <div className="dropdown">
-                      <Link
-                        to="#"
-                        className="bg-white dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        data-bs-auto-close="outside"
-                      >
-                        <i className="ti ti-calendar-due me-1" />
-                        Today
-                      </Link>
-                      <ul className="dropdown-menu mt-2 p-3">
-                        <li>
-                          <Link to="#" className="dropdown-item rounded-1">
-                            This Week
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#" className="dropdown-item rounded-1">
-                            Last Week
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#" className="dropdown-item rounded-1">
-                            Last Week
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div> */}
                 </div>
                 <div className="noti-content">
                   <div
@@ -260,13 +238,6 @@ const ProviderHeader = () => {
                       <div className="border-bottom mb-3 pb-3" key={i}>
                         <div>
                           <div className="d-flex">
-                            {/* <span className="avatar avatar-lg me-2 flex-shrink-0">
-                              <ImageWithBasePath
-                                src="assets/img/profiles/avatar-52.jpg"
-                                alt="Profile"
-                                className="rounded-circle"
-                              />
-                            </span> */}
                             <div className="flex-grow-1">
                               <div className="d-flex align-items-center">
                                 <p className="mb-1 w-100 fs-16">
@@ -291,14 +262,6 @@ const ProviderHeader = () => {
                     ))}
                   </div>
                 </div>
-                {/* <div className="d-flex p-0 notification-footer-btn">
-                  <Link to="#" className="btn btn-light rounded  me-2">
-                    Cancel
-                  </Link>
-                  <Link to="#" className="btn btn-dark rounded ">
-                    View All
-                  </Link>
-                </div> */}
               </div>
             </div>
             <div className="provider-head-links">
@@ -323,6 +286,7 @@ const ProviderHeader = () => {
           </div>
         </div>
       </div>
+
       {/* Mobile Menu */}
       <div className="dropdown mobile-user-menu">
         <Link
@@ -346,7 +310,6 @@ const ProviderHeader = () => {
           </div>
         </div>
       </div>
-      {/* /Mobile Menu */}
     </div>
   );
 };

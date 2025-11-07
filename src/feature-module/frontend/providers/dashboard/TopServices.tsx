@@ -13,18 +13,20 @@ const TopServices = () => {
 
   const serviceImage1 = (rowData: any) => {
     return (
-      <Link to={routes.viewServices} className="table-imgname">
-        {/* <ImageWithoutBasePath
-          src={rowData?.image}
-          className="me-2"
-          alt="img"
-          height={100}
-          width={100}
-        /> */}
-        <span>{rowData?.serviceTitle}</span>
+      <Link 
+        to={routes.viewServices} 
+        style={{
+          textDecoration: 'none',
+          color: '#1a1a1a',
+          fontWeight: '500',
+          transition: 'color 0.3s ease'
+        }}
+        onMouseEnter={(e) => e.target.style.color = '#000'}
+        onMouseLeave={(e) => e.target.style.color = '#1a1a1a'}
+      >
+        {rowData?.serviceTitle || 'N/A'}
       </Link>
     );
-   
   };
   useEffect(() => {
     fetchData();
@@ -41,45 +43,101 @@ const TopServices = () => {
     }
   };
   return (
-    <div className="card flex-fill">
-      <div className="card-body">
-        <div className="home-user">
-          <div className="home-head-user home-graph-header">
-            <h2>Top Services</h2>
-            {/* <Link to={routes.providerService} className="btn btn-viewall">
-              View All
-              <ImageWithBasePath
-                src="assets/admin/img/icons/arrow-right.svg"
-                className="ms-2"
-                alt="img"
-              />
-            </Link> */}
-          </div>
-          <div className="table-responsive datatable-nofooter">
-            <table className="table datatable">
-              <DataTable
-                paginatorTemplate="RowsPerPageDropdown CurrentPageReport PrevPageLink PageLinks NextPageLink  "
-                currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                value={services}
-              >
-                <Column sortable field="id" header="#"></Column>
-                <Column
-                  sortable
-                  field="service"
-                  header="Service"
-                  body={serviceImage1}                  
-                ></Column>
-                <Column
-                  sortable
-                  field="bookingCount"
-                  header="Bookings"
-                ></Column>
-                <Column sortable field="category" header="Category"></Column>
-                <Column sortable field="price" header="Amount"></Column>
-              </DataTable>
-            </table>
-          </div>
-        </div>
+    <div className="w-100">
+      <div className="table-responsive">
+        <DataTable
+          value={services}
+          className="modern-table"
+          stripedRows
+          showGridlines={false}
+          style={{
+            fontSize: '14px',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+          }}
+          pt={{
+            table: { 
+              style: { 
+                borderCollapse: 'separate',
+                borderSpacing: '0 8px'
+              } 
+            },
+            header: {
+              style: {
+                backgroundColor: '#f8f9fa',
+                color: '#1a1a1a',
+                fontWeight: '600',
+                fontSize: '13px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                padding: '16px 20px',
+                border: 'none'
+              }
+            },
+            bodyRow: {
+              style: {
+                backgroundColor: '#fff',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                marginBottom: '8px'
+              }
+            },
+            bodyCell: {
+              style: {
+                padding: '20px',
+                border: 'none',
+                borderRadius: '8px'
+              }
+            }
+          }}
+        >
+          <Column 
+            field="id" 
+            header="#"
+            style={{ width: '60px', textAlign: 'center', fontWeight: '500' }}
+          />
+          <Column
+            field="service"
+            header="Service"
+            body={serviceImage1}
+            style={{ fontWeight: '500', color: '#1a1a1a' }}
+          />
+          <Column
+            field="bookingCount"
+            header="Bookings"
+            body={(rowData) => (
+              <span style={{
+                backgroundColor: '#f0f0f0',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '12px',
+                fontWeight: '500',
+                color: '#666'
+              }}>
+                {rowData.bookingCount || 0}
+              </span>
+            )}
+            style={{ textAlign: 'center' }}
+          />
+          <Column 
+            field="category" 
+            header="Category"
+            style={{ color: '#666', fontSize: '13px' }}
+          />
+          <Column 
+            field="price" 
+            header="Amount"
+            body={(rowData) => (
+              <span style={{
+                fontWeight: '600',
+                color: '#000',
+                fontSize: '14px'
+              }}>
+                ${rowData.price || 0}
+              </span>
+            )}
+            style={{ textAlign: 'right' }}
+          />
+        </DataTable>
       </div>
     </div>
   );

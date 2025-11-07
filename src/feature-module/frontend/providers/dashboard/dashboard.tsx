@@ -22,6 +22,72 @@ import TopServices from './TopServices';
 import Status from './status';
 import Graph from './Graph';
 
+// Modern H&M Style CSS
+const hmStyles = {
+  pageWrapper: {
+    backgroundColor: '#f8f9fa',
+    minHeight: '100vh',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+  },
+  header: {
+    background: 'linear-gradient(135deg, #000 0%, #333 100%)',
+    color: '#fff',
+    padding: '32px 0',
+    marginBottom: '32px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+  },
+  card: {
+    backgroundColor: '#fff',
+    border: 'none',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+    borderRadius: '12px',
+    marginBottom: '24px',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease'
+  },
+  cardHeader: {
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #f0f0f0',
+    padding: '24px 32px',
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#1a1a1a',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  cardBody: {
+    padding: '32px'
+  },
+  button: {
+    backgroundColor: '#000',
+    color: '#fff',
+    border: 'none',
+    padding: '12px 28px',
+    fontSize: '13px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    borderRadius: '6px',
+    transition: 'all 0.3s ease',
+    textDecoration: 'none'
+  },
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    color: '#000',
+    border: '2px solid #000',
+    padding: '10px 26px',
+    fontSize: '13px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    borderRadius: '6px',
+    transition: 'all 0.3s ease',
+    textDecoration: 'none'
+  }
+};
+
 const ProviderDashboard = () => {
   const routes = all_routes;
   const [showModal, setShowModal] = useState(false);
@@ -35,1252 +101,247 @@ const ProviderDashboard = () => {
 
   return (
     <>
-      {/* Page Wrapper */}
-      <div className="page-wrapper">
-        <div className="content container-fluid pb-0">
-          <div className="row justify-content-center">
-            <Status />
-            <Graph />
-            {/* <div className="col-xxl-6 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body">
-                  <h6 className="mb-3">Subscription</h6>
-                  <div className=" bg-light-300 rounded p-3 mb-3">
-                    <div className="d-flex justify-content-between flex-wrap row-gap-2 mb-2">
-                      <span className="badge badge-success">
-                        <i className="ti ti-point-filled" />
-                        Current Plan
-                      </span>
-                      <span className="badge bg-info-transparent">
-                        Renewal Date : 14 Jan 2025
-                      </span>
-                    </div>
-                    <div className="mb-2">
-                      <p className="mb-0 text-dark fw-medium">Standard Plan</p>
-                      <span>Our most popular plan for small teams.</span>
-                    </div>
-                    <div className="d-flex mb-2">
-                      <h5 className="me-2">$291</h5>
-                      <span>Per user/Year</span>
-                    </div>
-                    <div className="">
-                      <div className="row justify-content-between">
-                        <div className="col-md-6">
-                          <Link
-                            to="#"
-                            className="btn btn-dark w-100 mb-3 mb-md-0"
-                          >
-                            Upgrade Plan
-                          </Link>
-                        </div>
-                        <div className="col-md-6">
-                          <Link to="#" className="btn btn-white w-100">
-                            Cancel Plan
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-light-500 rounded p-3">
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <div className="">
-                        <p className="mb-0 text-dark fw-medium">
-                          Standard Plan
-                        </p>
-                        <span className="d-block mb-2">
-                          Our most popular plan for small teams.
-                        </span>
-                        <Link
-                          to={routes.providerSubscription}
-                          className="text-info d-block"
-                        >
-                          View All Plans
-                        </Link>
-                      </div>
-                      <div className="d-flex">
-                        <h5>$291 </h5>
-                        <span> /Year</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            <div className="col-xxl-12 col-md-12 d-flex">
-              <TopServices />
-            </div>
-            {/* <div className="col-xxl-12 col-md-12 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h6>Top Services</h6>
-                    <Link to={routes.serviceDetails1} className="btn border">
-                      View All
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-56.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Installation Box
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">300 Bookings</span>
-                          <span className="pe-2 border-end">$400K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1 me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-57.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Plumbing Services
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">287 Bookings</span>
-                          <span className="pe-2 border-end">$320K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-58.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          House Renovation
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">250 Bookings</span>
-                          <span className="pe-2 border-end">$300K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-59.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Painting Services
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">214 Bookings</span>
-                          <span className="pe-2 border-end">$280K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-60.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Power restoration
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">115 Bookings</span>
-                          <span className="pe-2 border-end">$210K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-61.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Mosaic Cleaning Service
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">102 Bookings</span>
-                          <span className="pe-2 border-end">$190K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-62.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Light Installation
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">102 Bookings</span>
-                          <span className="pe-2 border-end">$190K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center mb-0">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.serviceDetails1}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/services/service-63.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link
-                          to={routes.serviceDetails1}
-                          className="fw-medium mb-0"
-                        >
-                          Cieling Fan Change
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">102 Bookings</span>
-                          <span className="pe-2 border-end">$190K</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to={routes.serviceDetails1}>
-                      <i className="ti ti-chevron-right" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className="col-xxl-4 col-md-6 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body reactcal-full">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h6>Bookings</h6>
-                    <Link to="#" className="btn border">
-                      View All
-                    </Link>
-                  </div>
-                  <div id="datetimepickershow ">
-                    <Calendar onChange={() => onChange} value={value} />
-                  </div>
-                  <div className="book-crd">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to={routes.bookingDetails}
-                              className="avatar avatar-lg flex-shrink-0 me-2"
-                            >
-                              <ImageWithBasePath
-                                src="assets/img/services/service-63.jpg"
-                                className="rounded-circle"
-                                alt="Img"
-                              />
-                            </Link>
-                            <div>
-                              <Link
-                                to={routes.bookingDetails}
-                                className="fw-medium"
-                              >
-                                Plan &amp; Design
-                              </Link>
-                              <span className="d-block fs-12">
-                                <i className="ti ti-clock me-1" />
-                                05:30 PM - 06:00 PM
-                              </span>
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to={routes.bookingDetails}
-                              className="avatar avatar-sm me-2"
-                            >
-                              <ImageWithBasePath
-                                src="assets/img/user/user-01.jpg"
-                                className="rounded-circle"
-                                alt="user"
-                              />
-                            </Link>
-                            <Link to={routes.bookingDetails}>
-                              <i className="ti ti-chevron-right" />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="book-crd">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                          <div className="d-flex">
-                            <Link
-                              to={routes.bookingDetails}
-                              className="avatar avatar-lg flex-shrink-0 me-2"
-                            >
-                              <ImageWithBasePath
-                                src="assets/img/services/service-56.jpg"
-                                className="rounded-circle"
-                                alt="Img"
-                              />
-                            </Link>
-                            <div>
-                              <Link
-                                to={routes.bookingDetails}
-                                className="fw-medium"
-                              >
-                                Installation &amp; Maintenance
-                              </Link>
-                              <span className="fs-12 d-block">
-                                <i className="ti ti-clock" />
-                                04:30 PM - 05:00 PM
-                              </span>
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <Link to="#" className="avatar avatar-sm me-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-01.jpg"
-                                className="rounded-circle"
-                                alt="user"
-                              />
-                            </Link>
-                            <Link to={routes.bookingDetails}>
-                              <i className="ti ti-chevron-right" />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="book-crd">
-                    <div className="card mb-0">
-                      <div className="card-body">
-                        <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to={routes.bookingDetails}
-                              className="avatar avatar-lg flex-shrink-0 me-2"
-                            >
-                              <ImageWithBasePath
-                                src="assets/img/services/service-63.jpg"
-                                className="rounded-circle"
-                                alt="Img"
-                              />
-                            </Link>
-                            <div>
-                              <Link
-                                to={routes.bookingDetails}
-                                className="fw-medium"
-                              >
-                                Plan &amp; Design
-                              </Link>
-                              <span className="d-block fs-12">
-                                <i className="ti ti-clock me-1" />
-                                05:30 PM - 06:00 PM
-                              </span>
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center">
-                            <Link
-                              to={routes.bookingDetails}
-                              className="avatar avatar-sm me-2"
-                            >
-                              <ImageWithBasePath
-                                src="assets/img/user/user-01.jpg"
-                                className="rounded-circle"
-                                alt="user"
-                              />
-                            </Link>
-                            <Link to={routes.bookingDetails}>
-                              <i className="ti ti-chevron-right" />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+      <div className="page-wrapper" style={hmStyles.pageWrapper}>
+        <div className="content container-fluid" style={{ padding: '24px' }}>
+          {/* Dashboard Grid */}
+          <div className="row g-4">
+            {/* Status Section */}
+            <div className="col-12">
+              <div style={hmStyles.card}>
+                <div style={hmStyles.cardBody}>
+                  <Status />
                 </div>
               </div>
             </div>
-            <div className="col-xxl-4 col-md-6 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body">
-                  <h6 className="mb-4">Top Locations</h6>
-                  <div id="deals-chart">
-                    <ReactApexChart
-                      options={sCol2}
-                      series={sCol2.series}
-                      type="bar"
-                      height={275}
-                    />
-                  </div>
-                  <div>
-                    <p>Top Locations &amp; Users</p>
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <div className="d-flex">
-                        <span className="avatar avatar-lg me-2">
-                          <ImageWithBasePath
-                            src="assets/img/icons/flag-01.svg"
-                            className="rounded-circle "
-                            alt="flag"
-                          />
-                        </span>
-                        <div>
-                          <p className="text-dark fw-medium mb-0">
-                            Saudi Arabia
-                          </p>
-                          <span className="fs-12">California</span>
-                        </div>
-                      </div>
-                      <span className="badge badge-info">
-                        <i className="ti ti-point-filled" />
-                        300 Bookings
-                      </span>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <div className="d-flex">
-                        <span className="avatar avatar-lg me-2">
-                          <ImageWithBasePath
-                            src="assets/img/icons/flag-02.svg"
-                            className="rounded-circle "
-                            alt="flag"
-                          />
-                        </span>
-                        <div>
-                          <p className="text-dark fw-medium mb-0">Honkong</p>
-                          <span className="fs-12">California</span>
-                        </div>
-                      </div>
-                      <span className="badge badge-info">
-                        <i className="ti ti-point-filled" />
-                        300 Bookings
-                      </span>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center mb-0">
-                      <div className="d-flex">
-                        <span className="avatar avatar-lg me-2">
-                          <ImageWithBasePath
-                            src="assets/img/icons/flag-03.svg"
-                            className="rounded-circle "
-                            alt="flag"
-                          />
-                        </span>
-                        <div>
-                          <p className="text-dark fw-medium mb-0">Germany</p>
-                          <span className="fs-12">California</span>
-                        </div>
-                      </div>
-                      <span className="badge badge-info">
-                        <i className="ti ti-point-filled" />
-                        300 Bookings
-                      </span>
-                    </div>
-                  </div>
+
+            {/* Analytics Section */}
+            <div className="col-12">
+              <div style={hmStyles.card}>
+                <div style={hmStyles.cardBody}>
+                  <Graph />
                 </div>
               </div>
-            </div> */}
-            {/* <div className="col-md-6 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h6>Latest Reviews</h6>
-                    <Link to={routes.providerReview} className="btn border">
-                      View All
-                    </Link>
-                  </div>
-                  <div className=" border-bottom pb-3 mb-3">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-01.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Maude Rossi
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info">
-                                Plumbing installation
-                              </span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-03.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">rebecca</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-bottom pb-3 mb-3">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-02.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Livengood
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info">
-                                {' '}
-                                Plumbing Repairs
-                              </span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-04.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">Adrian</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-bottom pb-3 mb-3">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-03.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Karl Brown
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info">
-                                {' '}
-                                Construction Worker
-                              </span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-05.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">Andreson</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-bottom pb-3 mb-3">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-03.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Jerry Curran
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info"> Makeup Artists</span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-06.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">Pique</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="border-bottom pb-3 mb-3">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-02.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Livengood
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info">
-                                {' '}
-                                Plumbing Repairs
-                              </span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-04.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">Adrian</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="">
-                    <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                      <div className="d-flex">
-                        <Link
-                          to="#"
-                          className="avatar avatar-lg flex-shrink-0 me-2"
-                        >
-                          <ImageWithBasePath
-                            src="assets/img/profiles/avatar-03.jpg"
-                            className="rounded-circle"
-                            alt="Img"
-                          />
-                        </Link>
-                        <div>
-                          <Link
-                            to={routes.providerReview}
-                            className="fw-medium"
-                          >
-                            Karl Brown
-                          </Link>
-                          <div className="d-flex align-items-center">
-                            <p className="fs-12 mb-0 pe-2 border-end">
-                              For{' '}
-                              <span className="text-info">
-                                {' '}
-                                Construction Worker
-                              </span>
-                            </p>
-                            <span className="avatar avatar-sm mx-2">
-                              <ImageWithBasePath
-                                src="assets/img/user/user-05.jpg"
-                                className="img-fluid rounded-circle"
-                                alt="user"
-                              />
-                            </span>
-                            <span className="fs-12">Andreson</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <span className="text-warning fs-10 me-1">
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                          <i className="ti ti-star-filled filled" />
-                        </span>
-                        <span className="fs-12">4.9</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className="col-md-6 d-flex">
-              <div className="card flex-fill">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2 mb-4">
-                    <h6>Highly Rated Staffs</h6>
-                    <Link to="#" className="btn border" onClick={handelOpen}>
-                      Add New Staff
-                    </Link>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-bottom flex-wrap row-gap-2 pb-3 mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-20.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Maude Rossi
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Plumber</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      300 Bookings
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-bottom flex-wrap row-gap-2 pb-3 mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-21.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Floyd Andrian
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Electrician</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      158 Bookings
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-bottom flex-wrap row-gap-2 pb-3 mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-22.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Michael Ruiz
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Painter</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      157 Bookings
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-bottom flex-wrap row-gap-2 pb-3 mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-23.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Glenn Lewis
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Electrician</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      156 Bookings
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center border-bottom flex-wrap row-gap-2 pb-3 mb-3">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-24.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Kimberly Meissner
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Electrician</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      120 Bookings
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-                    <div className="d-flex">
-                      <Link
-                        to={routes.staffDetails}
-                        className="avatar avatar-lg me-2"
-                      >
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-25.jpg"
-                          className="rounded-circle"
-                          alt="Img"
-                        />
-                      </Link>
-                      <div>
-                        <Link to={routes.staffDetails} className="fw-medium">
-                          Lisa Jackson
-                        </Link>
-                        <div className="fs-12 d-flex align-items-center gap-2">
-                          <span className="pe-2 border-end">Electrician</span>
-                          <span>
-                            <i className="ti ti-star-filled text-warning me-1" />
-                            4.9
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="badge badge-info">
-                      <i className="ti ti-point-filled" />
-                      120 Bookings
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </div>
-      {/* /Page Wrapper */}
-      {/* Add Staff*/}
-      <div className="modal fade custom-modal" id="add-staff">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content doctor-profile">
-            <Modal className="doctor-profile" centered show={showModal}>
-              <div className="modal-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 className="modal-title">Add Staff </h5>
-                <Link to="#" onClick={handleClose} aria-label="Close">
-                  <i className="ti ti-circle-x-filled fs-20" />
-                </Link>
-              </div>
-              <div className="modal-body pb-0">
-                <form>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <div className="d-flex profile-upload align-items-center">
-                          <span className="d-flex justify-content-center align-items-center p-4 bg-light rounded me-2">
-                            <i className="ti ti-photo" />
-                          </span>
-                          <div>
-                            <h6 className="fs-16">Profile</h6>
-                            <span className="fs-14">
-                              Image size does not exceed 5MB
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Full Name</label>
-                        <input
-                          type="text"
-                          className="form-control pass-input"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input
-                          type="email"
-                          className="form-control pass-input"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Phone Number</label>
-                        <input
-                          type="number"
-                          className="form-control pass-input"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Address</label>
-                        <input
-                          type="text"
-                          className="form-control pass-input"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Country</label>
-                        <CustomDropdown
-                          options={countryOption}
-                          className="select d-flex"
-                          placeholder="Select"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">State</label>
-                        <CustomDropdown
-                          options={stateOption}
-                          className="select d-flex"
-                          placeholder="Select"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">City</label>
-                        <CustomDropdown
-                          options={cityOption}
-                          className="select d-flex"
-                          placeholder="Select"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Zip Code</label>
-                        <input
-                          type="text"
-                          className="form-control pass-input"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Description</label>
-                        <textarea
-                          className="form-control"
-                          rows={3}
-                          defaultValue={''}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Services</label>
-                        <CustomDropdown
-                          options={serviceOption}
-                          className="select d-flex"
-                          placeholder="Select"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Status</label>
-                        <CustomDropdown
-                          options={statusOption}
-                          className="select d-flex"
-                          placeholder="Select"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <div className="d-flex justify-content-end align-items-center">
+            </div>
+
+            {/* Top Services Section */}
+            <div className="col-12">
+              <div style={hmStyles.card}>
+                <div style={hmStyles.cardHeader}>
+                  <span>Top Services</span>
                   <Link
-                    to="#"
-                    className="btn btn-light me-2"
-                    onClick={handleClose}
+                    to={routes.serviceDetails1}
+                    style={hmStyles.buttonSecondary}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#000';
+                      e.target.style.color = '#fff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = '#000';
+                    }}
                   >
-                    Cancel
-                  </Link>
-                  <Link to={routes.staffList} className="btn btn-dark">
-                    Submit
+                    View All
                   </Link>
                 </div>
+                <div style={{ padding: '0 32px 32px 32px' }}>
+                  <TopServices />
+                </div>
               </div>
-            </Modal>
+            </div>
           </div>
         </div>
       </div>
-      {/* /Add Staff */}
+
+      <Modal className="doctor-profile" centered show={showModal}>
+        <div className="modal-header" style={{
+          padding: '24px 32px',
+          borderBottom: '1px solid #f0f0f0',
+          backgroundColor: '#fff'
+        }}>
+          <h5 className="modal-title" style={{
+            fontSize: '18px',
+            fontWeight: '600',
+            color: '#1a1a1a',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            margin: '0'
+          }}>Add Staff</h5>
+          <Link
+            to="#"
+            onClick={handleClose}
+            aria-label="Close"
+            style={{
+              color: '#666',
+              fontSize: '24px',
+              textDecoration: 'none',
+              transition: 'color 0.3s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.color = '#000'}
+            onMouseLeave={(e) => e.target.style.color = '#666'}
+          >
+            <i className="ti ti-x" />
+          </Link>
+        </div>
+        <div className="modal-body" style={{ padding: '32px' }}>
+          <form>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="mb-3">
+                  <div className="d-flex profile-upload align-items-center">
+                    <span className="d-flex justify-content-center align-items-center p-4 bg-light rounded me-2">
+                      <i className="ti ti-photo" />
+                    </span>
+                    <div>
+                      <h6 className="fs-16">Profile</h6>
+                      <span className="fs-14">
+                        Image size does not exceed 5MB
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    className="form-control pass-input"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control pass-input"
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="mb-3">
+                  <label className="form-label">Phone Number</label>
+                  <input
+                    type="number"
+                    className="form-control pass-input"
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="mb-3">
+                  <label className="form-label">Address</label>
+                  <input
+                    type="text"
+                    className="form-control pass-input"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Country</label>
+                  <CustomDropdown
+                    options={countryOption}
+                    className="select d-flex"
+                    placeholder="Select"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">State</label>
+                  <CustomDropdown
+                    options={stateOption}
+                    className="select d-flex"
+                    placeholder="Select"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">City</label>
+                  <CustomDropdown
+                    options={cityOption}
+                    className="select d-flex"
+                    placeholder="Select"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Zip Code</label>
+                  <input
+                    type="text"
+                    className="form-control pass-input"
+                  />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="mb-3">
+                  <label className="form-label">Description</label>
+                  <textarea
+                    className="form-control"
+                    rows={3}
+                    defaultValue={''}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Services</label>
+                  <CustomDropdown
+                    options={serviceOption}
+                    className="select d-flex"
+                    placeholder="Select"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Status</label>
+                  <CustomDropdown
+                    options={statusOption}
+                    className="select d-flex"
+                    placeholder="Select"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="modal-footer" style={{
+          padding: '24px 32px',
+          borderTop: '1px solid #f0f0f0',
+          backgroundColor: '#fff'
+        }}>
+          <div className="d-flex justify-content-end align-items-center gap-3">
+            <Link
+              to="#"
+              style={hmStyles.buttonSecondary}
+              onClick={handleClose}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f8f9fa';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+              }}
+            >
+              Cancel
+            </Link>
+            <Link
+              to={routes.staffList}
+              style={hmStyles.button}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#000';
+              }}
+            >
+              Submit
+            </Link>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

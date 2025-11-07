@@ -16,135 +16,105 @@ const Status = () => {
     fetchData();
   }, []);
   return (
-    <div className="col-xxl-3 col-md-6">
-      <div className="row flex-fill">
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Pending Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.pending}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-warning d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check" />
-                </span>
+    <div className="row g-3">
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">Pending</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.pending || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-success me-2">
-              12% <i className="ti ti-arrow-badge-up-filled" />
-            </span>
-            from Last Week
-          </p> */}
+              <span className="prov-icon bg-warning d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-clock" />
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Completed Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.completed}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-success d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check text-dark" />
-                </span>
+      </div>
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">Completed</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.completed || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-danger me-2">
-              12% <i className="ti ti-arrow-badge-down-filled" />
-            </span>
-            from Last Week
-          </p> */}
+              <span className="prov-icon bg-success d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-check" />
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Progress Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.progress}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-info d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check" />
-                </span>
+      </div>
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">In Progress</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.progress || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-danger me-2">0%</span>from Last
-            Week
-          </p> */}
+              <span className="prov-icon bg-info d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-loader" />
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Accepted Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.accepted}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-success d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check" />
-                </span>
+      </div>
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">Accepted</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.accepted || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-danger me-2">0%</span>from Last
-            Week
-          </p> */}
+              <span className="prov-icon bg-primary d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-thumb-up" />
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Rejected Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.rejected}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-dark d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check" />
-                </span>
+      </div>
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">Rejected</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.rejected || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-danger me-2">0%</span>from Last
-            Week
-          </p> */}
+              <span className="prov-icon bg-dark d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-x" />
+              </span>
             </div>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card prov-widget">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="mb-2">
-                  <p className="mb-1">Cancelled Appointments</p>
-                  <h5>
-                    <span className="counter">{stats?.cancelled}</span>
-                  </h5>
-                </div>
-                <span className="prov-icon bg-danger d-flex justify-content-center align-items-center rounded">
-                  <i className="ti ti-calendar-check" />
-                </span>
+      </div>
+      <div className="col-lg-2 col-md-4 col-sm-6">
+        <div className="card prov-widget h-100">
+          <div className="card-body">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-2">
+                <p className="mb-1 text-muted small">Cancelled</p>
+                <h5 className="mb-0">
+                  <span className="counter">{stats?.cancelled || 0}</span>
+                </h5>
               </div>
-              {/* <p className="fs-12">
-            <span className="text-danger me-2">0%</span>from Last
-            Week
-          </p> */}
+              <span className="prov-icon bg-danger d-flex justify-content-center align-items-center rounded">
+                <i className="ti ti-ban" />
+              </span>
             </div>
           </div>
         </div>

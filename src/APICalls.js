@@ -312,6 +312,35 @@ export const fetchStaff = async (id) => {
     console.log(error);
   }
 };
+
+// New API functions for staff management
+export const fetchAllStaff = async () => {
+  try {
+    const { data } = await axios.get(
+      `${api}profiles/all/staff`,
+      bearerHeader,
+    );
+    if (!data) return [];
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export const fetchStaffByProvider = async (providerId) => {
+  try {
+    const response = await axios.get(
+      `${api}profiles/providers/${providerId}`,
+      bearerHeader,
+    );
+    if (!response.data || !response.data.success) return [];
+    return response.data.data; // Return the data array from the response
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
 export const getAllProviders = async () => {
   const { data } = await axios.get(`${api}profiles/all/provider`, bearerHeader);
   if (!data) return [];
@@ -471,7 +500,6 @@ export const createStaff = async (formData) => {
       formData,
       formDataHeader,
     );
-    alert(res.data.message);
     return { message: res.data.message, status: res.status };
   } catch (error) {
     console.log(error);
@@ -538,6 +566,21 @@ export const updateStaff = async (formData, id) => {
     return { message: res.data.message, status: res.status };
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+};
+
+export const deleteStaff = async (id) => {
+  try {
+    if (!id) return;
+    const res = await axios.delete(
+      `${api}profiles/${id}`,
+      bearerHeader,
+    );
+    return { message: res.data.message, status: res.status };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 

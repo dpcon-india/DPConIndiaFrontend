@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  fetchServicesByProvider,
-  updateServiceStatus,
-} from '../../../../APICalls';
-import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
+import { Link } from 'react-router-dom';
+import { fetchServicesByProvider, updateServiceStatus, deleteService } from '../../../../APICalls';
 import { IService } from '../../../../GlobleType';
 import { all_routes } from '../../../../core/data/routes/all_routes';
+import * as Icon from 'react-feather';
+import moment from 'moment';
+import EditServiceModal from './EditServiceModal';
 
 const routes = all_routes;
 
@@ -14,29 +13,34 @@ const ProviderServices = () => {
   const [services, setServices] = useState<IService[]>([]);
   const [data, setData] = useState<IService[]>([]);
   const [id, setId] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'active' | 'inactive'>('active');
+  const [selectedService, setSelectedService] = useState<any>(null);
+
+
   const fetchData = async () => {
     try {
-      const id = JSON.parse(localStorage.getItem('user') || '{}')?._id;
-      const res = await fetchServicesByProvider(id);
-      const sortedData = sortServices(res, sortOrder);
-      setData(sortedData);
-      filtered(sortedData, true);
+      const userId = JSON.parse(localStorage.getItem('user') || '{}')?._id;
+      const res = await fetchServicesByProvider(userId);
+      const formattedData = res.map((service: any, index: number) => ({
+        ...service,
+        serialNo: index + 1,
+        createdDate: moment(service.createdAt).format('DD MMM YYYY'),
+        statusText: service.active ? 'Active' : 'Inactive',
+        categoryName: service.categories?.[0]?.categoryName || 'N/A',
+        locationText: `${service.location?.city || ''}, ${service.location?.locality || ''}, ${service.location?.pincode || ''}`.replace(/^,\s*|,\s*$/g, '') || 'N/A',
+        serviceImage: service.image || service.gallery?.[0] || '',
+      }));
+      setData(formattedData);
+      setServices(formattedData.filter(s => s.active === (activeTab === 'active')));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const filtered = (res: IService[], active: boolean) => {
-    try {
-      const filter = res?.filter((e: IService) => e?.active === active);
-      setServices(filter);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleTabChange = (tab: 'active' | 'inactive') => {
+    setActiveTab(tab);
+    const filtered = data.filter(s => s.active === (tab === 'active'));
+    setServices(filtered);
   };
 
   const updateStatus = async (active: boolean) => {
@@ -47,322 +51,203 @@ const ProviderServices = () => {
       console.error(error);
     }
   };
-  const sortServices = (services: IService[], order: 'asc' | 'desc') => {
-    return services.sort((a, b) => {
-      const dateA = a?.createdAt ? new Date(a.createdAt).getTime() : 0; // Fallback to 0 if undefined
-      const dateB = b?.createdAt ? new Date(b.createdAt).getTime() : 0; // Fallback to 0 if undefined
-      return order === 'asc' ? dateA - dateB : dateB - dateA;
-    });
+
+  const handleDeleteService = async () => {
+    try {
+      const result = await deleteService(id);
+      if (result?.status === 200) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleSortToggle = () => {
-    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-    setSortOrder(newOrder);
-    const sortedData = sortServices(data, newOrder);
-    setData(sortedData);
-    filtered(sortedData, true);
-  };
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentServices = services.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    handleTabChange(activeTab);
+  }, [data]);
 
-  const totalPages = Math.ceil(services.length / itemsPerPage);
-  const option = [5, 10, 20, 50, 100];
+
+
+
+
+
   return (
     <>
-      {/* Page Wrapper */}
-      <div className="page-wrapper">
-        <div className="content container-fluid">
-          <div className="row">
-            <div className="d-flex justify-content-between align-items-center flex-wrap mb-4">
-              <h5>My Services</h5>
-              <div className="d-flex align-items-center">
-                <span className="fs-14 me-2">Sort</span>
-                <div className="dropdown me-2">
-                  <button
-                    className="btn bg-light-300"
-                    onClick={handleSortToggle}
-                  >
-                    {sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}
+    <div className="page-wrapper" style={{ marginLeft: '260px', paddingTop: '48px' }}>
+      <div className="content" style={{ backgroundColor: '#fafafa', minHeight: '100vh', padding: '2rem 0' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', padding: '0 1.5rem' }}>
+        <div>
+          <h1 style={{ fontSize: '2rem', fontWeight: '300', color: '#000', margin: 0 }}>Services</h1>
+          <p style={{ color: '#666', margin: '0.5rem 0 0 0' }}>Manage your offerings</p>
+        </div>
+        <Link to={routes.createService} style={{
+          backgroundColor: '#000', color: '#fff', padding: '0.75rem 1.5rem',
+          borderRadius: '0', textDecoration: 'none', fontSize: '0.9rem',
+          fontWeight: '400', display: 'flex', alignItems: 'center', gap: '0.5rem'
+        }}>
+          <Icon.Plus size={18} />Add Service
+        </Link>
+      </div>
+      
+      {/* Tabs */}
+      <div style={{ display: 'flex', marginBottom: '2rem', borderBottom: '1px solid #e5e5e5', padding: '0 1.5rem' }}>
+        {['active', 'inactive'].map(tab => (
+          <button key={tab} onClick={() => handleTabChange(tab as 'active' | 'inactive')}
+            style={{
+              padding: '1rem 0', marginRight: '2rem', border: 'none', background: 'none',
+              fontSize: '0.9rem', fontWeight: '400', cursor: 'pointer',
+              borderBottom: activeTab === tab ? '2px solid #000' : '2px solid transparent',
+              color: activeTab === tab ? '#000' : '#666'
+            }}>
+            {tab.charAt(0).toUpperCase() + tab.slice(1)} ({data.filter(s => s.active === (tab === 'active')).length})
+          </button>
+        ))}
+      </div>
+
+      {/* Services Grid */}
+      <div style={{ padding: '0 1.5rem' }}>
+      {services.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '4rem', color: '#999' }}>
+          <Icon.Package size={48} style={{ marginBottom: '1rem' }} />
+          <p>No {activeTab} services</p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+          {services.map(service => (
+            <div key={service._id} style={{
+              backgroundColor: '#fff', border: '1px solid #e5e5e5', overflow: 'hidden',
+              transition: 'transform 0.2s ease'
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+              
+              <div style={{ position: 'relative', height: '140px' }}>
+                <img src={service.serviceImage || '/placeholder.jpg'} alt={service.serviceTitle}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{
+                  position: 'absolute', top: '1rem', right: '1rem',
+                  backgroundColor: service.active ? '#000' : '#999', color: '#fff',
+                  padding: '0.25rem 0.5rem', fontSize: '0.7rem'
+                }}>
+                  {service.statusText}
+                </div>
+              </div>
+              
+              <div style={{ padding: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '400', margin: '0 0 0.5rem 0' }}>
+                  {service.serviceTitle}
+                </h3>
+                <p style={{ color: '#666', fontSize: '0.8rem', margin: '0 0 0.75rem 0', lineHeight: '1.3' }}>
+                  {service.description?.substring(0, 60)}...
+                </p>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                  <div>
+                    <span style={{ fontSize: '0.75rem', color: '#999' }}>PRICE</span>
+                    <div style={{ fontSize: '1rem', fontWeight: '500' }}>₹{service.price}</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#999' }}>CATEGORY</span>
+                    <div style={{ fontSize: '0.8rem' }}>{service.categoryName}</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#666', fontSize: '0.75rem' }}>
+                  <Icon.MapPin size={12} />{service.locationText}
+                </div>
+                
+                <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid #f0f0f0' }}>
+                  <button onClick={() => setSelectedService(service)} data-bs-toggle="modal" data-bs-target="#edit-service"
+                    style={{ flex: 1, padding: '0.4rem', border: '1px solid #e5e5e5', background: '#fff', cursor: 'pointer' }}>
+                    <Icon.Edit size={12} />
+                  </button>
+                  <button onClick={() => setId(service._id)} data-bs-toggle="modal" data-bs-target={service.active ? '#in-active' : '#active'}
+                    style={{ padding: '0.4rem', border: '1px solid #e5e5e5', background: '#fff', cursor: 'pointer' }}>
+                    <Icon.ToggleLeft size={12} />
+                  </button>
+                  <button onClick={() => setId(service._id)} data-bs-toggle="modal" data-bs-target="#del-service"
+                    style={{ padding: '0.4rem', border: '1px solid #e5e5e5', background: '#fff', cursor: 'pointer' }}>
+                    <Icon.Trash2 size={12} />
                   </button>
                 </div>
-                <Link
-                  to={routes.createService}
-                  className="btn btn-dark d-flex align-items-center"
-                >
-                  <i className="ti ti-circle-plus me-2" />
-                  Add Services
-                </Link>
               </div>
             </div>
-          </div>
-          <div className="row justify-content-center">
-            <div className="tab-list mb-4" role="tablist">
-              <ul className="nav d-flex align-items-center">
-                <li>
-                  <Link
-                    to="#"
-                    className="act-btn active me-3 p-2 rounded fs-14"
-                    data-bs-toggle="tab"
-                    // data-bs-target="#active-service"
-                    // role="tab"
-                    // aria-controls="active-service"
-                    aria-selected="true"
-                    tabIndex={-1}
-                    onClick={() => filtered(data, true)}
-                  >
-                    Active Services
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="act-btn p-2 rounded fs-14"
-                    data-bs-toggle="tab"
-                    aria-selected="false"
-                    tabIndex={-1}
-                    onClick={() => filtered(data, false)}
-                  >
-                    Inactive Services
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-xl-12 col-lg-12">
-              <div className="row  align-items-center">
-                {currentServices?.map((e, i) => (
-                  <div className="col-xl-4 col-md-6" key={i}>
-                    <div className="card p-0">
-                      <div className="card-body p-0">
-                        <div className="img-sec w-100">
-                          <Link to={routes.serviceDetails1}>
-                            <img
-                              src={e.gallery[0] || ''}
-                              className="img-fluid rounded-top w-100"
-                              alt="img"
-                              style={{ height: '300px', objectFit: 'cover' }}
-                            />
-                          </Link>
-                          <div className="image-tag d-flex justify-content-end align-items-center">
-                            <span className="trend-tag">
-                              {e?.categoryId?.categoryName}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="p-3">
-                          <h5 className="mb-2 text-truncate">
-                            <Link to={routes.serviceDetails1}>
-                              {e?.serviceTitle}
-                            </Link>
-                          </h5>
-                          <div className="d-flex justify-content-between align-items-center mb-3">
-                            <p className="fs-14 mb-0">
-                              <i className="ti ti-map-pin me-2" />
-                              {e?.location?.city}
-                              {', ' + e?.location?.locality}
-                              {', ' + e?.location?.pincode}
-                            </p>
-                            <h5>₹{e?.price}</h5>
-                          </div>
-
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex gap-3">
-                              {/* <div
-                                onClick={() =>
-                                  navigate('/services/edit-service', {
-                                    state: e,
-                                  })
-                                }
-                              >
-                                <i className="ti ti-edit me-2" />
-                                Edit
-                              </div> */}
-                              <Link
-                                to="#"
-                                data-bs-toggle="modal"
-                                data-bs-target={
-                                  e?.active ? '#in-active' : '#active'
-                                }
-                                onClick={() => setId(e?._id || '')}
-                              >
-                                <i className="ti ti-info-circle me-2" />
-                                {!e?.active ? 'Activate' : 'Inactive'}
-                              </Link>
-                            </div>
-                          </div>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Pagination */}
-              <div className="d-flex justify-content-between align-items-center mt-4">
-                <div className="value d-flex align-items-center">
-                  <span>Show</span>
-                  <select
-                    value={itemsPerPage}
-                    onChange={(e) => {
-                      const newItemsPerPage = Number(e.target.value);
-                      setItemsPerPage(newItemsPerPage); // Update the items per page
-                      setCurrentPage(1); // Reset to the first page
-                    }}
-                  >
-                    {option.map((optionValue, index) => (
-                      <option key={index} value={optionValue}>
-                        {optionValue}
-                      </option>
-                    ))}
-                  </select>
-                  <span>entries</span>
-                </div>
-                <nav aria-label="Page navigation">
-                  <ul className="pagination">
-                    {[...Array(totalPages)].map((_, index) => (
-                      <li
-                        key={index}
-                        className={`page-item ${
-                          index + 1 === currentPage ? 'active' : ''
-                        }`}
-                      >
-                        <button
-                          className="page-link"
-                          onClick={() => paginate(index + 1)}
-                        >
-                          {index + 1}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
+      )}
       </div>
-      {/* /Page Wrapper */}
-      {/* Inactive */}
-      <div className="modal fade custom-modal" id="in-active">
+      </div>
+    </div>
+    
+    {/* Modals */}
+      <div className="modal fade" id="in-active">
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header d-flex align-items-center justify-content-between border-bottom">
-              <h5 className="modal-title">Inactive Service</h5>
-              <Link to="#" data-bs-dismiss="modal" aria-label="Close">
-                <i className="ti ti-circle-x-filled fs-20" />
-              </Link>
+          <div className="modal-content" style={{ border: 'none' }}>
+            <div className="modal-header" style={{ borderBottom: '1px solid #e5e5e5' }}>
+              <h6 style={{ margin: 0, fontWeight: '400' }}>Deactivate Service</h6>
+              <button type="button" data-bs-dismiss="modal" style={{ border: 'none', background: 'none' }}>
+                <Icon.X size={20} />
+              </button>
             </div>
-            <div className="modal-body">
-              <div className="write-review">
-                <form>
-                  <p>Are you sure want to inactive this service?</p>
-                  <div className="modal-submit text-end">
-                    <Link
-                      to="#"
-                      className="btn btn-light me-2"
-                      data-bs-dismiss="modal"
-                    >
-                      Cancel
-                    </Link>
-                    <button
-                      type="button"
-                      data-bs-dismiss="modal"
-                      className="btn btn-dark"
-                      onClick={() => updateStatus(false)}
-                    >
-                      Yes
-                    </button>
-                  </div>
-                </form>
+            <div className="modal-body" style={{ padding: '2rem' }}>
+              <p style={{ margin: '0 0 2rem 0' }}>Deactivate this service?</p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: '1px solid #e5e5e5', background: '#fff' }}>Cancel</button>
+                <button onClick={() => updateStatus(false)} data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: 'none', background: '#000', color: '#fff' }}>Confirm</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* Inactive */}
-      {/* active */}
-      <div className="modal fade custom-modal" id="active">
+      
+      <div className="modal fade" id="active">
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header d-flex align-items-center justify-content-between border-bottom">
-              <h5 className="modal-title">Active Services</h5>
-              <Link to="#" data-bs-dismiss="modal" aria-label="Close">
-                <i className="ti ti-circle-x-filled fs-20" />
-              </Link>
+          <div className="modal-content" style={{ border: 'none' }}>
+            <div className="modal-header" style={{ borderBottom: '1px solid #e5e5e5' }}>
+              <h6 style={{ margin: 0, fontWeight: '400' }}>Activate Service</h6>
+              <button type="button" data-bs-dismiss="modal" style={{ border: 'none', background: 'none' }}>
+                <Icon.X size={20} />
+              </button>
             </div>
-            <div className="modal-body">
-              <div className="write-review">
-                <form>
-                  <p>Are you sure want to active this service?</p>
-                  <div className="modal-submit text-end">
-                    <Link
-                      to="#"
-                      className="btn btn-light me-2"
-                      data-bs-dismiss="modal"
-                    >
-                      Cancel
-                    </Link>
-                    <button
-                      type="button"
-                      data-bs-dismiss="modal"
-                      className="btn btn-dark"
-                      onClick={() => updateStatus(true)}
-                    >
-                      Yes
-                    </button>
-                  </div>
-                </form>
+            <div className="modal-body" style={{ padding: '2rem' }}>
+              <p style={{ margin: '0 0 2rem 0' }}>Activate this service?</p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: '1px solid #e5e5e5', background: '#fff' }}>Cancel</button>
+                <button onClick={() => updateStatus(true)} data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: 'none', background: '#000', color: '#fff' }}>Confirm</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* /active */}
-      {/* Delete Service */}
-      <div className="modal fade custom-modal" id="del-service">
+      
+      <div className="modal fade" id="del-service">
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header d-flex align-items-center justify-content-between border-bottom">
-              <h5 className="modal-title">Delete Service</h5>
-              <Link to="#" data-bs-dismiss="modal" aria-label="Close">
-                <i className="ti ti-circle-x-filled fs-20" />
-              </Link>
+          <div className="modal-content" style={{ border: 'none' }}>
+            <div className="modal-header" style={{ borderBottom: '1px solid #e5e5e5' }}>
+              <h6 style={{ margin: 0, fontWeight: '400' }}>Delete Service</h6>
+              <button type="button" data-bs-dismiss="modal" style={{ border: 'none', background: 'none' }}>
+                <Icon.X size={20} />
+              </button>
             </div>
-            <div className="modal-body">
-              <div className="write-review">
-                <form>
-                  <p>Are you sure want to delete this service?</p>
-                  <div className="modal-submit text-end">
-                    <Link
-                      to="#"
-                      className="btn btn-light me-2"
-                      data-bs-dismiss="modal"
-                    >
-                      Cancel
-                    </Link>
-                    <button
-                      type="button"
-                      data-bs-dismiss="modal"
-                      className="btn btn-dark"
-                    >
-                      Yes
-                    </button>
-                  </div>
-                </form>
+            <div className="modal-body" style={{ padding: '2rem' }}>
+              <p style={{ margin: '0 0 2rem 0' }}>Delete this service permanently?</p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: '1px solid #e5e5e5', background: '#fff' }}>Cancel</button>
+                <button onClick={handleDeleteService} data-bs-dismiss="modal" style={{ padding: '0.5rem 1rem', border: 'none', background: '#000', color: '#fff' }}>Delete</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* /Delete Service */}
+      
+      <EditServiceModal selectedService={selectedService} onServiceUpdated={fetchData} />
     </>
   );
 };

@@ -14,12 +14,13 @@ import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
 import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 import * as Yup from 'yup';
 
-const StaffModal = ({ fromParent }: any) => {
+const StaffModal = ({ fromParent, onUpdate, onDelete, staffToDelete }: any) => {
   const [image, setImage] = useState<any>();
   const [imagePreview, setImagePreview] = useState('');
   const [data, setData] = useState(fromParent);
   useEffect(() => {
     setData(fromParent);
+    setImagePreview(''); // Reset image preview when new data comes
   }, [fromParent]);
   // Initial values for the form
   const initialValues = {
@@ -80,40 +81,73 @@ const StaffModal = ({ fromParent }: any) => {
       .matches(/^[0-9]{6}$/, 'Zip Code must be 6 digits.'),
   });
   // Submit function for the form
-  const onSubmit = async (values: any) => {
-    const formData = new FormData();
-    formData.append('role', 'staff');
-    formData.append('name', values.name);
-    formData.append('password', values.password);
-    formData.append('email', values.email);
-    formData.append('number', values.number);
-    formData.append('location[city]', values.city);
-    formData.append('location[state]', values.state);
-    formData.append('location[country]', values.country);
-    formData.append('location[address]', values.address);
-    formData.append('location[pincode]', values.pincode);
-    const id = JSON.parse(localStorage.getItem('user') || '{}')?._id;
-    formData.append('providerId', id);
-    if (image) formData.append('image', image);
-    const res = await createStaff(formData);
-
-    // Handle form submission (e.g., make an API call to submit the data)
+  const onSubmit = async (values: any, { resetForm }: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('role', 'staff');
+      formData.append('name', values.name);
+      formData.append('password', values.password);
+      formData.append('email', values.email);
+      formData.append('number', values.number);
+      formData.append('location[city]', values.city);
+      formData.append('location[state]', values.state);
+      formData.append('location[country]', values.country);
+      formData.append('location[address]', values.address);
+      formData.append('location[pincode]', values.pincode);
+      const id = JSON.parse(localStorage.getItem('user') || '{}')?._id;
+      formData.append('providerId', id);
+      if (image) formData.append('image', image);
+      const res = await createStaff(formData);
+      
+      if (res) {
+        resetForm();
+        setImage(null);
+        setImagePreview('');
+        if (onUpdate) onUpdate(); // Refresh the staff list
+        const modal = document.getElementById('add-staff');
+        if (modal) {
+          const closeBtn = modal.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+          if (closeBtn) {
+            closeBtn.click();
+          }
+        }
+        alert('Staff added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding staff:', error);
+      alert('Failed to add staff');
+    }
   };
 
   const editHandler = async (values: any) => {
-    const formData = new FormData();
-    formData.append('role', 'staff');
-    formData.append('name', values.name);
-    formData.append('email', values.email);
-    formData.append('number', values.number);
-    formData.append('location[city]', values.city);
-    formData.append('location[state]', values.state);
-    formData.append('location[country]', values.country);
-    formData.append('location[address]', values.address);
-    formData.append('location[pincode]', values.pincode);
-    if (image) formData.append('image', image);
-    const res = await updateStaff(formData, data?._id);
-    if (res?.status == 200) alert('staff updated successfully');
+    try {
+      const formData = new FormData();
+      formData.append('role', 'staff');
+      formData.append('name', values.name);
+      formData.append('email', values.email);
+      formData.append('number', values.number);
+      formData.append('location[city]', values.city);
+      formData.append('location[state]', values.state);
+      formData.append('location[country]', values.country);
+      formData.append('location[address]', values.address);
+      formData.append('location[pincode]', values.pincode);
+      if (image) formData.append('image', image);
+      const res = await updateStaff(formData, data?._id);
+      if (res) {
+        if (onUpdate) onUpdate(); // Refresh the staff list
+        const modal = document.getElementById('edit-staff');
+        if (modal) {
+          const closeBtn = modal.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+          if (closeBtn) {
+            closeBtn.click();
+          }
+        }
+        alert('Staff updated successfully');
+      }
+    } catch (error) {
+      console.error('Error updating staff:', error);
+      alert('Failed to update staff');
+    }
   };
   return (
     <>
@@ -238,7 +272,7 @@ const StaffModal = ({ fromParent }: any) => {
                         <div className="mb-3">
                           <label className="form-label">Phone Number</label>
                           <Field
-                            type="number"
+                            type="text"
                             name="number"
                             className="form-control pass-input"
                           />{' '}
@@ -386,16 +420,16 @@ const StaffModal = ({ fromParent }: any) => {
             <div className="modal-body pb-0">
               <Formik
                 initialValues={{
-                  name: data?.name,
-                  email: data?.email,
-                  number: data?.number,
-                  address: data?.location?.address,
-                  country: data?.location?.country,
-                  state: data?.location?.state,
-                  city: data?.location?.city,
-                  pincode: data?.location?.pincode,
+                  name: data?.name || '',
+                  email: data?.email || '',
+                  number: data?.number || '',
+                  address: data?.location?.address || '',
+                  country: data?.location?.country || '',
+                  state: data?.location?.state || '',
+                  city: data?.location?.city || '',
+                  pincode: data?.location?.pincode || '',
                   status: '',
-                  image: data?.nameimage,
+                  image: data?.image || '',
                 }}
                 enableReinitialize
                 onSubmit={editHandler}
@@ -415,10 +449,24 @@ const StaffModal = ({ fromParent }: any) => {
                                 borderRadius: '50%',
                               }}
                             >
-                              <ImageWithoutBasePath
-                                src={imagePreview || data?.image}
-                                alt="img"
-                              />
+                              {imagePreview ? (
+                                <img
+                                  src={imagePreview}
+                                  alt="img"
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                                />
+                              ) : data?.image ? (
+                                <img
+                                  src={data.image}
+                                  alt="img"
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                                />
+                              ) : (
+                                <ImageWithBasePath
+                                  src={'assets/admin/img/customer/user-01.jpg'}
+                                  alt="img"
+                                />
+                              )}
                             </span>
                             {/* <div>
                             <h6 className="fs-16">Profile</h6>
@@ -499,7 +547,7 @@ const StaffModal = ({ fromParent }: any) => {
                         <div className="mb-3">
                           <label className="form-label">Phone Number</label>
                           <Field
-                            type="number"
+                            type="text"
                             name="number"
                             className="form-control pass-input"
                           />{' '}
@@ -631,7 +679,7 @@ const StaffModal = ({ fromParent }: any) => {
             <div className="modal-body">
               <div className="write-review">
                 <form>
-                  <p>Are you sure want to delete this Staff?</p>
+                  <p>Are you sure you want to delete {staffToDelete?.name}?</p>
                   <div className="modal-submit text-end">
                     <Link
                       to="#"
@@ -644,7 +692,7 @@ const StaffModal = ({ fromParent }: any) => {
                       type="button"
                       data-bs-dismiss="modal"
                       className="btn btn-dark"
-                      onClick={() => deleteCustomer()}
+                      onClick={onDelete}
                     >
                       Yes
                     </button>

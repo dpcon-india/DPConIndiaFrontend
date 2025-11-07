@@ -31,11 +31,11 @@ const Providers = () => {
   const isExcludedPath = excludedPaths.includes(location.pathname);
 
   return (
-    <>
+    <div className="provider-layout">
       {loggedIn && !isExcludedPath && <ProviderHeader />}
       {loggedIn && !isExcludedPath && <ProviderSidebar />}
       {loggedIn && <ProvidersRoutes />}
-    </>
+    </div>
   );
 };
 

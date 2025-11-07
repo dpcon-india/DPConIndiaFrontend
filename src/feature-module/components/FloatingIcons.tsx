@@ -2,6 +2,13 @@ import React from 'react';
 import { FaWhatsapp, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
 function FloatingIcons() {
+  const currentPath = window.location.pathname;
+  const isAdminOrProvider = currentPath.includes('/admin') || currentPath.includes('/provider');
+  
+  if (isAdminOrProvider) {
+    return null;
+  }
+  
   return (
     <ul
       style={{
