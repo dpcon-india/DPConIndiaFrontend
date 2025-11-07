@@ -1,0 +1,112 @@
+/* H&M Style Pagination */
+.custom-paginator {
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.custom-paginator .p-paginator-pages {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.custom-paginator.p-paginator::before {
+  left: 14px !important;
+}
+
+.custom-paginator .p-paginator-page,
+.custom-paginator .p-paginator-first,
+.custom-paginator .p-paginator-prev,
+.custom-paginator .p-paginator-next,
+.custom-paginator .p-paginator-last {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  color: #666;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.125rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-paginator .p-paginator-page:hover,
+.custom-paginator .p-paginator-first:hover,
+.custom-paginator .p-paginator-prev:hover,
+.custom-paginator .p-paginator-next:hover,
+.custom-paginator .p-paginator-last:hover {
+  background: #f8f8f8;
+  border-color: #ddd;
+  color: #000;
+}
+
+.custom-paginator .p-paginator-page.p-highlight {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.custom-paginator .p-paginator-page.p-highlight:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.custom-paginator .p-paginator-first.p-disabled,
+.custom-paginator .p-paginator-prev.p-disabled,
+.custom-paginator .p-paginator-next.p-disabled,
+.custom-paginator .p-paginator-last.p-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8f8f8;
+}
+
+.custom-paginator .p-paginator-first.p-disabled:hover,
+.custom-paginator .p-paginator-prev.p-disabled:hover,
+.custom-paginator .p-paginator-next.p-disabled:hover,
+.custom-paginator .p-paginator-last.p-disabled:hover {
+  background: #f8f8f8;
+  border-color: #e5e5e5;
+  color: #666;
+}
+
+.custom-paginator .p-dropdown {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #666;
+  font-size: 0.8rem;
+  height: 36px;
+  min-width: 80px;
+  margin-left: 24px;
+}
+
+.custom-paginator .p-dropdown:hover {
+  border-color: #ddd;
+}
+
+.custom-paginator .p-dropdown.p-focus {
+  border-color: #000;
+  box-shadow: none;
+}
+
+.custom-paginator .p-paginator-current {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.custom-paginator .p-dropdown-label.p-inputtext {
+  padding-top: 6px;
+  padding-left: 10px;
+  padding-bottom: 0;
+}

@@ -100,83 +100,90 @@ const Graph = () => {
   }, [timePeriod]);
 
   return (
-    <div className="col-xxl-3 col-md-6">
-      <div className="card flex-fill">
-        <div className="card-body">
-          <div>
-            {/* <div className="d-flex justify-content-center flex-column mb-3">
-              <h5 className="text-center">
-                1,500{' '}
-                <span className="text-success">
-                  <i className="ti ti-arrow-badge-up-filled" />
-                </span>
-              </h5>
-              <p className="fs-12 text-center">Total earned last week so far</p>
-            </div> */}
-            {/* <div className="d-flex justify-content-around mb-3">
-              <div>
-                <p className="mb-0">Total Income</p>
-                <h5>${totalIncome}</h5>
-              </div>
-              <div>
-                <p className="mb-0">Total Due</p>
-                <h5>${totalDue}</h5>
-              </div>
-            </div> */}
-            <div className="home-select">
-              <div className="dropdown">
-                <button
-                  className="btn btn-action btn-sm dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  {timePeriod}
-                </button>
-                <ul
-                  className="dropdown-menu"
-                  data-popper-placement="bottom-end"
-                >
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => setTimePeriod('weekly')}
-                    >
-                      Weekly
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => setTimePeriod('monthly')}
-                    >
-                      Monthly
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => setTimePeriod('yearly')}
-                    >
-                      Yearly
-                    </button>
-                  </li>
-                </ul>
+    <div className="w-100">
+      <div className="row g-4">
+        {/* Chart Section */}
+        <div className="col-lg-8">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h5 className="mb-0">Bookings Analytics</h5>
+            <div className="dropdown">
+              <button
+                className="btn btn-outline-dark btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style={{ textTransform: 'capitalize' }}
+              >
+                {timePeriod}
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setTimePeriod('weekly')}
+                  >
+                    Weekly
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setTimePeriod('monthly')}
+                  >
+                    Monthly
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => setTimePeriod('yearly')}
+                  >
+                    Yearly
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div id="daily-chart">
+            <ReactApexChart
+              options={sCol}
+              series={sCol.series}
+              type="bar"
+              height={350}
+            />
+          </div>
+        </div>
+        
+        {/* Stats Section */}
+        <div className="col-lg-4">
+          <div className="row g-3">
+            <div className="col-12">
+              <div className="card border-0 bg-light">
+                <div className="card-body text-center">
+                  <h6 className="text-muted mb-2">Total Income</h6>
+                  <h4 className="mb-0">${totalIncome.toLocaleString()}</h4>
+                </div>
               </div>
             </div>
-            <div id="daily-chart">
-              <ReactApexChart
-                options={sCol}
-                series={sCol.series}
-                type="bar"
-                height={200}
-              />
+            <div className="col-12">
+              <div className="card border-0 bg-light">
+                <div className="card-body text-center">
+                  <h6 className="text-muted mb-2">Total Due</h6>
+                  <h4 className="mb-0">${totalDue.toLocaleString()}</h4>
+                </div>
+              </div>
             </div>
-            <div className="d-flex justify-content-center flex-column">
-              {/* <span className="text-success text-center fs-12 mb-4">
-                {performance}
-              </span> */}
-              <Link to={routes.providerEarnings} className="btn btn-dark">
+            <div className="col-12">
+              <Link 
+                to={routes.providerEarnings} 
+                className="btn btn-dark w-100"
+                style={{
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  fontWeight: '600',
+                  fontSize: '13px'
+                }}
+              >
                 View All Earnings
               </Link>
             </div>

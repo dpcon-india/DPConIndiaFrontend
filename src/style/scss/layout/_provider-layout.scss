@@ -1,0 +1,419 @@
+// Provider Layout Styles - H&M Inspired Design
+
+.provider-layout {
+  .page-wrapper {
+    margin-left: 260px;
+    padding-top: 48px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
+
+    .content {
+      background-color: #fafafa;
+      min-height: calc(100vh - 48px);
+      padding: 2rem 0;
+    }
+  }
+
+  // Sidebar specific styles
+  .provider-sidebar {
+    position: fixed;
+    top: 48px;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    background-color: #fff;
+    border-right: 1px solid #e5e5e5;
+    z-index: 1001;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+
+    @media (max-width: 768px) {
+      transform: translateX(-100%);
+      
+      &.mobile-open {
+        transform: translateX(0);
+      }
+    }
+
+    // Section headers
+    .sidebar-section-header {
+      padding: 0.75rem 1.5rem 0.5rem;
+      border-bottom: 1px solid #f8f8f8;
+      margin-bottom: 0.5rem;
+
+      h6 {
+        margin: 0;
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        transition: color 0.2s ease;
+
+        &.active {
+          color: #000;
+        }
+      }
+    }
+
+    // Navigation items
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1.5rem;
+      margin: 0 0.75rem;
+      border-radius: 0;
+      text-decoration: none;
+      color: #666;
+      background-color: transparent;
+      border-left: 2px solid transparent;
+      font-size: 0.8rem;
+      font-weight: 400;
+      transition: all 0.15s ease;
+      margin-bottom: 0.15rem;
+
+      &:hover {
+        background-color: #fafafa;
+        color: #000;
+        border-left: 2px solid #ddd;
+        text-decoration: none;
+      }
+
+      &.active {
+        color: #000;
+        background-color: #f8f8f8;
+        border-left: 2px solid #000;
+        font-weight: 500;
+
+        i {
+          opacity: 1;
+        }
+      }
+
+      i {
+        font-size: 1rem;
+        margin-right: 0.75rem;
+        width: 18px;
+        text-align: center;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+      }
+    }
+
+    // Quick action button
+    .sidebar-quick-action {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #f0f0f0;
+      background-color: #fafafa;
+
+      .quick-action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: #333;
+          color: #fff;
+          text-decoration: none;
+        }
+
+        i {
+          margin-right: 0.5rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    // Footer
+    .sidebar-footer {
+      padding: 0.75rem 1.5rem;
+      border-top: 1px solid #f0f0f0;
+
+      .footer-text {
+        font-size: 0.65rem;
+        color: #999;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+      }
+    }
+  }
+
+  // Header adjustments for new sidebar
+  .provider-header {
+    .header-left {
+      width: 260px;
+      transition: width 0.3s ease;
+
+      @media (max-width: 768px) {
+        width: 216px;
+      }
+    }
+  }
+
+  // Mobile responsive
+  @media (max-width: 768px) {
+    .page-wrapper {
+      margin-left: 0;
+    }
+
+    .provider-sidebar {
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    // Mobile overlay
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+
+      &.active {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+// Service cards styling improvements
+.service-card {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .service-image {
+    position: relative;
+    height: 140px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    .service-status {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.active {
+        background-color: #000;
+      }
+
+      &.inactive {
+        background-color: #999;
+      }
+    }
+  }
+
+  .service-content {
+    padding: 1rem;
+
+    .service-title {
+      font-size: 1rem;
+      font-weight: 400;
+      margin: 0 0 0.5rem 0;
+      color: #000;
+      line-height: 1.3;
+    }
+
+    .service-description {
+      color: #666;
+      font-size: 0.8rem;
+      margin: 0 0 0.75rem 0;
+      line-height: 1.3;
+    }
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+
+      .meta-item {
+        .meta-label {
+          font-size: 0.75rem;
+          color: #999;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #000;
+
+          &.price {
+            font-size: 1rem;
+          }
+
+          &.category {
+            font-size: 0.8rem;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    .service-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      color: #666;
+      font-size: 0.75rem;
+
+      i {
+        font-size: 0.7rem;
+      }
+    }
+
+    .service-actions {
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #f0f0f0;
+
+      .action-btn {
+        padding: 0.4rem;
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #666;
+
+        &:hover {
+          background-color: #f8f8f8;
+          border-color: #ddd;
+          color: #000;
+        }
+
+        &.edit-btn {
+          flex: 1;
+        }
+
+        i {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+// Modal improvements
+.modal {
+  .modal-content {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 1.5rem;
+
+    h6 {
+      margin: 0;
+      font-weight: 400;
+      font-size: 1rem;
+      color: #000;
+    }
+
+    .btn-close {
+      border: none;
+      background: none;
+      font-size: 1.25rem;
+      color: #666;
+      padding: 0;
+
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 2rem 1.5rem;
+
+    p {
+      margin: 0 0 2rem 0;
+      color: #666;
+      line-height: 1.5;
+    }
+  }
+
+  .modal-footer {
+    border-top: 1px solid #e5e5e5;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      border-radius: 0;
+      transition: all 0.2s ease;
+
+      &.btn-secondary {
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        color: #666;
+
+        &:hover {
+          background-color: #f8f8f8;
+          border-color: #ddd;
+          color: #000;
+        }
+      }
+
+      &.btn-primary {
+        border: none;
+        background: #000;
+        color: #fff;
+
+        &:hover {
+          background-color: #333;
+        }
+      }
+    }
+  }
+}

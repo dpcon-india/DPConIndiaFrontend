@@ -11,24 +11,43 @@ import { fetchBookingsByProvider } from '../../../../APICalls';
 import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
 import moment from 'moment';
 
+// Modern H&M Style CSS
+const hmStyles = {
+  pageWrapper: {
+    backgroundColor: '#f8f9fa',
+    minHeight: '100vh',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+  },
+  header: {
+    background: 'linear-gradient(135deg, #000 0%, #333 100%)',
+    color: '#fff',
+    padding: '24px 32px',
+    marginBottom: '32px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+  },
+  card: {
+    backgroundColor: '#fff',
+    border: 'none',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+    borderRadius: '12px',
+    overflow: 'hidden'
+  },
+  statsCard: {
+    backgroundColor: '#fff',
+    border: 'none',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+    borderRadius: '8px',
+    padding: '24px',
+    marginBottom: '24px'
+  }
+};
+
 const ProviderEarnings = () => {
   const [selectedValue, setSelectedValue] = useState(null);
   const [booking, setBookings] = useState<BookingDetails[]>([]);
   const value = [{ name: 'A - Z' }, { name: 'Z - A' }];
-  const actionBodyTemplate = () => {
-    return (
-      <td>
-        <div className="table-actions">
-          <Link className="action-set" to="#">
-            <Icon.Edit size={15} />
-          </Link>
-          <Link className="action-set confirm-text" to="#">
-            <Icon.Trash2 size={15} />
-          </Link>
-        </div>
-      </td>
-    );
-  };
+
   const fetchData = async () => {
     try {
       const id = JSON.parse(localStorage.getItem('user') || '{}')?._id;
@@ -38,100 +57,150 @@ const ProviderEarnings = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
+
   const data = useSelector((state: any) => state.provider_earning);
+
+  // Calculate total earnings
+  const totalEarnings = booking.reduce((sum, item) => sum + (item?.service?.price || 0), 0);
+  const thisMonthEarnings = booking.filter(item =>
+    moment(item.date).isSame(moment(), 'month')
+  ).reduce((sum, item) => sum + (item?.service?.price || 0), 0);
 
   return (
     <>
-      <div className="page-wrapper">
-        <div className="content container-fluid">
-          {/* Page Header */}
-          <div className="page-header">
-            <div className="row">
-              <div className="col-md-4">
-                <div className="provider-subtitle">
-                  <h6>Earnings</h6>
+      <div className="page-wrapper" style={hmStyles.pageWrapper}>
+        <div className="content container-fluid" style={{ padding: '24px' }}>
+          {/* Stats Cards */}
+          <div className="row g-4 mb-4">
+            <div className="col-md-4">
+              <div style={hmStyles.statsCard}>
+                <div className="text-center">
+                  <h6 style={{ color: '#666', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Total Earnings</h6>
+                  <h3 style={{ color: '#000', fontWeight: '600', margin: '0' }}>₹{totalEarnings.toLocaleString()}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div style={hmStyles.statsCard}>
+                <div className="text-center">
+                  <h6 style={{ color: '#666', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>This Month</h6>
+                  <h3 style={{ color: '#000', fontWeight: '600', margin: '0' }}>₹{thisMonthEarnings.toLocaleString()}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div style={hmStyles.statsCard}>
+                <div className="text-center">
+                  <h6 style={{ color: '#666', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Total Bookings</h6>
+                  <h3 style={{ color: '#000', fontWeight: '600', margin: '0' }}>{booking.length}</h3>
                 </div>
               </div>
             </div>
           </div>
-          {/* /Page Header */}
-          {/* Coupons */}
-          <div className="row" style={{ alignContent: 'center' }}>
-            <div className="col-md-12">
-              <div className="provide-table manage-table">
-                <div className="table-responsive">
-                  <DataTable
-                    paginatorTemplate="RowsPerPageDropdown CurrentPageReport PrevPageLink PageLinks NextPageLink  "
-                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                    value={booking.reverse()}
-                    paginator
-                    rows={10}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                    size={'small'}
-                  >
-                    {/* <Column sortable field="#" header="#"></Column> */}
-                    <Column
-                      field="service"
-                      header="Service"
-                      body={(rowData: BookingDetails) => (
-                        <td>
-                          <Link to="#" className="avatar avatar-m me-2">
-                            <ImageWithoutBasePath
-                              className="avatar-img rounded"
-                              src={rowData?.service?. gallery[0] || ''}
-                              alt="User Image"
-                            />
-                          </Link>
-                          <Link to="#">{rowData?.serviceTitle}</Link>
-                        </td>
-                      )}
-                    ></Column>
-                    <Column
-                      sortable
-                      field="service.price"
-                      header="EarnedAmount"
-                      body={(rowData: BookingDetails) => (
-                        <td>
-                          <p>₹ {rowData?.service?.price}</p>
-                        </td>
-                      )}
-                    ></Column>
-                    <Column
-                      sortable
-                      field="date"
-                      header="Date"
-                      body={(rowData: BookingDetails) => (
-                        <td>
-                          <p>{moment(rowData?.date).format('DD-MM-YYYY')}</p>
-                        </td>
-                      )}
-                    ></Column>
-                    {/* <Column
-                      sortable
-                      field="action"
-                      header="Action"
-                      body={actionBodyTemplate}
-                    ></Column> */}
-                  </DataTable>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <div id="tablelength" />
-                </div>
-                <div className="col-md-9">
-                  <div className="table-ingopage">
-                    <div id="tableinfo" />
-                    <div id="tablepagination" />
-                  </div>
-                </div>
+
+          {/* Modern Table */}
+          <div style={hmStyles.card}>
+            <div style={{ padding: '32px' }}>
+              <h5 style={{ marginBottom: '24px', fontWeight: '600', color: '#1a1a1a' }}>Earnings History</h5>
+              <div className="table-responsive">
+                <DataTable
+                  value={booking.reverse()}
+                  paginator
+                  rows={10}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  className="modern-table"
+                  stripedRows
+                  showGridlines={false}
+                  style={{
+                    fontSize: '14px',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                  }}
+                  pt={{
+                    header: {
+                      style: {
+                        backgroundColor: '#f8f9fa',
+                        color: '#1a1a1a',
+                        fontWeight: '600',
+                        fontSize: '13px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        padding: '16px 20px',
+                        border: 'none'
+                      }
+                    },
+                    bodyRow: {
+                      style: {
+                        borderBottom: '1px solid #f0f0f0'
+                      }
+                    },
+                    bodyCell: {
+                      style: {
+                        padding: '20px',
+                        border: 'none'
+                      }
+                    }
+                  }}
+                >
+                  <Column
+                    field="service"
+                    header="Service"
+                    body={(rowData: BookingDetails) => (
+                      <div className="d-flex align-items-center">
+                        <div
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            marginRight: '16px',
+                            backgroundColor: '#f8f9fa'
+                          }}
+                        >
+                          <ImageWithoutBasePath
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            src={rowData?.service?.gallery[0] || ''}
+                            alt="Service"
+                          />
+                        </div>
+                        <div>
+                          <span style={{ fontWeight: '500', color: '#1a1a1a' }}>
+                            {rowData?.serviceTitle || 'N/A'}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  />
+                  <Column
+                    field="service.price"
+                    header="Amount"
+                    body={(rowData: BookingDetails) => (
+                      <span style={{
+                        fontWeight: '600',
+                        color: '#000',
+                        fontSize: '15px'
+                      }}>
+                        ₹{rowData?.service?.price?.toLocaleString() || 0}
+                      </span>
+                    )}
+                    style={{ textAlign: 'right' }}
+                  />
+                  <Column
+                    field="date"
+                    header="Date"
+                    body={(rowData: BookingDetails) => (
+                      <span style={{ color: '#666', fontSize: '13px' }}>
+                        {moment(rowData?.date).format('DD MMM YYYY')}
+                      </span>
+                    )}
+                  />
+                </DataTable>
               </div>
             </div>
           </div>
-          {/* /Coupons */}
         </div>
       </div>
     </>
