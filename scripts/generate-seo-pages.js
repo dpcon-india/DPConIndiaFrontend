@@ -1,8 +1,24 @@
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
-// SEO data from your sheet - ALL 13 PAGES
-const seoPages = [
+// Use exact same API endpoint as config.js
+const api = 'https://api.dpconindia.com/api/';
+
+// Node.js compatible version of fetchServices (matches APICalls.js exactly)
+const fetchServices = async () => {
+  try {
+    const { data } = await axios.get(`${api}service`);
+    if (!data) return [];
+    return data;
+  } catch (error) {
+    console.log('⚠️ Could not fetch services from API:', error.message);
+    return [];
+  }
+};
+
+// Static pages SEO data
+const staticPages = [
     {
         path: 'index.html',
         title: 'DPCon India | Professional Construction & Renovation Services in Mumbai',
@@ -51,71 +67,142 @@ const seoPages = [
         description: 'DPCon India connects you with trusted professionals for plumbing services in Mumbai, bathroom tiles work in Mumbai, and expert tiles work for homes and offices.',
         keywords: 'plumbing services Mumbai, bathroom tiles work, tiles experts, contact DPCon India, get quote',
         canonical: 'https://www.dpconindia.com/pages/contact-us'
-    },
-    {
-        path: 'services/service-details/67e4fb6d11d5f5a8a416ec38/index.html',
-        title: 'Crack Filling Services in Mumbai | Expert Wall and Ceiling Repairs – DPCon India',
-        description: 'DPCon India specializes in reliable crack filling services in Mumbai. Our professional team delivers long-lasting crack filling services in Mumbai for homes and commercial spaces.',
-        keywords: 'crack filling services Mumbai, wall repairs, ceiling repairs, structural repair, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67e4fb6d11d5f5a8a416ec38'
-    },
-    {
-        path: 'services/service-details/67bec42efc8baa5726a62beb/index.html',
-        title: 'Building Painting Services in Mumbai | Painting Contractors in Mumbai',
-        description: 'DPCon India connects you with trusted painting contractors in Mumbai for professional building painting services and expert home painting solutions. Quality, reliable, and hassle-free service.',
-        keywords: 'building painting services Mumbai, painting contractors, professional painting, home painting, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67bec42efc8baa5726a62beb'
-    },
-    {
-        path: 'services/service-details/67cfd623a94130f4469f4904/index.html',
-        title: 'Waterproofing Services in Mumbai | Water Leakage Detection Experts – DPCon India',
-        description: 'DPCon India offers reliable waterproofing services in Mumbai along with advanced water leakage detection services in Mumbai to protect your home and buildings from damage.',
-        keywords: 'waterproofing services Mumbai, water leakage detection, leak repair, waterproofing contractors, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67cfd623a94130f4469f4904'
-    },
-    {
-        path: 'services/service-details/67d13a23a94130f4469fdec4/index.html',
-        title: 'Tiles Work in Mumbai | Professional Tiling Services – DPCon India',
-        description: 'DPCon India provides expert tiles work in Mumbai, offering high-quality tiles installation and finishing for bathrooms, kitchens, floors, and commercial spaces.',
-        keywords: 'tiles work Mumbai, tiling services, tiles installation, floor tiles, wall tiles, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67d13a23a94130f4469fdec4'
-    },
-    {
-        path: 'services/service-details/67d13c1da94130f4469fe030/index.html',
-        title: 'Bathroom Tiles Work in Mumbai | DPCon India',
-        description: 'DPCon India offers expert bathroom tiles work in Mumbai with professional installation, quality materials, and reliable service for homes and commercial spaces.',
-        keywords: 'bathroom tiles work Mumbai, bathroom tiling, tiles installation, bathroom renovation, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67d13c1da94130f4469fe030'
-    },
-    {
-        path: 'services/service-details/67d1896ca94130f4469fefeb/index.html',
-        title: 'Waterproofing Painting Services in Mumbai | DPCon India',
-        description: 'DPCon India offers professional waterproofing painting services in Mumbai to protect your walls and buildings from leaks, dampness, and weather damage with lasting results.',
-        keywords: 'waterproofing painting Mumbai, waterproof paint, damp proofing, exterior painting, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67d1896ca94130f4469fefeb'
-    },
-    {
-        path: 'services/service-details/67d161bea94130f4469fe48d/index.html',
-        title: 'Building repair services in mumbai | Civil contractor services in Mumbai',
-        description: 'DPCon India offers reliable building repair services in Mumbai and professional civil contractor services to deliver quality construction and maintenance solutions.',
-        keywords: 'building repair services Mumbai, civil contractor, construction services, building maintenance, DPCon India',
-        canonical: 'https://www.dpconindia.com/services/service-details/67d161bea94130f4469fe48d'
     }
 ];
 
-// Read the base index.html from build folder
-const buildDir = path.join(__dirname, '..', 'build');
-const baseHtmlPath = path.join(buildDir, 'index.html');
 
-if (!fs.existsSync(baseHtmlPath)) {
-    console.error('❌ Build folder not found. Run npm run build first.');
-    process.exit(1);
-}
 
-const baseHtml = fs.readFileSync(baseHtmlPath, 'utf8');
+// SEO mapping with priority (most specific first)
+const seoMapping = [
+    {
+        keywords: ['waterproofing painting'],
+        priority: 10,
+        seo: {
+            title: 'Waterproofing Painting Services in Mumbai | DPCon India',
+            description: 'DPCon India offers professional waterproofing painting services in Mumbai to protect your walls and buildings from leaks, dampness, and weather damage with lasting results.',
+            keywords: 'waterproofing painting Mumbai, waterproof paint, damp proofing, exterior painting, DPCon India'
+        }
+    },
+    {
+        keywords: ['bathroom tiles', 'bathroom tile'],
+        priority: 9,
+        seo: {
+            title: 'Bathroom Tiles Work in Mumbai | DPCon India',
+            description: 'DPCon India offers expert bathroom tiles work in Mumbai with professional installation, quality materials, and reliable service for homes and commercial spaces.',
+            keywords: 'bathroom tiles work Mumbai, bathroom tiling, tiles installation, bathroom renovation, DPCon India'
+        }
+    },
+    {
+        keywords: ['building painting'],
+        priority: 8,
+        seo: {
+            title: 'Building Painting Services in Mumbai | Painting Contractors in Mumbai',
+            description: 'DPCon India connects you with trusted painting contractors in Mumbai for professional building painting services and expert home painting solutions. Quality, reliable, and hassle-free service.',
+            keywords: 'building painting services Mumbai, painting contractors, professional painting, home painting, DPCon India'
+        }
+    },
+    {
+        keywords: ['building repair'],
+        priority: 8,
+        seo: {
+            title: 'Building repair services in mumbai | Civil contractor services in Mumbai',
+            description: 'DPCon India offers reliable building repair services in Mumbai and professional civil contractor services to deliver quality construction and maintenance solutions.',
+            keywords: 'building repair services Mumbai, civil contractor, construction services, building maintenance, DPCon India'
+        }
+    },
+    {
+        keywords: ['crack filling'],
+        priority: 7,
+        seo: {
+            title: 'Crack Filling Services in Mumbai | Expert Wall and Ceiling Repairs – DPCon India',
+            description: 'DPCon India specializes in reliable crack filling services in Mumbai. Our professional team delivers long-lasting crack filling services in Mumbai for homes and commercial spaces.',
+            keywords: 'crack filling services Mumbai, wall repairs, ceiling repairs, structural repair, DPCon India'
+        }
+    },
+    {
+        keywords: ['tiles work', 'tile work', 'tiling'],
+        priority: 6,
+        seo: {
+            title: 'Tiles Work in Mumbai | Professional Tiling Services – DPCon India',
+            description: 'DPCon India provides expert tiles work in Mumbai, offering high-quality tiles installation and finishing for bathrooms, kitchens, floors, and commercial spaces.',
+            keywords: 'tiles work Mumbai, tiling services, tiles installation, floor tiles, wall tiles, DPCon India'
+        }
+    },
+    {
+        keywords: ['waterproofing'],
+        priority: 5,
+        seo: {
+            title: 'Waterproofing Services in Mumbai | Water Leakage Detection Experts – DPCon India',
+            description: 'DPCon India offers reliable waterproofing services in Mumbai along with advanced water leakage detection services in Mumbai to protect your home and buildings from damage.',
+            keywords: 'waterproofing services Mumbai, water leakage detection, leak repair, waterproofing contractors, DPCon India'
+        }
+    }
+];
 
-// Generate SEO pages
-seoPages.forEach(page => {
+// Function to find best matching SEO data
+const findSEOMatch = (serviceTitle) => {
+    const title = serviceTitle.toLowerCase();
+    let bestMatch = null;
+    let highestPriority = 0;
+    
+    // Find highest priority match
+    for (const mapping of seoMapping) {
+        for (const keyword of mapping.keywords) {
+            if (title.includes(keyword) && mapping.priority > highestPriority) {
+                bestMatch = mapping.seo;
+                highestPriority = mapping.priority;
+                break;
+            }
+        }
+    }
+    
+    // Return best match or default
+    return bestMatch || {
+        title: `${serviceTitle} in Mumbai | DPCon India`,
+        description: `DPCon India offers professional ${serviceTitle.toLowerCase()} in Mumbai with expert service and reliable results.`,
+        keywords: `${serviceTitle.toLowerCase()}, ${serviceTitle.toLowerCase()} Mumbai, construction services, DPCon India`
+    };
+};
+
+// Function to generate service page SEO data
+const generateServiceSEO = (service) => {
+    const serviceTitle = service.serviceTitle || service.title || 'Service';
+    const seoData = findSEOMatch(serviceTitle);
+    
+    return {
+        path: `services/service-details/${service._id}/index.html`,
+        title: seoData.title,
+        description: seoData.description,
+        keywords: seoData.keywords,
+        canonical: `https://www.dpconindia.com/services/service-details/${service._id}`
+    };
+};
+
+// Main function to generate all SEO pages
+const generateAllSEOPages = async () => {
+
+    // Fetch dynamic services
+    console.log('🔄 Fetching services from API...');
+    const services = await fetchServices();
+    console.log(`✅ Found ${services.length} services`);
+    
+    // Combine static pages with dynamic service pages
+    const dynamicServicePages = services.map(generateServiceSEO);
+    const allPages = [...staticPages, ...dynamicServicePages];
+    
+    // Read the base index.html from build folder
+    const buildDir = path.join(__dirname, '..', 'build');
+    const baseHtmlPath = path.join(buildDir, 'index.html');
+    
+    if (!fs.existsSync(baseHtmlPath)) {
+        console.error('❌ Build folder not found. Run npm run build first.');
+        process.exit(1);
+    }
+    
+    const baseHtml = fs.readFileSync(baseHtmlPath, 'utf8');
+    
+    // Generate SEO pages
+    allPages.forEach(page => {
     // Update the HTML with custom meta tags
     let customHtml = baseHtml;
 
@@ -144,11 +231,19 @@ seoPages.forEach(page => {
         );
     }
 
-    // Replace canonical URL
-    customHtml = customHtml.replace(
-        /<link rel="canonical" href=".*?">/,
-        `<link rel="canonical" href="${page.canonical}">`
-    );
+    // Replace or add canonical URL
+    if (customHtml.includes('<link rel="canonical"')) {
+        customHtml = customHtml.replace(
+            /<link rel="canonical" href=".*?">/,
+            `<link rel="canonical" href="${page.canonical}">`
+        );
+    } else {
+        customHtml = customHtml.replace(
+            '</head>',
+            `    <link rel="canonical" href="${page.canonical}">
+</head>`
+        );
+    }
 
     // Create directory if it doesn't exist
     const filePath = path.join(buildDir, page.path);
@@ -158,12 +253,21 @@ seoPages.forEach(page => {
         fs.mkdirSync(fileDir, { recursive: true });
     }
 
-    // Write the file
-    fs.writeFileSync(filePath, customHtml, 'utf8');
-    console.log(`✅ Generated: ${page.path}`);
-    console.log(`   Title: ${page.title.substring(0, 60)}...`);
-});
+        // Write the file
+        fs.writeFileSync(filePath, customHtml, 'utf8');
+        console.log(`✅ Generated: ${page.path}`);
+        console.log(`   Title: ${page.title.substring(0, 60)}...`);
+    });
+    
+    console.log(`\n🎉 Generated ${allPages.length} SEO pages successfully!`);
+    console.log(`   📄 Static pages: ${staticPages.length}`);
+    console.log(`   🔧 Service pages: ${dynamicServicePages.length}`);
+    console.log('📝 Run "npx serve -s build" to test');
+};
 
-console.log('\n🎉 All SEO pages generated successfully!');
-console.log('📝 Run "npx serve -s build" to test');
+// Run the script
+generateAllSEOPages().catch(error => {
+    console.error('❌ Error generating SEO pages:', error);
+    process.exit(1);
+});
 

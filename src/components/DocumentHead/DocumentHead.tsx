@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { fetchServiceById } from '../../APICalls';
 
 interface MetaTag {
     path: string | RegExp;
@@ -18,6 +19,96 @@ const isMatchingPath = (path: string, pattern: string | RegExp): boolean => {
     }
     // Handle regex patterns
     return pattern.test(path);
+};
+
+// SEO mapping for dynamic service matching
+const seoMapping = [
+    {
+        keywords: ['waterproofing painting'],
+        priority: 10,
+        seo: {
+            title: 'Waterproofing Painting Services in Mumbai | DPCon India',
+            description: 'DPCon India offers professional waterproofing painting services in Mumbai to protect your walls and buildings from leaks, dampness, and weather damage with lasting results.',
+            keywords: 'waterproofing painting Mumbai, waterproof paint, damp proofing, exterior painting, DPCon India'
+        }
+    },
+    {
+        keywords: ['bathroom tiles', 'bathroom tile'],
+        priority: 9,
+        seo: {
+            title: 'Bathroom Tiles Work in Mumbai | DPCon India',
+            description: 'DPCon India offers expert bathroom tiles work in Mumbai with professional installation, quality materials, and reliable service for homes and commercial spaces.',
+            keywords: 'bathroom tiles work Mumbai, bathroom tiling, tiles installation, bathroom renovation, DPCon India'
+        }
+    },
+    {
+        keywords: ['building painting'],
+        priority: 8,
+        seo: {
+            title: 'Building Painting Services in Mumbai | Painting Contractors in Mumbai',
+            description: 'DPCon India connects you with trusted painting contractors in Mumbai for professional building painting services and expert home painting solutions. Quality, reliable, and hassle-free service.',
+            keywords: 'building painting services Mumbai, painting contractors, professional painting, home painting, DPCon India'
+        }
+    },
+    {
+        keywords: ['building repair'],
+        priority: 8,
+        seo: {
+            title: 'Building repair services in mumbai | Civil contractor services in Mumbai',
+            description: 'DPCon India offers reliable building repair services in Mumbai and professional civil contractor services to deliver quality construction and maintenance solutions.',
+            keywords: 'building repair services Mumbai, civil contractor, construction services, building maintenance, DPCon India'
+        }
+    },
+    {
+        keywords: ['crack filling'],
+        priority: 7,
+        seo: {
+            title: 'Crack Filling Services in Mumbai | Expert Wall and Ceiling Repairs – DPCon India',
+            description: 'DPCon India specializes in reliable crack filling services in Mumbai. Our professional team delivers long-lasting crack filling services in Mumbai for homes and commercial spaces.',
+            keywords: 'crack filling services Mumbai, wall repairs, ceiling repairs, structural repair, DPCon India'
+        }
+    },
+    {
+        keywords: ['tiles work', 'tile work', 'tiling'],
+        priority: 6,
+        seo: {
+            title: 'Tiles Work in Mumbai | Professional Tiling Services – DPCon India',
+            description: 'DPCon India provides expert tiles work in Mumbai, offering high-quality tiles installation and finishing for bathrooms, kitchens, floors, and commercial spaces.',
+            keywords: 'tiles work Mumbai, tiling services, tiles installation, floor tiles, wall tiles, DPCon India'
+        }
+    },
+    {
+        keywords: ['waterproofing'],
+        priority: 5,
+        seo: {
+            title: 'Waterproofing Services in Mumbai | Water Leakage Detection Experts – DPCon India',
+            description: 'DPCon India offers reliable waterproofing services in Mumbai along with advanced water leakage detection services in Mumbai to protect your home and buildings from damage.',
+            keywords: 'waterproofing services Mumbai, water leakage detection, leak repair, waterproofing contractors, DPCon India'
+        }
+    }
+];
+
+// Function to find best matching SEO data
+const findSEOMatch = (serviceTitle: string) => {
+    const title = serviceTitle.toLowerCase();
+    let bestMatch = null;
+    let highestPriority = 0;
+    
+    for (const mapping of seoMapping) {
+        for (const keyword of mapping.keywords) {
+            if (title.includes(keyword) && mapping.priority > highestPriority) {
+                bestMatch = mapping.seo;
+                highestPriority = mapping.priority;
+                break;
+            }
+        }
+    }
+    
+    return bestMatch || {
+        title: `${serviceTitle} in Mumbai | DPCon India`,
+        description: `DPCon India offers professional ${serviceTitle.toLowerCase()} in Mumbai with expert service and reliable results.`,
+        keywords: `${serviceTitle.toLowerCase()}, ${serviceTitle.toLowerCase()} Mumbai, construction services, DPCon India`
+    };
 };
 
 // Helper function to get meta tag value (supports both static and dynamic values)
@@ -85,61 +176,7 @@ const metaTags: MetaTag[] = [
         keywords: 'plumbing services Mumbai, bathroom tiles work, tiles experts, contact DPCon India, get quote'
     },
 
-    // 7. Crack Filling Services
-    {
-        path: '/services/service-details/67e4fb6d11d5f5a8a416ec38',
-        title: 'Crack Filling Services in Mumbai | Expert Wall and Ceiling Repairs – DPCon India',
-        description: 'DPCon India specializes in reliable crack filling services in Mumbai. Our professional team delivers long-lasting crack filling services in Mumbai for homes and commercial spaces.',
-        keywords: 'crack filling services Mumbai, wall repair, ceiling repair, crack repair, DPCon India'
-    },
 
-    // 8. Building Painting Services
-    {
-        path: '/services/service-details/67bec42efc8baa5726a62beb',
-        title: 'Building Painting Services in Mumbai | Painting Contractors in Mumbai',
-        description: 'DPCon India connects you with trusted painting contractors in Mumbai for professional building painting services and expert home painting solutions. Quality, reliable, and hassle-free service.',
-        keywords: 'building painting services Mumbai, painting contractors, professional painting, home painting, DPCon India'
-    },
-
-    // 9. Waterproofing Services
-    {
-        path: '/services/service-details/67cfd623a94130f4469f4904',
-        title: 'Waterproofing Services in Mumbai | Water Leakage Detection Experts – DPCon India',
-        description: 'DPCon India offers reliable waterproofing services in Mumbai along with advanced water leakage detection services in Mumbai to protect your home and buildings from damage.',
-        keywords: 'waterproofing services Mumbai, water leakage detection, leak repair, waterproofing contractors, DPCon India'
-    },
-
-    // 10. Tiles Work Services
-    {
-        path: '/services/service-details/67d13a23a94130f4469fdec4',
-        title: 'Tiles Work in Mumbai | Professional Tiling Services – DPCon India',
-        description: 'DPCon India provides expert tiles work in Mumbai, offering high-quality tiles installation and finishing for bathrooms, kitchens, floors, and commercial spaces.',
-        keywords: 'tiles work Mumbai, tiling services, tiles installation, bathroom tiles, kitchen tiles, DPCon India'
-    },
-
-    // 11. Bathroom Tiles Work
-    {
-        path: '/services/service-details/67d13c1da94130f4469fe030',
-        title: 'Bathroom Tiles Work in Mumbai | DPCon India',
-        description: 'DPCon India offers expert bathroom tiles work in Mumbai with professional installation, quality materials, and reliable service for homes and commercial spaces.',
-        keywords: 'bathroom tiles work Mumbai, bathroom renovation, tiles installation, bathroom remodeling, DPCon India'
-    },
-
-    // 12. Waterproofing Painting Services
-    {
-        path: '/services/service-details/67d1896ca94130f4469fefeb',
-        title: 'Waterproofing Painting Services in Mumbai | DPCon India',
-        description: 'DPCon India offers professional waterproofing painting services in Mumbai to protect your walls and buildings from leaks, dampness, and weather damage with lasting results.',
-        keywords: 'waterproofing painting Mumbai, waterproof paint, damp proofing, weather protection, DPCon India'
-    },
-
-    // 13. Building Repair Services
-    {
-        path: '/services/service-details/67d161bea94130f4469fe48d',
-        title: 'Building repair services in mumbai | Civil contractor services in Mumbai',
-        description: 'DPCon India offers reliable building repair services in Mumbai and professional civil contractor services to deliver quality construction and maintenance solutions.',
-        keywords: 'building repair services Mumbai, civil contractor services, construction services, building maintenance, DPCon India'
-    },
 
     // Blog (general)
     {
@@ -164,12 +201,17 @@ const metaTags: MetaTag[] = [
         keywords: 'construction blog, renovation tips, home improvement, DPCon India blog'
     },
 
-    // Service Details (dynamic)
+    // Service Details (dynamic with smart SEO matching)
     {
         path: /^\/services\/service-details\/[a-zA-Z0-9]+$/,
-        title: () => 'Service Details | DPCon India',
-        description: 'Learn more about our professional construction and renovation services in Mumbai. DPCon India delivers quality and reliability for every project.',
-        keywords: 'construction services, renovation services Mumbai, professional contractors, DPCon India services'
+        title: (pathname: string) => {
+            // Extract service ID and try to get service data
+            const serviceId = pathname.split('/').pop();
+            // For now, return generic title - this will be enhanced by API data
+            return 'Professional Construction Services in Mumbai | DPCon India';
+        },
+        description: 'DPCon India offers professional construction and renovation services in Mumbai with expert contractors and quality results.',
+        keywords: 'construction services Mumbai, renovation services, professional contractors, DPCon India'
     },
 
     // 404 Page
@@ -182,11 +224,38 @@ const metaTags: MetaTag[] = [
 ];
 
 const DocumentHead = () => {
-    // Debug: Log when component mounts/updates
-    console.log('=== DocumentHead Component Mounted/Updated ===');
-
     const location = useLocation();
     const { pathname, search } = location;
+    const [dynamicSEO, setDynamicSEO] = useState<any>(null);
+
+    // Check if this is a service details page
+    const isServiceDetailsPage = /^\/services\/service-details\/[a-zA-Z0-9]+$/.test(pathname);
+    
+    // Fetch service data for dynamic SEO
+    useEffect(() => {
+        if (isServiceDetailsPage) {
+            const serviceId = pathname.split('/').pop();
+            if (serviceId) {
+                fetchServiceById(serviceId)
+                    .then(service => {
+                        if (service?.serviceTitle) {
+                            const seoData = findSEOMatch(service.serviceTitle);
+                            setDynamicSEO(seoData);
+                        }
+                    })
+                    .catch(() => {
+                        // Fallback SEO if API fails
+                        setDynamicSEO({
+                            title: 'Professional Construction Services in Mumbai | DPCon India',
+                            description: 'DPCon India offers professional construction and renovation services in Mumbai with expert contractors and quality results.',
+                            keywords: 'construction services Mumbai, renovation services, professional contractors, DPCon India'
+                        });
+                    });
+            }
+        }
+    }, [pathname, isServiceDetailsPage]);
+
+    console.log('=== DocumentHead Component Mounted/Updated ===');
 
     // Debug: Log location changes
     console.log('🔍 Location changed:', {
@@ -225,10 +294,18 @@ const DocumentHead = () => {
         return null;
     }
 
-    // Get meta values
-    const title = getMetaValue(currentMeta.title, pathname);
-    const description = getMetaValue(currentMeta.description, pathname);
-    const keywords = currentMeta.keywords ? getMetaValue(currentMeta.keywords, pathname) : '';
+    // Get meta values (use dynamic SEO for service pages if available)
+    let title, description, keywords;
+    
+    if (isServiceDetailsPage && dynamicSEO) {
+        title = dynamicSEO.title;
+        description = dynamicSEO.description;
+        keywords = dynamicSEO.keywords;
+    } else {
+        title = getMetaValue(currentMeta.title, pathname);
+        description = getMetaValue(currentMeta.description, pathname);
+        keywords = currentMeta.keywords ? getMetaValue(currentMeta.keywords, pathname) : '';
+    }
 
     console.log('🏷️ Extracted values:', {
         rawTitle: currentMeta.title,
