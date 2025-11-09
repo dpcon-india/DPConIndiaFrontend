@@ -275,7 +275,7 @@ const NewHome = () => {
 
                     </div>
 
-                    <div className="d-flex justify-content-between align-items-center mt-4">
+                    {/* <div className="d-flex justify-content-between align-items-center mt-4">
                       <div className="text-center flex-fill">
                         <div className="fw-bold fs-4">⭐ 4.8</div>
                         <small className="text-muted">Service Rating*</small>
@@ -284,7 +284,7 @@ const NewHome = () => {
                         <div className="fw-bold fs-4">👥 12M+</div>
                         <small className="text-muted">Customers Globally*</small>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                 </div>
@@ -465,9 +465,9 @@ const NewHome = () => {
           </div>
         </section>
         {/* /Category Section */}
-        
+
         {/* Urban Company Style - Quality Promise Section */}
-        <section className="py-5" style={{backgroundColor: '#f8f9fa'}}>
+        <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
           <div className="container">
             <div className="row align-items-center">
               <div className="col-lg-6">
@@ -525,11 +525,11 @@ const NewHome = () => {
             </div>
           </div>
         </section>
-        
+
         {featuredCat && <PopularSection featuredCat={featuredCat} />}
-        
+
         {/* Urban Company Style - Service Booking CTA */}
-        <section className="py-5" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+        <section className="py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
           <div className="container">
             <div className="row align-items-center text-white">
               <div className="col-lg-6">
@@ -540,7 +540,7 @@ const NewHome = () => {
                     <TbSettings size={20} className="me-2" />
                     Book Service
                   </Link>
-                  <button 
+                  <button
                     className="btn btn-outline-light btn-lg px-4"
                     onClick={() => setShowQuoteModal(true)}
                   >
@@ -550,37 +550,37 @@ const NewHome = () => {
                 </div>
               </div>
               <div className="col-lg-6 text-center">
-                <img src="/assets/home/service (3).jpg" alt="Professional Service" className="img-fluid rounded-4" style={{maxHeight: '300px'}} />
+                <img src="/assets/home/service (3).jpg" alt="Professional Service" className="img-fluid rounded-4" style={{ maxHeight: '300px' }} />
               </div>
             </div>
           </div>
         </section>
-        
-        
+
+
         {/* Urban Company Style - Stats Section */}
-        <section className="py-5" style={{backgroundColor: '#f8f9fa'}}>
+        <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
           <div className="container">
             <div className="row text-center g-4">
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>12M+</div>
+                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>12M+</div>
                 <p className="mb-0 text-muted fw-medium">Customers globally</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>25K+</div>
+                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>25K+</div>
                 <p className="mb-0 text-muted fw-medium">Trained professionals</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>50+</div>
+                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>50+</div>
                 <p className="mb-0 text-muted fw-medium">Cities covered</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{fontSize: '2.5rem', color: '#6c5ce7'}}>4.8★</div>
+                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>4.8★</div>
                 <p className="mb-0 text-muted fw-medium">Average rating</p>
               </div>
             </div>
           </div>
         </section>
-        
+
         {/* <WorkSection /> */}
         {/* <PreferredSection /> */}
         {/* <ProviderSection/> */}
