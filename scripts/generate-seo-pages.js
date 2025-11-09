@@ -164,10 +164,32 @@ const findSEOMatch = (serviceTitle) => {
     };
 };
 
-// Function to generate service page SEO data
+// Function to generate service page SEO data with 3-tier fallback
 const generateServiceSEO = (service) => {
-    const serviceTitle = service.serviceTitle || service.title || 'Service';
-    const seoData = findSEOMatch(serviceTitle);
+    let seoData;
+    
+    // 1st Priority: Use API SEO object if present
+    if (service?.seo?.metaTitle) {
+        seoData = {
+            title: service.seo.metaTitle,
+            description: service.seo.metaDescription || 'Professional construction services in Mumbai by DPCon India.',
+            keywords: Array.isArray(service.seo.metaKeywords) 
+                ? service.seo.metaKeywords.join(', ') 
+                : service.seo.metaKeywords || ''
+        };
+    }
+    // 2nd Priority: Use keyword matching system
+    else if (service?.serviceTitle) {
+        seoData = findSEOMatch(service.serviceTitle);
+    }
+    // 3rd Priority: Default fallback
+    else {
+        seoData = {
+            title: 'Professional Construction Services in Mumbai | DPCon India',
+            description: 'DPCon India offers professional construction and renovation services in Mumbai with expert contractors and quality results.',
+            keywords: 'construction services Mumbai, renovation services, professional contractors, DPCon India'
+        };
+    }
     
     return {
         path: `services/service-details/${service._id}/index.html`,
