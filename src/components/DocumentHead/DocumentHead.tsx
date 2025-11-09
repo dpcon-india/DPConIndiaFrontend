@@ -231,20 +231,42 @@ const DocumentHead = () => {
     // Check if this is a service details page
     const isServiceDetailsPage = /^\/services\/service-details\/[a-zA-Z0-9]+$/.test(pathname);
     
-    // Fetch service data for dynamic SEO
+    // Fetch service data for dynamic SEO with 3-tier fallback
     useEffect(() => {
         if (isServiceDetailsPage) {
             const serviceId = pathname.split('/').pop();
             if (serviceId) {
                 fetchServiceById(serviceId)
                     .then(service => {
-                        if (service?.serviceTitle) {
-                            const seoData = findSEOMatch(service.serviceTitle);
-                            setDynamicSEO(seoData);
+                        let seoData;
+                        
+                        // 1st Priority: Use API SEO object if present
+                        if (service?.seo?.metaTitle) {
+                            seoData = {
+                                title: service.seo.metaTitle,
+                                description: service.seo.metaDescription || 'Professional construction services in Mumbai by DPCon India.',
+                                keywords: Array.isArray(service.seo.metaKeywords) 
+                                    ? service.seo.metaKeywords.join(', ') 
+                                    : service.seo.metaKeywords || ''
+                            };
                         }
+                        // 2nd Priority: Use keyword matching system
+                        else if (service?.serviceTitle) {
+                            seoData = findSEOMatch(service.serviceTitle);
+                        }
+                        // 3rd Priority: Default fallback
+                        else {
+                            seoData = {
+                                title: 'Professional Construction Services in Mumbai | DPCon India',
+                                description: 'DPCon India offers professional construction and renovation services in Mumbai with expert contractors and quality results.',
+                                keywords: 'construction services Mumbai, renovation services, professional contractors, DPCon India'
+                            };
+                        }
+                        
+                        setDynamicSEO(seoData);
                     })
                     .catch(() => {
-                        // Fallback SEO if API fails
+                        // Final fallback if API fails completely
                         setDynamicSEO({
                             title: 'Professional Construction Services in Mumbai | DPCon India',
                             description: 'DPCon India offers professional construction and renovation services in Mumbai with expert contractors and quality results.',
