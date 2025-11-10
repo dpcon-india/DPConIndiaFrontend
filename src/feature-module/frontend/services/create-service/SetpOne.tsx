@@ -229,11 +229,10 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     categories: Yup.array()
       .min(1, 'At least one category is required')
       .of(Yup.string().required('Category ID is required')),
-    staff: Yup.array().min(1, 'At least one staff member is required'),
+    staff: Yup.array(), // Removed required validation
     price: Yup.number()
-      .required('Price is required')
       .min(0, 'Price must be positive')
-      .typeError('Price must be a number'),
+      .typeError('Price must be a number'), // Removed required validation
     duration: Yup.string().required('Duration is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.object().shape({
@@ -266,11 +265,10 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     if (!values.categories || values.categories.length === 0) {
       errors.categories = 'At least one category is required';
     }
-    if (!values.staff || values.staff.length === 0) {
-      errors.staff = 'At least one staff member is required';
-    }
-    if (!values.price || values.price <= 0) {
-      errors.price = 'Price must be greater than 0';
+    // Staff is now optional - no validation needed
+    // Price is now optional - only validate if provided
+    if (values.price && values.price < 0) {
+      errors.price = 'Price must be positive';
     }
     if (!values.duration?.trim()) {
       errors.duration = 'Duration is required';
@@ -423,9 +421,6 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
         if (response.data && response.data.success !== false) {
           // Store the created service data
           setCreatedService(response.data.data);
-
-          // Mark form as submitted and show success state
-          setIsSubmitted(true);
 
           // Call the onSuccess callback if provided
           if (onSuccess) onSuccess();
@@ -775,119 +770,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     );
   }
 
-  // Show success state after successful submission
-  if (isSubmitted) {
-    return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="card">
-              <div className="card-body text-center py-5">
-                <div className="success-icon mb-4">
-                  <span
-                    className="d-inline-flex align-items-center justify-content-center"
-                    style={{
-                      width: '80px',
-                      height: '80px',
-                      backgroundColor: '#28a745',
-                      borderRadius: '50%',
-                      color: 'white',
-                      fontSize: '40px',
-                      margin: '0 auto'
-                    }}
-                  >
-                    <i className="ti ti-check" />
-                  </span>
-                </div>
 
-                <h3 className="mb-3 text-success">Service Created Successfully!</h3>
-
-                <div className="alert alert-success mb-4">
-                  <h5 className="mb-2">{createdService?.serviceTitle || 'Your service'}</h5>
-                  <p className="mb-0">has been successfully created and added to your service list.</p>
-                </div>
-
-                <div className="service-details mb-4">
-                  {createdService && (
-                    <div className="row text-center">
-                      <div className="col-md-4">
-                        <div className="border rounded p-3">
-                          <h6 className="text-muted mb-1">Service ID</h6>
-                          <code className="small">{createdService._id}</code>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="border rounded p-3">
-                          <h6 className="text-muted mb-1">Categories</h6>
-                          <span className="badge bg-primary">
-                            {formik.values.categories.length} selected
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="border rounded p-3">
-                          <h6 className="text-muted mb-1">Staff Assigned</h6>
-                          <span className="badge bg-secondary">
-                            {formik.values.staff.length} members
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="action-buttons">
-                  <div className="d-flex justify-content-center gap-3">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        setIsSubmitted(false);
-                        formik.resetForm();
-                        setMainImage(null);
-                        setGalleryImages([]);
-                        setAdditionalServices([{ service: '', desc: '', price: 0, duration: '' }]);
-                        setIncludes(['']);
-                        setFaq([{ question: '', answer: '' }]);
-                        setCreatedService(null);
-                      }}
-                    >
-                      <i className="ti ti-plus me-2"></i>
-                      Create Another Service
-                    </button>
-
-                    <Link
-                      to="/admin/services/all-service"
-                      className="btn btn-outline-primary"
-                    >
-                      <i className="ti ti-list me-2"></i>
-                      View All Services
-                    </Link>
-
-                    {createdService?._id && (
-                      <Link
-                        to={`/services/service-details/${createdService._id}`}
-                        className="btn btn-outline-secondary"
-                      >
-                        <i className="ti ti-eye me-2"></i>
-                        Preview Service
-                      </Link>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <small className="text-muted">
-                    <i className="ti ti-info-circle me-1"></i>
-                    You can monitor the API response in your browser&apos;s Network tab
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container">
@@ -1051,7 +934,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
                 <div className="row mb-4">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Staff *</label>
+                      <label>Staff</label>
                       {staffLoading ? (
                         <div className="d-flex align-items-center">
                           <div className="spinner-border spinner-border-sm me-2" role="status">
@@ -1123,7 +1006,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
                   <div className="col-md-3">
                     <div className="form-group">
-                      <label>Price (₹) *</label>
+                      <label>Price (₹)</label>
                       <input
                         type="number"
                         className={`form-control ${formik.touched.price && formik.errors.price ? 'is-invalid' : ''

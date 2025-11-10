@@ -311,11 +311,10 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
     categories: Yup.array()
       .min(1, 'At least one category is required')
       .of(Yup.string().required('Category ID is required')),
-    staff: Yup.array().min(1, 'At least one staff member is required'),
+    staff: Yup.array(), // Removed required validation
     price: Yup.number()
-      .required('Price is required')
       .min(0, 'Price must be positive')
-      .typeError('Price must be a number'),
+      .typeError('Price must be a number'), // Removed required validation
     duration: Yup.string().required('Duration is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.object().shape({
@@ -348,11 +347,10 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
     if (!values.categories || values.categories.length === 0) {
       errors.categories = 'At least one category is required';
     }
-    if (!values.staff || values.staff.length === 0) {
-      errors.staff = 'At least one staff member is required';
-    }
-    if (!values.price || values.price <= 0) {
-      errors.price = 'Price must be greater than 0';
+    // Staff is now optional - no validation needed
+    // Price is now optional - only validate if provided
+    if (values.price && values.price < 0) {
+      errors.price = 'Price must be positive';
     }
     if (!values.duration?.trim()) {
       errors.duration = 'Duration is required';
@@ -991,7 +989,7 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
                 <div className="row mb-4">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Staff *</label>
+                      <label>Staff</label>
                       {staffLoading ? (
                         <div className="d-flex align-items-center">
                           <div className="spinner-border spinner-border-sm me-2" role="status">
@@ -1063,7 +1061,7 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
 
                   <div className="col-md-3">
                     <div className="form-group">
-                      <label>Price (₹) *</label>
+                      <label>Price (₹)</label>
                       <input
                         type="number"
                         className={`form-control ${formik.touched.price && formik.errors.price ? 'is-invalid' : ''
