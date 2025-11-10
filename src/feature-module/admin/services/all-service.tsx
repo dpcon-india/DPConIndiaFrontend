@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Column } from 'primereact/column';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { AllserviceInterface } from '../../../core/models/interface';
 import ProviderListModal from './ProviderListModal';
 import { deleteService, fetchServices } from '../../../APICalls';
 import ImageWithoutBasePath from '../../../core/img/ImageWithoutBasePath';
 import moment from 'moment';
+import { Modal } from 'react-bootstrap';
 
 const AllService = () => {
   const [data, setData] = useState([]);
@@ -14,7 +15,9 @@ const AllService = () => {
   const [message, setMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const fetchServ = async () => {
     try {
       setLoading(true);
@@ -28,7 +31,14 @@ const AllService = () => {
   };
   useEffect(() => {
     fetchServ();
-  }, []);
+    // Check for success parameter in URL
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('success') === 'true') {
+      setShowSuccessModal(true);
+      // Clean up URL
+      window.history.replaceState({}, '', location.pathname);
+    }
+  }, [location]);
 
   const closeModal = () => {
     (
@@ -332,6 +342,29 @@ const AllService = () => {
         </div>
       </div>
       <ProviderListModal />
+      
+      {/* Success Modal */}
+      <Modal centered show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <div className="modal-body">
+          <div className="text-center py-4">
+            <span className="success-check mb-3 mx-auto">
+              <i className="ti ti-check" />
+            </span>
+            <h4 className="mb-2">Service Created Successfully</h4>
+            <p>
+              Service has been created and added to your Service List
+            </p>
+            <div className="d-flex align-items-center justify-content-center mt-3">
+              <button 
+                className="btn btn-primary"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

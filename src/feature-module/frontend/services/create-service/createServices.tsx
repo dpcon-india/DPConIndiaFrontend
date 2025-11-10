@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { all_routes } from '../../../../core/data/routes/all_routes';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import ImageWithBasePath from '../../../../core/img/ImageWithBasePath';
 import BreadCrumb from '../../common/breadcrumb/breadCrumb';
@@ -16,6 +16,7 @@ import ImageWithoutBasePath from '../../../../core/img/ImageWithoutBasePath';
 
 const CreateService = () => {
   const routes = all_routes;
+  const navigate = useNavigate();
   const routeProviderId = useLocation()?.state?.providerId;
   const defaultServiceState: IService = {
     count: 0, // Default value for count
@@ -160,8 +161,10 @@ const CreateService = () => {
                     <SetpOne
                       providerId={serviceData?.providerId}
                       onSuccess={() => {
-                        setCurrentStep(1);
-                        handelOpen();
+                        // Navigate to services listing page with success flag
+                        const userRole = JSON.parse(localStorage.getItem('user') || '{}')?.role;
+                        const targetRoute = userRole === 'admin' ? '/admin/services/all-services' : '/providers/provider-service';
+                        navigate(`${targetRoute}?success=true`);
                       }}
                     />
                   )}
@@ -262,31 +265,7 @@ const CreateService = () => {
           </div>
         </div>
       </div>
-      <Modal centered show={showModal}>
-        <div className="modal-body">
-          <div className="text-center py-4">
-            <span className="success-check mb-3 mx-auto">
-              <i className="ti ti-check" />
-            </span>
-            <h4 className="mb-2">Service Created Successfullly</h4>
-            <p>
-              {serviceData?.categoryName} service has been Created, and updated
-              on your Service List
-            </p>
-            <div className="f-flex align-items-center justify-content-center mt-3">
-              <Link to="#" className="btn btn-light me-3" onClick={handleClose}>
-                Close
-              </Link>
-              <Link
-                to={routes.serviceDetails1}
-                className="btn btn-linear-primary"
-              >
-                Preview
-              </Link>
-            </div>
-          </div>
-        </div>
-      </Modal>
+
     </>
   );
 };

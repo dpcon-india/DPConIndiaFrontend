@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { fetchServicesByProvider, updateServiceStatus, deleteService } from '../../../../APICalls';
 import { IService } from '../../../../GlobleType';
 import { all_routes } from '../../../../core/data/routes/all_routes';
 import * as Icon from 'react-feather';
 import moment from 'moment';
 import EditServiceModal from './EditServiceModal';
+import { Modal } from 'react-bootstrap';
 
 const routes = all_routes;
 
@@ -15,6 +16,8 @@ const ProviderServices = () => {
   const [id, setId] = useState('');
   const [activeTab, setActiveTab] = useState<'active' | 'inactive'>('active');
   const [selectedService, setSelectedService] = useState<any>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const location = useLocation();
 
 
   const fetchData = async () => {
@@ -66,7 +69,14 @@ const ProviderServices = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    // Check for success parameter in URL
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('success') === 'true') {
+      setShowSuccessModal(true);
+      // Clean up URL
+      window.history.replaceState({}, '', location.pathname);
+    }
+  }, [location]);
 
   useEffect(() => {
     handleTabChange(activeTab);
@@ -248,6 +258,29 @@ const ProviderServices = () => {
       </div>
       
       <EditServiceModal selectedService={selectedService} onServiceUpdated={fetchData} />
+      
+      {/* Success Modal */}
+      <Modal centered show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <div className="modal-body">
+          <div className="text-center py-4">
+            <span className="success-check mb-3 mx-auto">
+              <i className="ti ti-check" />
+            </span>
+            <h4 className="mb-2">Service Created Successfully</h4>
+            <p>
+              Service has been created and added to your Service List
+            </p>
+            <div className="d-flex align-items-center justify-content-center mt-3">
+              <button 
+                className="btn btn-primary"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };
