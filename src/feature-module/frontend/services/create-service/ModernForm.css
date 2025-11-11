@@ -1,0 +1,401 @@
+/* Modern H&M Style Service Creation Form */
+
+/* Container & Layout */
+.modern-table-wrapper .container {
+  max-width: 1200px;
+  padding: 0;
+}
+
+.modern-table-wrapper .row {
+  margin: 0;
+}
+
+.modern-table-wrapper .col-lg-8,
+.modern-table-wrapper .col-lg-4 {
+  padding: 0 1rem;
+}
+
+/* Card Styling */
+.modern-table-wrapper .card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: white;
+  overflow: hidden;
+}
+
+.modern-table-wrapper .card-body {
+  padding: 2.5rem;
+}
+
+.modern-table-wrapper .card-title {
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: #222;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+/* Form Styling */
+.modern-table-wrapper .form-group {
+  margin-bottom: 2rem;
+}
+
+.modern-table-wrapper label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.75rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-table-wrapper .form-control,
+.modern-table-wrapper .form-select {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: #fff;
+  font-family: inherit;
+  min-height: 48px;
+}
+
+.modern-table-wrapper .form-control:focus,
+.modern-table-wrapper .form-select:focus {
+  border-color: #222;
+  box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.1);
+  outline: none;
+}
+
+.modern-table-wrapper textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Section Headers */
+.modern-table-wrapper h5 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #222;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  letter-spacing: -0.01em;
+}
+
+/* Button Styling */
+.modern-table-wrapper .btn {
+  padding: 0.875rem 2rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modern-table-wrapper .btn-primary {
+  background: #222;
+  color: white;
+}
+
+.modern-table-wrapper .btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modern-table-wrapper .btn-outline-primary {
+  background: transparent;
+  color: #222;
+  border: 1px solid #e5e5e5;
+}
+
+.modern-table-wrapper .btn-outline-primary:hover {
+  border-color: #222;
+  color: white;
+  background: #222;
+}
+
+.modern-table-wrapper .btn-outline-danger {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 0.5rem 1rem;
+}
+
+.modern-table-wrapper .btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.modern-table-wrapper .btn-outline-secondary {
+  background: transparent;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.modern-table-wrapper .btn-outline-secondary:hover {
+  border-color: #222;
+  color: #222;
+  background: #f8f9fa;
+}
+
+/* Input Group */
+.modern-table-wrapper .input-group .btn {
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Alert Styling */
+.modern-table-wrapper .alert {
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.modern-table-wrapper .alert-info {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.modern-table-wrapper .alert-danger {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.modern-table-wrapper .alert-warning {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+/* React Select Styling */
+.modern-table-wrapper .basic-multi-select .select__control {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  min-height: 48px;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.modern-table-wrapper .basic-multi-select .select__control:hover {
+  border-color: #222;
+}
+
+.modern-table-wrapper .basic-multi-select .select__control--is-focused {
+  border-color: #222;
+  box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.1);
+}
+
+.modern-table-wrapper .basic-multi-select .select__multi-value {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.modern-table-wrapper .basic-multi-select .select__multi-value__label {
+  color: #222;
+  font-size: 0.875rem;
+}
+
+.modern-table-wrapper .basic-multi-select .select__multi-value__remove:hover {
+  background: #222;
+  color: white;
+}
+
+/* File Upload Styling */
+.modern-table-wrapper .border-dashed {
+  border: 2px dashed #e5e5e5 !important;
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modern-table-wrapper .border-dashed:hover {
+  border-color: #222 !important;
+  background: #f5f5f5;
+}
+
+.modern-table-wrapper .ti-cloud-upload {
+  font-size: 3rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+/* Gallery Preview */
+.modern-table-wrapper .gallery-preview .card {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.modern-table-wrapper .gallery-preview .card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modern-table-wrapper .gallery-preview .card-img-top {
+  height: 80px;
+  object-fit: cover;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modern-table-wrapper .gallery-preview .card-body {
+  padding: 0.75rem;
+}
+
+/* Badge Styling */
+.modern-table-wrapper .badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-table-wrapper .badge.bg-primary {
+  background: #222 !important;
+  color: white;
+  cursor: pointer;
+}
+
+.modern-table-wrapper .badge.bg-secondary {
+  background: #f0f0f0 !important;
+  color: #666;
+}
+
+.modern-table-wrapper .badge.bg-light {
+  background: #f8f9fa !important;
+  color: #666;
+}
+
+/* Form Text */
+.modern-table-wrapper .form-text,
+.modern-table-wrapper small {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Invalid Feedback */
+.modern-table-wrapper .invalid-feedback {
+  font-size: 0.75rem;
+  color: #dc3545;
+  margin-top: 0.5rem;
+}
+
+.modern-table-wrapper .is-invalid {
+  border-color: #dc3545;
+}
+
+/* Loading States */
+.modern-table-wrapper .spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 2px;
+}
+
+.modern-table-wrapper .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 1px;
+}
+
+/* Preview Section */
+.modern-table-wrapper .service-preview {
+  padding: 1rem 0;
+}
+
+.modern-table-wrapper .service-preview .service-img {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.modern-table-wrapper .service-preview .service-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.75rem;
+}
+
+.modern-table-wrapper .service-preview .service-meta {
+  margin-bottom: 1rem;
+}
+
+.modern-table-wrapper .service-preview .service-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.modern-table-wrapper .service-preview .service-details {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modern-table-wrapper .card-body {
+    padding: 1.5rem;
+  }
+  
+  .modern-table-wrapper .col-lg-8,
+  .modern-table-wrapper .col-lg-4 {
+    padding: 0 0.5rem;
+  }
+  
+  .modern-table-wrapper .border-dashed {
+    padding: 2rem 1rem;
+    min-height: 150px;
+  }
+  
+  .modern-table-wrapper .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .modern-table-wrapper .form-control,
+  .modern-table-wrapper .form-select {
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modern-table-wrapper .card-body {
+    padding: 1rem;
+  }
+  
+  .modern-table-wrapper .card-title {
+    font-size: 1.5rem;
+  }
+  
+  .modern-table-wrapper h5 {
+    font-size: 1.125rem;
+  }
+  
+  .modern-table-wrapper .gallery-preview .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}

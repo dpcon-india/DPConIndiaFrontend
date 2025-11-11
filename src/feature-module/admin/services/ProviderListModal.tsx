@@ -6,6 +6,7 @@ import { fetchAllProfileByRole } from '../../../APICalls';
 import moment from 'moment';
 import ImageWithoutBasePath from '../../../core/img/ImageWithoutBasePath';
 import { useNavigate } from 'react-router-dom';
+import './ProviderListModal.css';
 type Customer = {
   _id: string;
   id?: number;
@@ -62,19 +63,21 @@ const ProviderListModal = () => {
   };
   const actionButton = (data: Customer) => {
     return (
-      <div className="table-actions d-flex">
+      <div className="provider-action">
         <button
-          className="delete-table border-none me-2"
+          className="select-provider-btn"
           type="button"
           data-bs-dismiss="modal"
           onClick={() => {
-            navigate('/services/create-service', {
+            navigate('/admin/services/create-service', {
               state: { providerId: data?._id },
             });
             setSelectedData(data);
           }}
+          title="Select Provider"
         >
-          <Icon.Plus className="react-feather-custom" />
+          <Icon.Plus size={16} />
+          <span>Select</span>
         </button>
       </div>
     );
@@ -82,17 +85,17 @@ const ProviderListModal = () => {
   const renderCustomerNameColumn = (rowData: Customer) => {
     const [name, email] = rowData.name.split('\n');
     return (
-      <div className="table-profileimage">
-        <ImageWithoutBasePath
-          className="me-2"
-          src={rowData.image}
-          alt="img"
-          style={{ width: '50px', height: 'auto' }}
-        />
-        <div className="ml-2">
-          <span>{name}</span>
-          <br />
-          <span>{email}</span>
+      <div className="provider-profile">
+        <div className="provider-avatar">
+          <ImageWithoutBasePath
+            src={rowData.image}
+            alt="provider"
+            className="avatar-image"
+          />
+        </div>
+        <div className="provider-details">
+          <div className="provider-name">{name || rowData.name}</div>
+          <div className="provider-email">{email || rowData.email}</div>
         </div>
       </div>
     );
@@ -100,59 +103,76 @@ const ProviderListModal = () => {
   return (
     <>
       <div className="modal fade" id="provider-list">
-        <div
-          className="modal-dialog modal-dialog-centered"
-          style={{ maxWidth: '60%' }}
-        >
-          <div className="modal-content">
-            <div className="modal-header">
+        <div className="modal-dialog modal-dialog-centered provider-modal-dialog">
+          <div className="modal-content provider-modal-content">
+            <div className="modal-header provider-modal-header">
+              <div className="modal-title-section">
+                <h3 className="modal-title">Select Provider</h3>
+                <p className="modal-subtitle">Choose a provider to create a new service</p>
+              </div>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close modern-close-btn"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-              />
+              >
+                <i className="fa fa-times"></i>
+              </button>
             </div>
-            <div className="modal-body pt-0">
-              <div className="d-grid gap-2 justify-content-center mt-4">
-                {/* Provider List */}
-                <h2>Select Provider</h2>
+            <div className="modal-body provider-modal-body">
+              <div className="provider-table-container">
                 <DataTable
                   paginator
                   rows={10}
                   rowsPerPageOptions={[5, 10, 25, 50]}
                   value={data}
-                  showGridlines
-                  tableStyle={{ minWidth: '50rem' }}
+                  className="provider-datatable"
+                  showGridlines={false}
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
+                  currentPageReportTemplate="{first}-{last} of {totalRecords} providers"
                 >
-                  <Column sortable field="id" header="#"></Column>
-                  <Column
-                    sortable
-                    field="name"
-                    header="Customer Name"
-                    body={(rowdata) => renderCustomerNameColumn(rowdata)}
+                  <Column 
+                    field="id" 
+                    header="#" 
+                    className="id-column"
+                    headerClassName="table-header"
                   ></Column>
-                  <Column sortable field="number" header="Mobile"></Column>
-                  {/* <Column
-                      sortable
-                      field="lastActivity"
-                      header="Last Activity"
-                    ></Column> */}
                   <Column
-                    sortable
+                    field="name"
+                    header="Provider"
+                    body={(rowdata) => renderCustomerNameColumn(rowdata)}
+                    className="provider-column"
+                    headerClassName="table-header"
+                  ></Column>
+                  <Column 
+                    field="number" 
+                    header="Mobile"
+                    className="mobile-column"
+                    headerClassName="table-header"
+                    body={(rowData) => (
+                      <div className="mobile-text">
+                        {rowData.number || 'N/A'}
+                      </div>
+                    )}
+                  ></Column>
+                  <Column
                     field="action"
                     header="Action"
                     body={actionButton}
+                    className="action-column"
+                    headerClassName="table-header"
                   ></Column>
                 </DataTable>
-                <button
-                  type="button"
-                  className="btn w-sm btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
               </div>
+            </div>
+            <div className="modal-footer provider-modal-footer">
+              <button
+                type="button"
+                className="cancel-btn"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

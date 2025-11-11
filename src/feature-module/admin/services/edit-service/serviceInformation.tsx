@@ -387,33 +387,32 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
       formData.append('duration', values.duration);
       formData.append('description', values.description);
 
-      // Categories - send as individual entries
+      // Categories as array
       values.categories.forEach((categoryId: string) => {
         formData.append('categories', categoryId);
       });
 
-      // Staff - send as individual entries
+      // Staff as array
       values.staff.forEach((staffId: string) => {
         formData.append('staff', staffId);
       });
 
-      // Location - send as individual fields (backend expects separate fields)
-      if (values.location.city) formData.append('city', values.location.city);
-      if (values.location.state) formData.append('state', values.location.state);
-      if (values.location.locality) formData.append('locality', values.location.locality);
-      if (values.location.pincode) formData.append('pincode', values.location.pincode);
-      if (values.location.address) formData.append('address', values.location.address);
-      // Add default country
-      formData.append('country', 'India');
+      // Location fields with proper nesting
+      if (values.location.address) formData.append('location[address]', values.location.address);
+      if (values.location.city) formData.append('location[city]', values.location.city);
+      if (values.location.state) formData.append('location[state]', values.location.state);
+      if (values.location.locality) formData.append('location[locality]', values.location.locality);
+      if (values.location.pincode) formData.append('location[pincode]', values.location.pincode);
+      formData.append('location[country]', 'India');
 
-      // SEO - send as individual fields (backend expects separate fields)
-      if (values.seo.metaTitle) formData.append('metaTitle', values.seo.metaTitle);
-      if (values.seo.metaDescription) formData.append('metaDescription', values.seo.metaDescription);
-      // Send each keyword individually
+      // SEO fields with proper nesting
+      if (values.seo.metaTitle) formData.append('seo[metaTitle]', values.seo.metaTitle);
+      if (values.seo.metaDescription) formData.append('seo[metaDescription]', values.seo.metaDescription);
+      // Send keywords as array
       if (values.seo.metaKeywords && values.seo.metaKeywords.length > 0) {
         values.seo.metaKeywords.forEach((keyword: string) => {
           if (keyword.trim()) {
-            formData.append('metaKeywords', keyword);
+            formData.append('seo[metaKeywords]', keyword);
           }
         });
       }
@@ -469,15 +468,15 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
         });
       }
 
-      // If no new images are being uploaded, explicitly tell backend to preserve existing images
-      if (!hasNewMainImage && !hasNewGalleryImages) {
-        // Add a flag to indicate we want to preserve existing images
-        formData.append('preserveImages', 'true');
-      }
+      // Remove the preserveImages field as it's causing JSON parsing errors
+      // The backend should handle existing images automatically
 
 
       // UPDATE service using PUT request
       const response = await axiosInstance.put(`/service/${serviceData._id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
         timeout: 30000,
       });
 

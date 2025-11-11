@@ -6,6 +6,7 @@ import axios from 'axios';
 import { api, formDataHeader } from '../../../config';
 import moment from 'moment';
 import ImageWithoutBasePath from '../../../core/img/ImageWithoutBasePath';
+import './Appointments.css';
 
 interface Appointment {
   _id: string;
@@ -110,44 +111,46 @@ const AppointmentModal = () => {
   };
 
   const actionTemplate = (rowData: Appointment) => (
-    <div className="d-flex align-items-center gap-2 justify-content-center">
+    <div className="action-buttons">
       <button
         onClick={() => {
           setSelectedAppointment(rowData);
           setShowModal(true);
         }}
-        className="btn btn-sm btn-outline-primary d-flex align-items-center"
+        className="action-btn view-btn"
         title="View Details"
       >
-        <Icon.Eye size={16} className="me-1" /> View
+        <Icon.Eye size={16} />
       </button>
       <button
         onClick={() => {
           setAppointmentToDelete(rowData._id);
           setDeleteConfirmModal(true);
         }}
-        className="btn btn-sm btn-outline-danger d-flex align-items-center"
+        className="action-btn delete-btn"
         title="Delete Appointment"
       >
-        <Icon.Trash2 size={16} className="me-1" /> Delete
+        <Icon.Trash2 size={16} />
       </button>
     </div>
   );
 
   return (
     <>
-      <div className="page-wrapper page-settings">
+      <div className="page-wrapper">
         <div className="content">
-          <div className="content-page-header content-page-headersplit mb-4">
-            <h5 className="mb-0">Appointments</h5>
-            <div className="d-flex align-items-center gap-3">
-              <div className="d-flex align-items-center">
-                <label className="me-2 mb-0 fw-medium">Sort By:</label>
+          <div className="page-header">
+            <div className="header-content">
+              <h1 className="page-title">Appointments</h1>
+              <p className="page-subtitle">Manage customer appointments and bookings</p>
+            </div>
+            <div className="header-actions">
+              <div className="sort-dropdown">
+                <label className="sort-label">Sort By:</label>
                 <select
-                  className="form-select"
+                  className="sort-select"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value as 'latest' | 'oldest')}
-                  style={{ width: 'auto', minWidth: '150px' }}
                 >
                   <option value="latest">Latest First</option>
                   <option value="oldest">Oldest First</option>
@@ -157,133 +160,118 @@ const AppointmentModal = () => {
           </div>
 
           {loading ? (
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
+            <div className="loading-state">
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+                <p>Loading appointments...</p>
               </div>
             </div>
           ) : appointments.length === 0 ? (
-            <div className="text-center py-5">
-              <div className="mb-3">
-                <i className="fa fa-calendar" style={{ fontSize: '3rem', color: '#6c757d' }}></i>
+            <div className="empty-state">
+              <div className="empty-icon">
+                <i className="fa fa-calendar"></i>
               </div>
-              <h5 className="text-muted">No Appointments Found</h5>
-              <p className="text-muted">No appointments have been booked yet</p>
+              <h3>No appointments yet</h3>
+              <p>Customer appointments will appear here once they start booking</p>
             </div>
           ) : (
-            <div className="row">
-              <div className="col-12">
-                <div className="card">
-                  <div className="card-body p-0">
-                    <div className="table-responsive">
-                      <DataTable
-                        value={appointments}
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} appointments"
-                        className="custom-datatable"
-                        stripedRows
-                        showGridlines={false}
-                      >
-                        <Column
-                          field="userId.name"
-                          header="Customer"
-                          sortable
-                          body={(rowData) => (
-                            <div className="d-flex align-items-center">
-                              <div className="flex-shrink-0" style={{ width: '35px', height: '35px', overflow: 'hidden', borderRadius: '50%' }}>
-                                <ImageWithoutBasePath
-                                  src={rowData?.userId?.image}
-                                  className="img-fluid rounded-circle"
-                                  alt="user avatar"
-                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                              </div>
-                              <div className="ms-2">
-                                <div className="fw-semibold text-truncate" style={{ maxWidth: '150px' }} title={rowData?.userId?.name}>
-                                  {rowData?.userId?.name}
-                                </div>
-                                <small className="text-muted text-truncate d-block" style={{ maxWidth: '150px' }} title={rowData?.userId?.email}>
-                                  {rowData?.userId?.email}
-                                </small>
-                              </div>
-                            </div>
-                          )}
-                          style={{ minWidth: '220px' }}
-                        />
-                        <Column
-                          field="userId.number"
-                          header="Phone"
-                          body={(rowData) => (
-                            <span className="text-muted">{rowData?.userId?.number}</span>
-                          )}
-                          style={{ width: '120px' }}
-                        />
-                        <Column
-                          field="serviceId.serviceTitle"
-                          header="Service"
-                          sortable
-                          body={(rowData) => (
-                            <div>
-                              <div className="fw-medium text-truncate" style={{ maxWidth: '180px' }} title={rowData?.serviceId?.serviceTitle}>
-                                {rowData?.serviceId?.serviceTitle || 'N/A'}
-                              </div>
-                              {rowData?.serviceId?.providerId?.name && (
-                                <small className="text-muted">By: {rowData.serviceId.providerId.name}</small>
-                              )}
-                            </div>
-                          )}
-                          style={{ minWidth: '200px' }}
-                        />
-                        <Column
-                          header="Appointment"
-                          body={(rowData) => (
-                            <div>
-                              <div className="fw-medium">
-                                {moment(rowData.date).format('DD MMM YYYY')}
-                              </div>
-                              <small className="text-muted">{rowData.time}</small>
-                            </div>
-                          )}
-                          sortable
-                          sortField="date"
-                          style={{ width: '140px' }}
-                        />
-                        <Column
-                          field="amount"
-                          header="Amount"
-                          sortable
-                          body={(rowData) => (
-                            <span className={`badge ${rowData.amount ? 'bg-success' : 'bg-info'} px-3 py-2`}>
-                              {rowData.amount ? `₹${rowData.amount}` : 'Free Survey'}
-                            </span>
-                          )}
-                          style={{ width: '120px' }}
-                        />
-                        <Column
-                          header="Created"
-                          body={(rowData) => (
-                            <small className="text-muted">
-                              {moment(rowData.createdAt).format('DD MMM YYYY')}
-                            </small>
-                          )}
-                          sortable
-                          sortField="createdAt"
-                          style={{ width: '120px' }}
-                        />
-                        <Column
-                          body={actionTemplate}
-                          header="Actions"
-                          headerStyle={{ textAlign: 'center' }}
-                          bodyStyle={{ textAlign: 'center' }}
-                          style={{ width: '180px' }}
-                        />
-                      </DataTable>
-                    </div>
-                  </div>
-                </div>
+            <div className="appointments-table-container">
+              <div className="modern-table-wrapper">
+                <DataTable
+                  value={appointments}
+                  paginator
+                  rows={10}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="{first}-{last} of {totalRecords} appointments"
+                  className="modern-datatable"
+                  showGridlines={false}
+                >
+                  <Column
+                    field="userId.name"
+                    header="Customer"
+                    sortable
+                    body={(rowData) => (
+                      <div className="customer-item">
+                        <div className="customer-avatar">
+                          <ImageWithoutBasePath
+                            src={rowData?.userId?.image}
+                            className="avatar-img"
+                            alt="customer"
+                          />
+                        </div>
+                        <div className="customer-details">
+                          <div className="customer-name">{rowData?.userId?.name}</div>
+                          <div className="customer-email">{rowData?.userId?.email}</div>
+                        </div>
+                      </div>
+                    )}
+                    className="customer-column"
+                  />
+                  <Column
+                    field="userId.number"
+                    header="Phone"
+                    body={(rowData) => (
+                      <div className="phone-text">{rowData?.userId?.number}</div>
+                    )}
+                    className="phone-column"
+                  />
+                  <Column
+                    field="serviceId.serviceTitle"
+                    header="Service"
+                    sortable
+                    body={(rowData) => (
+                      <div className="service-item">
+                        <div className="service-title">{rowData?.serviceId?.serviceTitle || 'N/A'}</div>
+                        {rowData?.serviceId?.providerId?.name && (
+                          <div className="service-provider">By: {rowData.serviceId.providerId.name}</div>
+                        )}
+                      </div>
+                    )}
+                    className="service-column"
+                  />
+                  <Column
+                    header="Appointment"
+                    body={(rowData) => (
+                      <div className="appointment-datetime">
+                        <div className="appointment-date">
+                          {moment(rowData.date).format('DD MMM YYYY')}
+                        </div>
+                        <div className="appointment-time">{rowData.time}</div>
+                      </div>
+                    )}
+                    sortable
+                    sortField="date"
+                    className="datetime-column"
+                  />
+                  <Column
+                    field="amount"
+                    header="Amount"
+                    sortable
+                    body={(rowData) => (
+                      <span className={`amount-badge ${rowData.amount ? 'paid' : 'free'}`}>
+                        {rowData.amount ? `₹${rowData.amount}` : 'Free Survey'}
+                      </span>
+                    )}
+                    className="amount-column"
+                  />
+                  <Column
+                    header="Created"
+                    body={(rowData) => (
+                      <div className="created-date">
+                        {moment(rowData.createdAt).format('DD MMM YYYY')}
+                      </div>
+                    )}
+                    sortable
+                    sortField="createdAt"
+                    className="created-column"
+                  />
+                  <Column
+                    body={actionTemplate}
+                    header="Actions"
+                    className="action-column"
+                  />
+                </DataTable>
               </div>
             </div>
           )}
@@ -298,73 +286,78 @@ const AppointmentModal = () => {
           onClick={() => setShowModal(false)}
         >
           <div className="modal-dialog modal-dialog-centered modal-lg" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Appointment Details</h5>
+            <div className="modal-content modern-modal">
+              <div className="modal-header modern-modal-header">
+                <div className="modal-title-section">
+                  <h3 className="modal-title">Appointment Details</h3>
+                  <p className="modal-subtitle">View complete appointment information</p>
+                </div>
                 <button
                   type="button"
-                  className="btn-close"
+                  className="btn-close modern-close-btn"
                   onClick={() => setShowModal(false)}
-                ></button>
+                >
+                  <i className="fa fa-times"></i>
+                </button>
               </div>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Customer Name</label>
-                    <p className="mb-0">{selectedAppointment.userId?.name}</p>
+              <div className="modal-body modern-modal-body">
+                <div className="appointment-details-grid">
+                  <div className="detail-item">
+                    <label className="detail-label">Customer Name</label>
+                    <p className="detail-value">{selectedAppointment.userId?.name}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Email</label>
-                    <p className="mb-0">{selectedAppointment.userId?.email}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Email</label>
+                    <p className="detail-value">{selectedAppointment.userId?.email}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Phone Number</label>
-                    <p className="mb-0">{selectedAppointment.userId?.number}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Phone Number</label>
+                    <p className="detail-value">{selectedAppointment.userId?.number}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Service</label>
-                    <p className="mb-0">{selectedAppointment.serviceId?.serviceTitle || 'N/A'}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Service</label>
+                    <p className="detail-value">{selectedAppointment.serviceId?.serviceTitle || 'N/A'}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Appointment Date</label>
-                    <p className="mb-0">{moment(selectedAppointment.date).format('DD MMMM YYYY')}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Appointment Date</label>
+                    <p className="detail-value">{moment(selectedAppointment.date).format('DD MMMM YYYY')}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Appointment Time</label>
-                    <p className="mb-0">{selectedAppointment.time}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Appointment Time</label>
+                    <p className="detail-value">{selectedAppointment.time}</p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Amount</label>
-                    <p className="mb-0">
-                      <span className={`badge ${selectedAppointment.amount ? 'bg-success' : 'bg-info'}`}>
+                  <div className="detail-item">
+                    <label className="detail-label">Amount</label>
+                    <p className="detail-value">
+                      <span className={`amount-badge ${selectedAppointment.amount ? 'paid' : 'free'}`}>
                         {selectedAppointment.amount ? `₹${selectedAppointment.amount}` : 'Free Survey'}
                       </span>
                     </p>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="fw-semibold text-muted small">Created At</label>
-                    <p className="mb-0">{moment(selectedAppointment.createdAt).format('DD MMM YYYY, HH:mm')}</p>
+                  <div className="detail-item">
+                    <label className="detail-label">Created At</label>
+                    <p className="detail-value">{moment(selectedAppointment.createdAt).format('DD MMM YYYY, HH:mm')}</p>
                   </div>
                   {selectedAppointment.serviceId?.providerId?.name && (
-                    <div className="col-md-6 mb-3">
-                      <label className="fw-semibold text-muted small">Provider</label>
-                      <p className="mb-0">{selectedAppointment.serviceId.providerId.name}</p>
+                    <div className="detail-item">
+                      <label className="detail-label">Provider</label>
+                      <p className="detail-value">{selectedAppointment.serviceId.providerId.name}</p>
                     </div>
                   )}
-                  <div className="col-12 mb-3">
-                    <label className="fw-semibold text-muted small">Service Details / Notes</label>
-                    <p className="mb-0 p-3 bg-light rounded">{selectedAppointment.serviceDetails || 'No details provided'}</p>
+                  <div className="detail-item full-width">
+                    <label className="detail-label">Service Details / Notes</label>
+                    <div className="detail-notes">{selectedAppointment.serviceDetails || 'No details provided'}</div>
                   </div>
-                  <div className="col-12">
-                    <label className="fw-semibold text-muted small">Appointment ID</label>
-                    <p className="mb-0"><code>{selectedAppointment._id}</code></p>
+                  <div className="detail-item full-width">
+                    <label className="detail-label">Appointment ID</label>
+                    <p className="detail-value appointment-id">{selectedAppointment._id}</p>
                   </div>
                 </div>
               </div>
-              <div className="modal-footer">
+              <div className="modal-footer modern-modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="close-btn"
                   onClick={() => setShowModal(false)}
                 >
                   Close
@@ -383,39 +376,44 @@ const AppointmentModal = () => {
           onClick={() => setDeleteConfirmModal(false)}
         >
           <div className="modal-dialog modal-dialog-centered" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-content">
-              <div className="modal-header border-0">
+            <div className="modal-content modern-modal">
+              <div className="modal-header modern-modal-header">
                 <button
                   type="button"
-                  className="btn-close"
+                  className="btn-close modern-close-btn"
                   onClick={() => setDeleteConfirmModal(false)}
-                ></button>
+                >
+                  <i className="fa fa-times"></i>
+                </button>
               </div>
-              <div className="modal-body text-center pt-0">
-                <div className="mb-3">
-                  <i className="fa fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#dc3545' }}></i>
+              <div className="modal-body modern-modal-body">
+                <div className="delete-confirmation">
+                  <div className="warning-icon">
+                    <i className="fa fa-exclamation-triangle"></i>
+                  </div>
+                  <h4>Delete Appointment</h4>
+                  <p>Are you sure you want to delete this appointment? This action cannot be undone.</p>
                 </div>
-                <h5>Delete Appointment?</h5>
-                <p className="text-muted">Are you sure you want to delete this appointment? This action cannot be undone.</p>
               </div>
-              <div className="modal-footer border-0 justify-content-center">
+              <div className="modal-footer modern-modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary px-4"
+                  className="cancel-btn"
                   onClick={() => setDeleteConfirmModal(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger px-4"
+                  className="delete-confirm-btn"
                   onClick={() => {
                     if (appointmentToDelete) {
                       deleteAppointment(appointmentToDelete);
                     }
                   }}
                 >
-                  <Icon.Trash2 size={16} className="me-1" /> Delete
+                  <Icon.Trash2 size={16} />
+                  <span>Delete</span>
                 </button>
               </div>
             </div>

@@ -126,6 +126,7 @@ import PincodeList from './categories/pincode-list';
 import SearchHistory from './categories/search-history';
 import { useUser } from '../../core/data/context/UserContext';
 import EditService from './services/edit-service';
+import CreateService from './services/create-service';
 import AllGallery from './gallery/all-gallery';
 import AddGallery from './gallery/add-gallery';
 import AppointmentModal from './support/appointment';
@@ -572,6 +573,12 @@ const AdminRoutes = () => {
       path: '/services/edit-service',
       name: 'edit-service',
       element: <EditService />,
+      route: Route,
+    },
+    {
+      path: '/services/create-service',
+      name: 'create-service',
+      element: <CreateService />,
       route: Route,
     },
     {
