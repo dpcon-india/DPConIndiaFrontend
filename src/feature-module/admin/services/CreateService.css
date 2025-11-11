@@ -1,0 +1,543 @@
+/* Modern H&M Style Create Service CSS - Matching All Services Page */
+
+/* Page Layout */
+.page-wrapper {
+  background: #fafafa;
+}
+
+.page-wrapper .content {
+  padding: 1.5rem;
+  background: #fafafa;
+}
+
+/* Header Styles */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 300;
+  color: #222;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+.create-btn {
+  background: #222;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.create-btn:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+/* Table Container - Matching All Services */
+.services-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.modern-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Form Styling */
+.services-form-container .service-inform-fieldset {
+  padding: 2rem;
+}
+
+.services-form-container .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.services-form-container .form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.services-form-container .form-control {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.services-form-container .form-control:focus {
+  border-color: #222;
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+  outline: none;
+}
+
+.services-form-container .form-select {
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.services-form-container .form-select:focus {
+  border-color: #222;
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+  outline: none;
+}
+
+/* Button Styles */
+.services-form-container .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.services-form-container .btn-primary {
+  background: #222;
+  color: white;
+}
+
+.services-form-container .btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.services-form-container .btn-secondary {
+  background: transparent;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.services-form-container .btn-secondary:hover {
+  border-color: #222;
+  color: #222;
+  background: #f8f9fa;
+}
+
+/* File Upload Styling */
+.services-form-container .file-upload-area {
+  border: 2px dashed #e5e5e5;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+
+.services-form-container .file-upload-area:hover {
+  border-color: #222;
+  background: #f5f5f5;
+}
+
+.services-form-container .file-upload-area.dragover {
+  border-color: #222;
+  background: #f0f0f0;
+}
+
+/* Image Preview */
+.services-form-container .image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.services-form-container .image-preview-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+}
+
+.services-form-container .image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.services-form-container .image-remove-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.services-form-container .image-remove-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* Textarea Styling */
+.services-form-container textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Checkbox and Radio Styling */
+.services-form-container .form-check {
+  margin-bottom: 0.75rem;
+}
+
+.services-form-container .form-check-input {
+  margin-top: 0.25rem;
+}
+
+.services-form-container .form-check-label {
+  font-size: 0.875rem;
+  color: #222;
+  margin-left: 0.5rem;
+}
+
+/* Alert Styling */
+.services-form-container .alert {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: none;
+}
+
+.services-form-container .alert-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.services-form-container .alert-danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Loading State */
+.services-form-container .loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.services-form-container .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #222;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Form Styling - Matching All Services Style */
+.modern-table-wrapper .service-inform-fieldset {
+  padding: 2rem;
+}
+
+.modern-table-wrapper .form-section {
+  margin-bottom: 2rem;
+}
+
+.modern-table-wrapper .section-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modern-table-wrapper .form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.modern-table-wrapper .form-col {
+  flex: 1;
+}
+
+.modern-table-wrapper .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modern-table-wrapper .form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.modern-table-wrapper .form-control,
+.modern-table-wrapper .form-select {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: #fff;
+  font-family: inherit;
+}
+
+.modern-table-wrapper .form-control:focus,
+.modern-table-wrapper .form-select:focus {
+  border-color: #222;
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+  outline: none;
+}
+
+.modern-table-wrapper textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Button Styling */
+.modern-table-wrapper .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modern-table-wrapper .btn-primary {
+  background: #222;
+  color: white;
+}
+
+.modern-table-wrapper .btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.modern-table-wrapper .btn-secondary {
+  background: transparent;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.modern-table-wrapper .btn-secondary:hover {
+  border-color: #222;
+  color: #222;
+  background: #f8f9fa;
+}
+
+/* File Upload Styling */
+.modern-table-wrapper .file-upload-area {
+  border: 2px dashed #e5e5e5;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.modern-table-wrapper .file-upload-area:hover {
+  border-color: #222;
+  background: #f5f5f5;
+}
+
+.modern-table-wrapper .file-upload-area.dragover {
+  border-color: #222;
+  background: #f0f0f0;
+}
+
+.modern-table-wrapper .upload-icon {
+  font-size: 2rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.modern-table-wrapper .upload-text {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.modern-table-wrapper .upload-hint {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* Image Preview */
+.modern-table-wrapper .image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modern-table-wrapper .image-preview-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  background: #f8f9fa;
+}
+
+.modern-table-wrapper .image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modern-table-wrapper .image-remove-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modern-table-wrapper .image-remove-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* Form Actions */
+.modern-table-wrapper .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-wrapper .content {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .modern-table-wrapper .service-inform-fieldset {
+    padding: 1.5rem;
+  }
+  
+  .modern-table-wrapper .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .modern-table-wrapper .image-preview {
+    gap: 0.75rem;
+  }
+  
+  .modern-table-wrapper .image-preview-item {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .modern-table-wrapper .form-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .modern-table-wrapper .service-inform-fieldset {
+    padding: 1rem;
+  }
+  
+  .modern-table-wrapper .image-preview {
+    gap: 0.5rem;
+  }
+  
+  .modern-table-wrapper .image-preview-item {
+    width: 80px;
+    height: 80px;
+  }
+}

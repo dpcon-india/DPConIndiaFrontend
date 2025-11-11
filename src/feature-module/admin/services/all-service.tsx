@@ -8,6 +8,7 @@ import { deleteService, fetchServices } from '../../../APICalls';
 import ImageWithoutBasePath from '../../../core/img/ImageWithoutBasePath';
 import moment from 'moment';
 import { Modal } from 'react-bootstrap';
+import './AllService.css';
 
 const AllService = () => {
   const [data, setData] = useState([]);
@@ -49,18 +50,17 @@ const AllService = () => {
     const imageSrc =
       res?.image && res.image.trim() !== '' ? res.image : res?.gallery?.[0];
     return (
-      <div className="table-imgname d-flex align-items-center">
-        <div className="flex-shrink-0" style={{ width: '50px', height: '50px', overflow: 'hidden', borderRadius: '8px' }}>
+      <div className="service-item">
+        <div className="service-image">
           <ImageWithoutBasePath
             src={imageSrc}
-            className="img-fluid"
-            alt="img"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            className="service-img"
+            alt="service"
           />
         </div>
-        <span className="ms-2 text-truncate" style={{ maxWidth: '200px' }} title={res?.serviceTitle}>
-          {res?.serviceTitle}
-        </span>
+        <div className="service-info">
+          <h6 className="service-title">{res?.serviceTitle}</h6>
+        </div>
       </div>
     );
   };
@@ -68,8 +68,9 @@ const AllService = () => {
   // console.log(res?.image)
   const renderBody2 = (res: any) => {
     return (
-      <div className="d-flex align-items-center">
-        <span className={`badge ${res.active ? 'bg-success' : 'bg-secondary'} px-3 py-2`}>
+      <div className="status-wrapper">
+        <span className={`status-badge ${res.active ? 'active' : 'inactive'}`}>
+          <span className="status-dot"></span>
           {res.active ? 'Active' : 'Inactive'}
         </span>
       </div>
@@ -77,8 +78,8 @@ const AllService = () => {
   };
   const renderBody4 = (res: any) => {
     return (
-      <div className="text-muted">
-        <span>{moment(res?.createdAt).format('MMM DD, YYYY')}</span>
+      <div className="date-text">
+        {moment(res?.createdAt).format('MMM DD, YYYY')}
       </div>
     );
   };
@@ -108,19 +109,18 @@ const AllService = () => {
 
   const renderBody3 = (res: any) => {
     return (
-      <div className="d-flex align-items-center gap-2">
+      <div className="action-buttons">
         <button
           onClick={() => {
             navigate('/admin/services/edit-service', { state: res });
           }}
-          className="btn btn-sm btn-outline-primary d-flex align-items-center"
+          className="action-btn edit-btn"
           title="Edit Service"
         >
-          <i className="fa-regular fa-pen-to-square me-1"></i>
-          <span>Edit</span>
+          <i className="fa-regular fa-pen-to-square"></i>
         </button>
         <button
-          className="btn btn-sm btn-outline-danger d-flex align-items-center"
+          className="action-btn delete-btn"
           type="button"
           onClick={() => {
             setSelectedService(res);
@@ -129,237 +129,214 @@ const AllService = () => {
           data-bs-target="#delete-item"
           title="Delete Service"
         >
-          <i className="fa-solid fa-trash-can me-1"></i>
-          <span>Delete</span>
+          <i className="fa-solid fa-trash-can"></i>
         </button>
       </div>
     );
   };
   return (
     <>
-      <div className="page-wrapper page-settings">
+      <div className="page-wrapper">
         <div className="content">
-          <div className="content-page-header content-page-headersplit mb-4">
-            <h5 className="mb-0">All Services</h5>
-            <div className="list-btn">
-              <button
-                className="btn btn-primary d-flex align-items-center"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#provider-list"
-              >
-                <i className="fa fa-plus me-2" />
-                Create New Service
-              </button>
+          <div className="page-header">
+            <div className="header-content">
+              <h1 className="page-title">Services</h1>
+              <p className="page-subtitle">Manage your service offerings</p>
             </div>
+            <button
+              className="create-btn"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#provider-list"
+            >
+              <i className="fa fa-plus" />
+              <span>New Service</span>
+            </button>
           </div>
 
           {loading ? (
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
+            <div className="loading-state">
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+                <p>Loading services...</p>
               </div>
             </div>
           ) : data.length === 0 ? (
-            <div className="text-center py-5">
-              <div className="mb-3">
-                <i className="fa fa-inbox" style={{ fontSize: '3rem', color: '#6c757d' }}></i>
+            <div className="empty-state">
+              <div className="empty-icon">
+                <i className="fa fa-store"></i>
               </div>
-              <h5 className="text-muted">No Services Found</h5>
-              <p className="text-muted">Create your first service to get started</p>
+              <h3>No services yet</h3>
+              <p>Start by creating your first service offering</p>
               <button
-                className="btn btn-primary mt-3"
+                className="create-btn"
                 type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#provider-list"
               >
-                <i className="fa fa-plus me-2" />
-                Create Service
+                <i className="fa fa-plus" />
+                <span>Create Service</span>
               </button>
             </div>
           ) : (
-            <div className="row">
-              <div className="col-12">
-                <div className="card">
-                  <div className="card-body p-0">
-                    <div className="table-responsive">
-                      <table className="table datatable">
-                        <DataTable
-                          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} services"
-                          value={data}
-                          paginator
-                          rows={10}
-                          rowsPerPageOptions={[5, 10, 25, 50]}
-                          tableStyle={{ minWidth: '50rem' }}
-                          className="custom-datatable"
-                          stripedRows
-                          showGridlines={false}
-                        >
-                          <Column header="Service" body={renderBody} style={{ minWidth: '250px' }}></Column>
-                          <Column
-                            header="Provider"
-                            body={(res) => {
-                              return (
-                                <div className="d-flex align-items-center">
-                                  <div className="flex-shrink-0" style={{ width: '40px', height: '40px', overflow: 'hidden', borderRadius: '50%' }}>
-                                    <ImageWithoutBasePath
-                                      src={res?.providerId?.image}
-                                      className="img-fluid rounded-circle"
-                                      alt="provider avatar"
-                                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                  </div>
-                                  <span className="ms-2 text-truncate" style={{ maxWidth: '150px' }} title={res?.providerId?.name}>
-                                    {res?.providerId?.name || 'N/A'}
-                                  </span>
-                                </div>
-                              );
-                            }}
-                            style={{ minWidth: '200px' }}
-                          ></Column>
-                          <Column
-                            field="category"
-                            header="Category"
-                            body={(res) => {
-                              // Handle multiple categories
-                              const categoryName = res?.categoryId?.categoryName ||
-                                (res?.categories && res.categories.length > 0
-                                  ? (typeof res.categories[0] === 'object'
-                                    ? res.categories[0].categoryName
-                                    : 'Multiple')
-                                  : 'N/A');
-                              return (
-                                <div className="d-flex align-items-center">
-                                  <span className="badge bg-primary-light text-primary px-3 py-2" title={categoryName}>
-                                    {categoryName}
-                                  </span>
-                                </div>
-                              );
-                            }}
-                            style={{ minWidth: '150px' }}
-                          ></Column>
-                          <Column
-                            sortable
-                            field="price"
-                            header="Price"
-                            body={(res) => (
-                              <div className="fw-semibold text-success">
-                                ₹{res?.price?.toLocaleString()}
-                              </div>
-                            )}
-                            style={{ minWidth: '120px' }}
-                          ></Column>
-                          <Column
-                            sortable
-                            field="duration"
-                            header="Duration"
-                            body={(res) => (
-                              <div className="text-muted">
-                                {res?.duration || 'N/A'}
-                              </div>
-                            )}
-                            style={{ minWidth: '120px' }}
-                          ></Column>
-                          <Column
-                            field="status"
-                            header="Status"
-                            body={renderBody2}
-                            style={{ minWidth: '120px' }}
-                          ></Column>
-                          <Column
-                            field="CreatedAt"
-                            header="Created At"
-                            body={renderBody4}
-                            sortable
-                            style={{ minWidth: '140px' }}
-                          ></Column>
-                          <Column
-                            header="Action"
-                            body={renderBody3}
-                            style={{ minWidth: '200px' }}
-                            headerStyle={{ textAlign: 'center' }}
-                            bodyStyle={{ textAlign: 'center' }}
-                          ></Column>
-                        </DataTable>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+            <div className="services-table-container">
+              <div className="modern-table-wrapper">
+                <DataTable
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="{first}-{last} of {totalRecords} services"
+                  value={data}
+                  paginator
+                  rows={10}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  className="modern-datatable"
+                  showGridlines={false}
+                >
+                  <Column header="Service" body={renderBody} className="service-column"></Column>
+                  <Column
+                    header="Provider"
+                    body={(res) => {
+                      return (
+                        <div className="provider-item">
+                          <div className="provider-avatar">
+                            <ImageWithoutBasePath
+                              src={res?.providerId?.image}
+                              className="avatar-img"
+                              alt="provider"
+                            />
+                          </div>
+                          <span className="provider-name">
+                            {res?.providerId?.name || 'N/A'}
+                          </span>
+                        </div>
+                      );
+                    }}
+                    className="provider-column"
+                  ></Column>
+                  <Column
+                    field="category"
+                    header="Category"
+                    body={(res) => {
+                      const categoryName = res?.categoryId?.categoryName ||
+                        (res?.categories && res.categories.length > 0
+                          ? (typeof res.categories[0] === 'object'
+                            ? res.categories[0].categoryName
+                            : 'Multiple')
+                          : 'N/A');
+                      return (
+                        <span className="category-tag">
+                          {categoryName}
+                        </span>
+                      );
+                    }}
+                    className="category-column"
+                  ></Column>
+                  <Column
+                    sortable
+                    field="price"
+                    header="Price"
+                    body={(res) => (
+                      <div className="price-text">
+                        ₹{res?.price?.toLocaleString()}
+                      </div>
+                    )}
+                    className="price-column"
+                  ></Column>
+                  <Column
+                    sortable
+                    field="duration"
+                    header="Duration"
+                    body={(res) => (
+                      <div className="duration-text">
+                        {res?.duration || 'N/A'}
+                      </div>
+                    )}
+                    className="duration-column"
+                  ></Column>
+                  <Column
+                    field="status"
+                    header="Status"
+                    body={renderBody2}
+                    className="status-column"
+                  ></Column>
+                  <Column
+                    field="CreatedAt"
+                    header="Created"
+                    body={renderBody4}
+                    sortable
+                    className="date-column"
+                  ></Column>
+                  <Column
+                    header="Actions"
+                    body={renderBody3}
+                    className="action-column"
+                  ></Column>
+                </DataTable>
               </div>
             </div>
           )}
         </div>
       </div>
-      {/* Delete */}
-      <div
-        className="modal fade"
-        id="delete-item"
-        tabIndex={-1}
-        aria-hidden="true"
-      >
+      {/* Delete Modal */}
+      <div className="modal fade" id="delete-item" tabIndex={-1} aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <form>
+          <div className="modal-content modern-modal">
+            <div className="modal-header">
+              <h5 className="modal-title">Delete Service</h5>
               <button
                 type="button"
-                className="delete-popup"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <div className="delete-confirmation">
+                <div className="warning-icon">
+                  <i className="fa fa-exclamation-triangle"></i>
+                </div>
+                <p>Are you sure you want to delete this service?</p>
+                <div className="service-name">{selectedService?.serviceTitle}</div>
+                <p className="warning-text">This action cannot be undone.</p>
+              </div>
+              {message && <div className="alert alert-success">{message}</div>}
+              {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
               >
-                <i className="fa-regular fa-rectangle-xmark" />
+                Cancel
               </button>
-              <div className="del-modal">
-                <h5>Do you realy want to delete this service?</h5>
-                <p>{selectedService?.serviceTitle}</p>
-              </div>
-              {message && (
-                <p style={{ textAlign: 'center', color: 'green' }}>{message}</p>
-              )}
-              {errorMessage && (
-                <p style={{ textAlign: 'center', color: 'red' }}>
-                  {errorMessage}
-                </p>
-              )}
-              <div className="delete-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn modal-delete"
-                  onClick={(e) => deleteHandler(e)}
-                >
-                  Delete
-                </button>
-              </div>
-            </form>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={(e) => deleteHandler(e)}
+              >
+                Delete Service
+              </button>
+            </div>
           </div>
         </div>
       </div>
       <ProviderListModal />
-      
+
       {/* Success Modal */}
       <Modal centered show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
-        <div className="modal-body">
-          <div className="text-center py-4">
-            <span className="success-check mb-3 mx-auto">
-              <i className="ti ti-check" />
-            </span>
-            <h4 className="mb-2">Service Created Successfully</h4>
-            <p>
-              Service has been created and added to your Service List
-            </p>
-            <div className="d-flex align-items-center justify-content-center mt-3">
-              <button 
+        <div className="modal-content modern-modal">
+          <div className="modal-body">
+            <div className="success-content">
+              <div className="success-icon">
+                <i className="fa fa-check"></i>
+              </div>
+              <h4>Service Created</h4>
+              <p>Your service has been successfully added to the catalog</p>
+              <button
                 className="btn btn-primary"
                 onClick={() => setShowSuccessModal(false)}
               >
-                OK
+                Continue
               </button>
             </div>
           </div>

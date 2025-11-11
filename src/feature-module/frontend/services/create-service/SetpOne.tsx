@@ -8,6 +8,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useNavigate, Link } from 'react-router-dom';
 import { all_routes } from '../../../../core/data/routes/all_routes';
+import './ModernForm.css';
 
 // Define interfaces
 interface Category {

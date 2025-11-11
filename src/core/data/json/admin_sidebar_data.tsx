@@ -18,6 +18,20 @@ export const adminSidebar = [
     ],
   },
   {
+    tittle: 'Service Bookings',
+    showAsTab: false,
+    separateRoute: false,
+    menu: [
+      {
+        menuValue: 'Service Bookings',
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: routes.appointment,
+        icon: <Icon.MessageSquare className="react-feather-icon" />,
+      },
+    ],
+  },
+  {
     tittle: 'Services',
     showAsTab: false,
     separateRoute: false,
@@ -213,8 +227,8 @@ export const adminSidebar = [
             menuValue: 'All Gallery',
             route: routes.allGallery,
           },
-         
-          
+
+
         ],
       },
       // {
@@ -345,22 +359,7 @@ export const adminSidebar = [
   //     // },
   //   ],
   // },
-  {
-    tittle: 'Appointments',
-    showAsTab: false,
-    separateRoute: false,
-    menu: [
-      {
-        menuValue: 'Appointments',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: routes.appointment,
-        icon: <Icon.MessageSquare className="react-feather-icon" />,
-      },
-     
-      
-    ],
-  },
+
   {
     tittle: 'USER MANAGEMENT',
     showAsTab: false,
