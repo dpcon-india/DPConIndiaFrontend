@@ -349,9 +349,6 @@ const EditServiceForm: React.FC<EditServiceFormProps> = ({ serviceData: propServ
     if (!values.description?.trim()) {
       errors.description = 'Description is required';
     }
-    if (!values.duration?.trim()) {
-      errors.duration = 'Duration is required';
-    }
     // All other fields are optional
 
     // If there are validation errors, show them and don't submit
