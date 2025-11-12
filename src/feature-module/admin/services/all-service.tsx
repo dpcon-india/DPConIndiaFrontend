@@ -302,20 +302,46 @@ const AllService = () => {
               {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={(e) => deleteHandler(e)}
-              >
-                Delete Service
-              </button>
+              {!message && (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={(e) => deleteHandler(e)}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Delete Service'
+                    )}
+                  </button>
+                </>
+              )}
+              {message && (
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              )}
             </div>
           </div>
         </div>
