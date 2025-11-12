@@ -218,7 +218,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       .replace(/--+/g, '-');
   };
 
-  // Form validation schema
+  // Form validation schema - Only 4 mandatory fields
   const validationSchema = Yup.object().shape({
     serviceTitle: Yup.string().required('Service title is required'),
     slug: Yup.string()
@@ -230,12 +230,11 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     categories: Yup.array()
       .min(1, 'At least one category is required')
       .of(Yup.string().required('Category ID is required')),
-    staff: Yup.array(), // Removed required validation
-    price: Yup.number()
-      .min(0, 'Price must be positive')
-      .typeError('Price must be a number'), // Removed required validation
-    duration: Yup.string().required('Duration is required'),
     description: Yup.string().required('Description is required'),
+    // All other fields are optional
+    duration: Yup.string(),
+    staff: Yup.array(),
+    price: Yup.string(),
     location: Yup.object().shape({
       city: Yup.string(),
       state: Yup.string(),
@@ -244,9 +243,9 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       address: Yup.string(),
     }),
     seo: Yup.object().shape({
-      metaTitle: Yup.string().required('Meta title is required'),
-      metaDescription: Yup.string().required('Meta description is required'),
-      metaKeywords: Yup.array().min(1, 'At least one keyword is required'),
+      metaTitle: Yup.string(),
+      metaDescription: Yup.string(),
+      metaKeywords: Yup.array(),
     }),
   });
 
@@ -254,7 +253,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
   const handleSubmit = async (values: any) => {
     setFormSubmitted(true);
 
-    // Validate required fields manually
+    // Validate only the 4 mandatory fields
     const errors: any = {};
 
     if (!values.serviceTitle?.trim()) {
@@ -266,18 +265,10 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
     if (!values.categories || values.categories.length === 0) {
       errors.categories = 'At least one category is required';
     }
-    // Staff is now optional - no validation needed
-    // Price is now optional - only validate if provided
-    if (values.price && values.price < 0) {
-      errors.price = 'Price must be positive';
-    }
-    if (!values.duration?.trim()) {
-      errors.duration = 'Duration is required';
-    }
     if (!values.description?.trim()) {
       errors.description = 'Description is required';
     }
-    // Location fields are now optional - no validation needed
+    // All other fields are optional
 
     // If there are validation errors, show them and don't submit
     if (Object.keys(errors).length > 0) {
@@ -315,7 +306,9 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
       formData.append('staff', JSON.stringify(values.staff));
 
       formData.append('price', values.price.toString());
-      formData.append('duration', values.duration);
+      if (values.duration && values.duration.trim()) {
+        formData.append('duration', values.duration);
+      }
       formData.append('description', values.description);
 
       // Location as JSON string (backend expects this format) - Optional
@@ -1029,7 +1022,7 @@ const NewServiceForm: React.FC<NewServiceFormProps> = ({ providerId, onSuccess }
 
                   <div className="col-md-3">
                     <div className="form-group">
-                      <label>Duration *</label>
+                      <label>Duration</label>
                       <input
                         type="text"
                         className={`form-control ${formik.touched.duration && formik.errors.duration
