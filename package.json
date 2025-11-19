@@ -137,7 +137,17 @@
       "/pages/about-us",
       "/pages/contact-us",
       "/blog/blog-grid",
-      "/services/service-details/691092c00caa03553ab3a0e6"
+      "/services/service-details/69171afda2a6d99051242a77",
+      "/services/service-details/69172096a2a6d99051242cba",
+      "/services/service-details/6917253ca2a6d99051242d2b",
+      "/services/service-details/69172beea2a6d99051242f15",
+      "/services/service-details/69172dc6a2a6d99051242f33",
+      "/services/service-details/69172ff6a2a6d99051242f4e",
+      "/services/service-details/691730ada2a6d99051242fb7",
+      "/services/service-details/6917362ea2a6d990512432ae",
+      "/services/service-details/69173943a2a6d99051243403",
+      "/services/service-details/69173a2aa2a6d99051243499",
+      "/services/service-details/69173c5da2a6d99051243610"
     ],
     "skipThirdPartyRequests": true,
     "cacheAjaxRequests": false,
