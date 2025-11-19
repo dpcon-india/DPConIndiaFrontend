@@ -250,24 +250,23 @@ const NewHome = () => {
       <>
         {/* Hero Section */}
         <section className="hero-section" id="home">
-          <div className="hero-content position-relative overflow-hidden py-5">
+          <div className="hero-content position-relative overflow-hidden py-3 py-lg-5">
             <div className="container h-100">
               <div className="row align-items-center h-100">
                 {/* Left Section - 50% width */}
                 <div className="col-lg-6 mb-4 mb-lg-0">
-                  <div className="home-service-card p-4 rounded-4 shadow-sm bg-white">
-                    <h2 className="fw-bold mb-4">Connect with Nearby Top-rated Professionals</h2>
+                  <div className="home-service-card p-3 p-lg-4 rounded-4 shadow-sm bg-white">
+                    <h2 className="fw-bold mb-3 mb-lg-4 fs-4 fs-lg-2">Connect with Nearby Top-rated Professionals</h2>
 
                     <div className="service-box" style={{
                       background: '#f8f9fa',
                       border: '1px solid #e9ecef',
                       borderRadius: '16px',
-                      padding: '24px',
+                      padding: '16px',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
                     }}>
-                      <h5 className="fw-bold mb-4" style={{
+                      <h5 className="fw-bold mb-3 mb-lg-4 fs-6 fs-lg-5" style={{
                         color: '#2d3748',
-                        fontSize: '18px',
                         letterSpacing: '-0.02em'
                       }}>What are you looking for?</h5>
 
@@ -290,10 +289,10 @@ const NewHome = () => {
                 </div>
 
                 {/* Right Section - 50% width - Image Grid */}
-                <div className="col-lg-6">
+                <div className="col-lg-6 d-none d-lg-block">
                   <div className="h-100 d-flex align-items-center">
                     <div className="w-100">
-                      <div className="row g-3">
+                      <div className="row g-2 g-lg-3">
                         {/* Large Top Left Image */}
                         <div className="col-md-8">
                           <div className="position-relative overflow-hidden rounded-4" style={{
@@ -467,12 +466,12 @@ const NewHome = () => {
         {/* /Category Section */}
 
         {/* Urban Company Style - Quality Promise Section */}
-        <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
+        <section className="py-4 py-lg-5" style={{ backgroundColor: '#f8f9fa' }}>
           <div className="container">
             <div className="row align-items-center">
-              <div className="col-lg-6">
-                <h2 className="fw-bold mb-4">Quality you can trust</h2>
-                <div className="row g-4">
+              <div className="col-lg-6 mb-4 mb-lg-0">
+                <h2 className="fw-bold mb-3 mb-lg-4 fs-4 fs-lg-2">Quality you can trust</h2>
+                <div className="row g-3 g-lg-4">
                   <div className="col-6">
                     <div className="d-flex align-items-start">
                       <div className="bg-success rounded-circle p-2 me-3 flex-shrink-0">
@@ -529,19 +528,19 @@ const NewHome = () => {
         {featuredCat && <PopularSection featuredCat={featuredCat} />}
 
         {/* Urban Company Style - Service Booking CTA */}
-        <section className="py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <section className="py-4 py-lg-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
           <div className="container">
             <div className="row align-items-center text-white">
-              <div className="col-lg-6">
-                <h2 className="fw-bold mb-3">Ready to book a service?</h2>
-                <p className="mb-4 opacity-75">Get instant quotes, compare professionals, and book your service in minutes</p>
-                <div className="d-flex gap-3">
-                  <Link to="/services/service-list" className="btn btn-light btn-lg px-4">
+              <div className="col-lg-6 mb-4 mb-lg-0">
+                <h2 className="fw-bold mb-3 fs-4 fs-lg-2">Ready to book a service?</h2>
+                <p className="mb-3 mb-lg-4 opacity-75">Get instant quotes, compare professionals, and book your service in minutes</p>
+                <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3">
+                  <Link to="/services/service-list" className="btn btn-light btn-lg px-3 px-sm-4 w-100 w-sm-auto">
                     <TbSettings size={20} className="me-2" />
                     Book Service
                   </Link>
                   <button
-                    className="btn btn-outline-light btn-lg px-4"
+                    className="btn btn-outline-light btn-lg px-3 px-sm-4 w-100 w-sm-auto"
                     onClick={() => setShowQuoteModal(true)}
                   >
                     <FaPhoneAlt size={16} className="me-2" />
@@ -558,24 +557,24 @@ const NewHome = () => {
 
 
         {/* Urban Company Style - Stats Section */}
-        <section className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
+        <section className="py-4 py-lg-5" style={{ backgroundColor: '#f8f9fa' }}>
           <div className="container">
-            <div className="row text-center g-4">
+            <div className="row text-center g-3 g-lg-4">
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>12M+</div>
-                <p className="mb-0 text-muted fw-medium">Customers globally</p>
+                <div className="fw-bold" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: '#6c5ce7' }}>12M+</div>
+                <p className="mb-0 text-muted fw-medium small">Customers globally</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>25K+</div>
-                <p className="mb-0 text-muted fw-medium">Trained professionals</p>
+                <div className="fw-bold" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: '#6c5ce7' }}>25K+</div>
+                <p className="mb-0 text-muted fw-medium small">Trained professionals</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>50+</div>
-                <p className="mb-0 text-muted fw-medium">Cities covered</p>
+                <div className="fw-bold" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: '#6c5ce7' }}>50+</div>
+                <p className="mb-0 text-muted fw-medium small">Cities covered</p>
               </div>
               <div className="col-6 col-md-3">
-                <div className="fw-bold" style={{ fontSize: '2.5rem', color: '#6c5ce7' }}>4.8★</div>
-                <p className="mb-0 text-muted fw-medium">Average rating</p>
+                <div className="fw-bold" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: '#6c5ce7' }}>4.8★</div>
+                <p className="mb-0 text-muted fw-medium small">Average rating</p>
               </div>
             </div>
           </div>

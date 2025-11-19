@@ -174,23 +174,13 @@ const HomeHeader: React.FC<props> = ({ type }) => {
     switch (pathType) {
       case 1:
         return (
-          <ul className="nav header-navbar-rht">
-            {/* <li className="nav-item pe-1">
-              <Link
-                className="nav-link btn btn-light"
-                to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#login-modal"
-              >
-                <i className="ti ti-lock me-2"></i>Sign In
-              </Link>
-            </li> */}
+          <ul className="nav header-navbar-rht flex-wrap">
             {user ? (
               <>
                 {(user.role === 'admin' || user.role === 'provider' || user.role === 'staff') && (
-                  <li className="nav-item me-2">
+                  <li className="nav-item me-2 mb-2 mb-lg-0">
                     <Link
-                      className="nav-link btn btn-outline-primary"
+                      className="nav-link btn btn-outline-primary btn-sm"
                       to={
                         user.role === 'admin' ? '/admin/dashboard' :
                           user.role === 'provider' ? '/providers/dashboard' :
@@ -198,56 +188,47 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                               '/'
                       }
                     >
-                      <i className="ti ti-layout-dashboard me-1"></i>Dashboard
+                      <i className="ti ti-layout-dashboard me-1"></i>
+                      <span className="d-none d-sm-inline">Dashboard</span>
                     </Link>
                   </li>
                 )}
-                <li className="nav-item">
+                <li className="nav-item mb-2 mb-lg-0">
                   <button
-                    className="nav-link btn btn-primary"
+                    className="nav-link btn btn-primary btn-sm"
                     onClick={handleLogout}
                   >
-                    <i className="ti ti-logout me-1"></i>Logout
+                    <i className="ti ti-logout me-1"></i>
+                    <span className="d-none d-sm-inline">Logout</span>
                   </button>
                 </li>
               </>
             ) : (
-              <li className="nav-item">
+              <li className="nav-item mb-2 mb-lg-0">
                 <Link
-                  className="nav-link btn btn-linear-primary"
+                  className="nav-link btn btn-linear-primary btn-sm"
                   to="#"
                   data-bs-toggle="modal"
                   data-bs-target="#login-modal"
                 >
-                  <i className="ti ti-lock me-2"></i>Login / Signup
+                  <i className="ti ti-lock me-2"></i>
+                  <span className="d-none d-sm-inline">Login / Signup</span>
                 </Link>
               </li>
             )}
 
-            {/* <li
-              className="nav-item"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-              }}
-            >
+            <li className="nav-item d-flex align-items-center">
               <a
                 href="https://wa.me/9833133366"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
+                className="d-flex align-items-center text-decoration-none text-dark"
               >
-                <Icon.PhoneCall size={24} color="white" />
-                <span>For enquiry 9833133366</span>
+                <Icon.PhoneCall size={20} color="black" />
+                <span className="ms-2 d-none d-md-inline">For enquiry 9833133366</span>
+                <span className="ms-2 d-md-none">9833133366</span>
               </a>
-            </li> */}
+            </li>
           </ul>
         );
         break;
@@ -740,20 +721,6 @@ const HomeHeader: React.FC<props> = ({ type }) => {
 
   return (
     <>
-      <div className="enquiry-container">
-        <span className="nav-item flex items-center justify-center">
-          <a
-            href="https://wa.me/9833133366"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-white no-underline font-semibold text-lg"
-          >
-            <Icon.PhoneCall size={24} color="white" />
-            <span className="mx-1 text-white">For enquiry 9833133366</span>
-          </a>
-        </span>
-      </div>
-
       <div className={` top-bar ${type != 3 || !close ? 'd-none' : ''}`}>
         <h6>50% OFF on Christmas</h6>
         <ul>
@@ -774,62 +741,102 @@ const HomeHeader: React.FC<props> = ({ type }) => {
           // className={` ${type == 4 || type == 1 ? 'container-fluid' : 'container'}
           className="container"
         >
-          <nav className="navbar navbar-expand-lg header-nav mt-[5rem]">
+          <nav className="navbar navbar-expand-lg header-nav mt-lg-[2rem]">
             <div className="navbar-header">
-              <Link onClick={toogle} id="mobile_btn" to="#">
-                <span className="bar-icon">
-                  <span />
-                  <span />
-                  <span />
-                </span>
-              </Link>
-              <div className="logo-container">
-                <Link to={routes.index} className="navbar-brand logo">
-                  <img
-                    src="/assets/img/dpconlogo.png"
-                    className="img-fluid"
-                    alt="Logo"
-                    style={{
-                      maxHeight: '70px',
-                      display: 'block',
-                      margin: '0 auto',
-                    }}
-                  />
-                  <div className="logo-text">
-                    <div className="logo-main">DPCON</div>
-                    <div className="logo-sub">Engineers India Pvt Ltd</div>
-                  </div>
-                </Link>
-              </div>
-              <Link to={routes.index} className="navbar-brand logo-small p-0">
+              {/* Desktop Logo */}
+              <Link to={routes.index} className="navbar-brand logo d-none d-lg-flex" style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
                 <img
                   src="/assets/img/dpconlogo.png"
-                  // className="img-fluid"
                   alt="Logo"
                   style={{
-                    maxHeight: '50px',
+                    height: '60px',
                     width: 'auto',
-                    // minWidth: '100px',
-                    // width: '300px',
-                    // objectFit: 'contain',
+                    marginRight: '6px',
+                    flexShrink: 0
                   }}
                 />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    color: '#000',
+                    lineHeight: '1.1',
+                    letterSpacing: '0.5px',
+                    whiteSpace: 'nowrap'
+                  }}>DPCON</div>
+                  <div style={{
+                    fontSize: '10px',
+                    color: '#666',
+                    lineHeight: '1.1',
+                    fontWeight: '400',
+                    whiteSpace: 'nowrap'
+                  }}>Engineers India Pvt Ltd</div>
+                </div>
               </Link>
-              <div className="navbar-brand logo-small" style={{ padding: 0 }}>
-                {role && role !== 'undefined' && (role === 'admin' || role === 'provider' || role === 'staff') ? (
-                  <Link className="fs-14" to={route}>
-                    <i className="ti ti-user-filled me-2"></i>Dashboard
+
+              {/* Mobile Layout */}
+              <div className="d-flex d-lg-none w-100 align-items-center justify-content-between" style={{ position: 'relative' }}>
+                <div className="d-flex align-items-center" style={{ gap: '8px', flex: '1 1 auto', minWidth: 0 }}>
+                  {/* hamburger (Left) */}
+                  <Link onClick={toogle} id="mobile_btn" to="#" className="flex-shrink-0" style={{ position: 'relative', zIndex: 10 }}>
+                    <span className="bar-icon">
+                      <span />
+                      <span />
+                      <span />
+                    </span>
                   </Link>
-                ) : (
-                  <Link
-                    className="nav-link btn btn-linear-primary"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#register-modal"
-                  >
-                    <i className="ti ti-user-filled me-2"></i>Login
+
+                  {/* Logo with Captions (After hamburger) */}
+                  <Link to={routes.index} className="navbar-brand logo-small d-flex p-0 align-items-center" style={{ minWidth: 0, position: 'relative', zIndex: 10 }}>
+                    <img
+                      src="/assets/img/dpconlogo.png"
+                      alt="Logo"
+                      className="flex-shrink-0"
+                      style={{
+                        height: '28px',
+                        width: 'auto'
+                      }}
+                    />
+                    <div className="d-flex flex-column ms-1" style={{ minWidth: 0, alignItems: 'flex-start' }}>
+                      <div style={{
+                        fontSize: '10px',
+                        fontWeight: '600',
+                        color: '#000',
+                        lineHeight: '1.2',
+                        letterSpacing: '0.2px',
+                        whiteSpace: 'nowrap',
+                        textAlign: 'left'
+                      }}>DPCON</div>
+                      <div style={{
+                        fontSize: '7px',
+                        color: '#666',
+                        lineHeight: '1.2',
+                        fontWeight: '400',
+                        whiteSpace: 'nowrap',
+                        textAlign: 'left'
+                      }}>Engineers India Pvt Ltd</div>
+                    </div>
                   </Link>
-                )}
+                </div>
+
+                {/* Login/Signup Button (Right) */}
+                <div className="flex-shrink-0" style={{ marginLeft: '8px' }}>
+                  {role && role !== 'undefined' && (role === 'admin' || role === 'provider' || role === 'staff') ? (
+                    <Link className="btn btn-sm btn-outline-primary" to={route} style={{ fontSize: '10px', padding: '4px 8px' }}>
+                      <i className="ti ti-user-filled"></i>
+                    </Link>
+                  ) : (
+                    <Link
+                      className="btn btn-sm btn-linear-primary"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#register-modal"
+                      style={{ fontSize: '10px', padding: '4px 8px' }}
+                    >
+                      <i className="ti ti-user-filled"></i>
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
             <div className="main-menu-wrapper">
@@ -892,22 +899,20 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                 ) : (
                   <></>
                 )} */}
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/home"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     Home
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/services/service-list"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     Services
                   </Link>
@@ -1061,43 +1066,39 @@ const HomeHeader: React.FC<props> = ({ type }) => {
                   <></>
                 )} */}
 
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/pages/about-us"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     About
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/pages/gallery"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     Gallery
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/blog/blog-grid"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     Blogs
                   </Link>
                 </li>
 
-                <li className="nav-item">
+                <li className="nav-item" style={{ padding: '0.25rem 0' }}>
                   <Link
                     className="nav-link"
                     to="/pages/contact-us"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#provider"
+                    style={{ padding: '0.5rem 1rem', lineHeight: '1.2' }}
                   >
                     Contact
                   </Link>

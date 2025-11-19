@@ -16,3 +16,66 @@
   font-size: small;
   /* Ensures it stays above other elements */
 }
+
+/* Mobile responsive styles */
+@media (max-width: 991.98px) {
+  .navbar-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+  }
+
+  #mobile_btn {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+  }
+
+  .navbar-brand.logo-small {
+    display: flex;
+    align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .enquiry-container {
+    font-size: 12px;
+    padding: 6px 0;
+  }
+
+  .enquiry-container span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-brand.logo-small img {
+    height: 35px !important;
+  }
+
+  .navbar-brand.logo-small div:first-of-type {
+    font-size: 12px !important;
+  }
+
+  .navbar-brand.logo-small div:last-of-type {
+    font-size: 7px !important;
+  }
+
+  .btn-sm {
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+
+  .enquiry-container {
+    font-size: 10px;
+    padding: 4px 0;
+  }
+
+  .enquiry-container .flex {
+    flex-direction: column;
+    gap: 2px;
+  }
+}

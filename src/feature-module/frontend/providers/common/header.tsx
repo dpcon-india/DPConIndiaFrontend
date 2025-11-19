@@ -126,16 +126,16 @@ const ProviderHeader = () => {
             }}
           />
           <div>
-            <div style={{ 
-              fontSize: '18px', 
-              fontWeight: '600', 
-              color: '#000', 
+            <div style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#000',
               lineHeight: '1.1',
               letterSpacing: '0.5px'
             }}>DPCON</div>
-            <div style={{ 
-              fontSize: '10px', 
-              color: '#666', 
+            <div style={{
+              fontSize: '10px',
+              color: '#666',
               lineHeight: '1.1',
               fontWeight: '400',
               textAlign: 'center'
